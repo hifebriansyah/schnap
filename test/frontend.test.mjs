@@ -80,6 +80,8 @@ assert.strictEqual(typeof parseBrandsResponse, 'function');
 // 5. Color Palette, 3-Level Menu & Clean UI Verification
 const tokensCss = fs.readFileSync(new URL('../assets/css/tokens.css', import.meta.url), 'utf8');
 assert.ok(tokensCss.includes('#5D1C25'));
+assert.ok(tokensCss.includes('#5C0632'));
+assert.ok(tokensCss.includes('#747F8A'));
 assert.ok(tokensCss.includes('#FFFFFF'));
 assert.ok(tokensCss.includes('#C58B2A'));
 assert.ok(!tokensCss.includes('#EB1B24'));

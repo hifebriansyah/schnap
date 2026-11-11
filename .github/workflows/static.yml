@@ -1,4 +1,4 @@
-# Deploy the static SCHNAP pitch site (HTML pages + assets/) to GitHub Pages at commerce.situs.id
+# Deploy the static SCHNAP pitch site (HTML pages + assets/) to GitHub Pages at schnap.situs.id
 name: Deploy to Pages
 
 on:

@@ -2,7 +2,7 @@
 import assert from "node:assert";
 import worker, { upstreamPath, rewriteSetCookie } from "../worker/commerce.js";
 
-const ORIGIN = "https://commerce.situs.id";
+const ORIGIN = "https://schnap.situs.id";
 const env = { ALLOWED_ORIGINS: `${ORIGIN},http://localhost`, UPSTREAM: "https://www.schnap.com.au", CACHE_SECONDS: "60" };
 const store = new Map();
 globalThis.caches = { default: { match: async (r) => store.get(r.url)?.clone(), put: async (r, res) => void store.set(r.url, res) } };

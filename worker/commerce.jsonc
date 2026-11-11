@@ -10,7 +10,7 @@
   "vars": {
     "UPSTREAM": "https://www.schnap.com.au",
     // The pages allowed to read the answers (browsers send their address as Origin). Add the address where the pitch is hosted.
-    "ALLOWED_ORIGINS": "https://commerce.situs.id,http://localhost,https://localhost,http://127.0.0.1",
+    "ALLOWED_ORIGINS": "https://schnap.situs.id,http://localhost,https://localhost,http://127.0.0.1",
     // Anonymous catalog GETs are kept this many seconds at the edge ("0" is off); carts, checkout and logins are never cached.
     "CACHE_SECONDS": "120"
   },
