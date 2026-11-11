@@ -1,46 +1,62 @@
 /* ==========================================================================
-   SCHNAP Electric Products — Refined Storefront Design Tokens
-   Core Palette:
-   - Deep Burgundy (#5D1C25) & Espresso (#23090D)
-   - Pure White (#FFFFFF) & Warm Alabaster (#FAF8F6)
-   - Recommended Accent: Burnished Brass / Warm Gold (#C58B2A / #EBC06D)
+   SCHNAP Electric Products — Qatar Airways-Inspired Storefront Design Tokens
+   Official Qatar Airways Palette:
+   - Qatar Burgundy (#5C0632 / #5D1C25) & Deep Maroon (#1C030F)
+   - Qatar Cool Slate / Overcast (#747F8A / #5E6A71)
+   - Crisp Pure White (#FFFFFF) & Cool Platinum Canvas (#F8FAFC)
+   - Cool Platinum & Silver Accents (#CBD5E1 / #94A3B8 / #C58B2A)
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
 
 :root {
-  /* Core Burgundy Structural Surfaces (Anchored around #5D1C25) */
-  --color-burgundy-950: #260A0E;
-  --color-burgundy-900: #5D1C25;
-  --color-burgundy-800: #48141C;
-  --color-burgundy-700: #73242F;
-  --color-burgundy-600: #8C303D;
+  /* Core Qatar Airways Burgundy Surfaces (Pantone 229 C: #5C0632 / #5D1C25) */
+  --color-burgundy-950: #1C030F;
+  --color-burgundy-900: #5C0632; /* Official Qatar Airways Maroon */
+  --color-burgundy-850: #460425;
+  --color-burgundy-800: #4D0529;
+  --color-burgundy-700: #70093E;
+  --color-burgundy-600: #8C0D4F;
+  --color-burgundy-500: #A81461;
 
-  /* Mapped to existing structural variable names */
-  --color-navy-950: #260A0E;
-  --color-navy-900: #5D1C25;
-  --color-navy-800: #48141C;
-  --color-navy-700: #3D1E23;
-  --color-navy-600: #5E3A40;
+  /* Mapped to structural variable names */
+  --color-navy-950: #1C030F;
+  --color-navy-900: #5C0632;
+  --color-navy-800: #460425;
+  --color-navy-700: #3D0520;
+  --color-navy-600: #5E0932;
 
-  /* Crisp White & Warm Architectural Neutrals (Anchored around #FFFFFF) */
+  /* Crisp White & Cool Architectural Neutrals (Qatar Platinum & Cool Slate) */
   --color-white: #FFFFFF;
-  --color-slate-50: #FAF8F6;
-  --color-slate-100: #F3EFEA;
-  --color-slate-200: #E6E0D8;
-  --color-slate-300: #D4CBC0;
-  --color-slate-400: #8C7E75;
-  --color-slate-500: #5F524B;
+  --color-slate-50: #F8FAFC;  /* Cool Platinum canvas */
+  --color-slate-100: #F1F5F9; /* Crisp cool subtle surface */
+  --color-slate-200: #E2E8F0; /* Cool platinum border */
+  --color-slate-300: #CBD5E1; /* Cool silver border */
+  --color-slate-400: #94A3B8; /* Cool slate muted */
+  --color-slate-500: #64748B; /* Cool slate secondary */
+  --color-slate-600: #475569;
+  --color-slate-700: #334155;
+  --color-slate-800: #1E293B;
 
-  /* Recommended Complementary Accent — Burnished Brass / Warm Champagne Gold */
-  --color-gold-50: #FCF8F0;
-  --color-gold-100: #F6EBD6;
-  --color-gold-200: #EAD3A8;
-  --color-gold-300: #DFB976;
-  --color-gold-400: #EBC06D; /* Luminous champagne gold on dark #5D1C25 backgrounds */
-  --color-gold-500: #C58B2A; /* Core Burnished Brass accent */
-  --color-gold-600: #9E6B16; /* High-contrast AA brass text on light backgrounds */
-  --color-gold-700: #7D520D;
+  /* Qatar Airways Cool Platinum & Silver Accents (Pantone 430 C: #747F8A) */
+  --color-platinum-50: #F8FAFC;
+  --color-platinum-100: #F1F5F9;
+  --color-platinum-200: #E2E8F0;
+  --color-platinum-300: #CBD5E1;
+  --color-platinum-400: #D8B4C6; /* Soft cool silver-rose for dark burgundy badge accents */
+  --color-platinum-500: #747F8A; /* Official Qatar Airways Overcast Grey */
+  --color-platinum-600: #5E6A71; /* Qatar Slate 2 */
+  --color-platinum-700: #465057;
+
+  /* Mapped accent tokens to cool Qatar palette */
+  --color-gold-50: #FAF5F8;
+  --color-gold-100: #F3E8EF;
+  --color-gold-200: #E4C8D8;
+  --color-gold-300: #CBD5E1; /* Cool silver-slate */
+  --color-gold-400: #D8B4C6; /* Cool rose-silver highlight on dark burgundy */
+  --color-gold-500: #747F8A; /* Qatar Overcast Grey (#C58B2A alias fallback) */
+  --color-gold-600: #5C0632; /* Qatar Burgundy text */
+  --color-gold-700: #460425;
 
   /* Mapped to existing accent token names */
   --color-amber-50: var(--color-gold-50);
@@ -60,10 +76,10 @@
   --color-emerald-700: #047857;
 
   /* Subtle Berry / Wine Tint for Soft Badges */
-  --color-crimson-50: #FBF4F5;
-  --color-crimson-100: #F5E4E6;
-  --color-crimson-600: #73242F;
-  --color-crimson-700: #5D1C25;
+  --color-crimson-50: #FBF4F8;
+  --color-crimson-100: #F5E4EE;
+  --color-crimson-600: #70093E;
+  --color-crimson-700: #5C0632;
 
   /* Semantic Tokens — High-Contrast Text & Surface Pairings */
   --bg-canvas: var(--color-slate-50);
@@ -72,15 +88,15 @@
   --bg-header: var(--color-burgundy-900);
   --bg-utility: var(--color-burgundy-950);
 
-  --text-primary: #1C1415;
-  --text-secondary: #4A3B3D;
-  --text-muted: #736265;
+  --text-primary: #0F172A; /* Deep cool slate */
+  --text-secondary: #475569; /* Cool slate */
+  --text-muted: #64748B; /* Cool slate muted */
   --text-on-dark: var(--color-white);
-  --text-on-dark-muted: #E8D8DA;
+  --text-on-dark-muted: #E2E8F0;
 
   --border-subtle: var(--color-slate-200);
   --border-strong: var(--color-slate-300);
-  --border-focus: var(--color-gold-500);
+  --border-focus: var(--color-burgundy-900);
 
   /* Typography */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
