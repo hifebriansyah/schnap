@@ -1,0 +1,22 @@
+{
+  // The commerce Worker (worker/commerce.js): the edge gateway from the SCHNAP pitch pages to the live CS-Cart store. Deployed by: python3 tools/deploy_worker.py
+  "name": "commerce-worker",
+  "main": "commerce.js",
+  "compatibility_date": "2025-09-01",
+  // The public address the pages call (/api/... or /cscart/...). The deploy attaches it and turns the workers.dev address off.
+  "domain": "commerce-worker.situs.id",
+  // Near Sydney: SCHNAP's store is in Australia and so are its visitors.
+  "placement": { "region": "aws:ap-southeast-2" },
+  "vars": {
+    "UPSTREAM": "https://www.schnap.com.au",
+    // The pages allowed to read the answers (browsers send their address as Origin). Add the address where the pitch is hosted.
+    "ALLOWED_ORIGINS": "https://commerce.situs.id,http://localhost,https://localhost,http://127.0.0.1",
+    // Anonymous catalog GETs are kept this many seconds at the edge ("0" is off); carts, checkout and logins are never cached.
+    "CACHE_SECONDS": "120"
+  },
+  // Catalog browsing is many small calls: at most 120 a minute from one IP address, and 600 a minute for everybody together (it is their live store).
+  "ratelimits": [
+    { "name": "LIMITER", "namespace_id": "3501", "simple": { "limit": 120, "period": 60 } },
+    { "name": "LIMITER_ALL", "namespace_id": "3502", "simple": { "limit": 600, "period": 60 } }
+  ]
+}
