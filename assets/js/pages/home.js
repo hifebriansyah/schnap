@@ -118,7 +118,7 @@ function renderBrandsRibbon() {
 
       return `
         <a
-          href="search.html?q=${encodeURIComponent(b.query)}&brand=${encodeURIComponent(b.name)}"
+          href="search.html?brand=${encodeURIComponent(b.name)}"
           class="brand-tile"
           title="${escapeHtml(b.name)}"
         >

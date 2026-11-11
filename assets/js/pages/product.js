@@ -153,7 +153,7 @@ function renderProductDetail(product) {
     <div class="pdp-buy-box">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem;flex-wrap:wrap">
         <div style="display:flex;align-items:center;gap:0.5rem">
-          <a href="search.html?q=${encodeURIComponent(product.brand || 'SCHNAP')}" class="badge badge-navy">${escapeHtml(product.brand || 'SCHNAP')}</a>
+          <a href="search.html?brand=${encodeURIComponent(product.brand || 'SCHNAP')}" class="badge badge-navy">${escapeHtml(product.brand || 'SCHNAP')}</a>
           <button
             type="button"
             class="sku-copy-pill"

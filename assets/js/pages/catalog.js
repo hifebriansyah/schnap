@@ -102,12 +102,14 @@ async function loadCatalogData() {
 
   updateHeaderBanner(pillar);
 
+  const activeBrand = state.selectedBrands.size === 1 ? [...state.selectedBrands][0] : '';
   const [sortBy, sortOrder] = state.sort.split('_');
 
   let result;
-  if (state.isSearchPage || state.query || state.tag) {
+  if (state.isSearchPage || state.query || state.tag || activeBrand) {
     result = await fetchSearchCatalog({
       query: state.query,
+      brand: activeBrand,
       tag: state.tag,
       page: state.page,
       sortBy: sortBy || 'position',
@@ -166,19 +168,24 @@ function updateHeaderBanner(pillar) {
   const subtitleEl = document.getElementById('catalog-page-subtitle');
   const breadcrumbEl = document.getElementById('catalog-breadcrumb-current');
 
+  const activeBrand = state.selectedBrands.size === 1 ? [...state.selectedBrands][0] : '';
   const resolvedTitle =
     state.query
       ? `Search: "${state.query}"`
-      : state.tag
-        ? state.tag
-        : state.title || pillar?.name || 'Catalog';
+      : activeBrand
+        ? activeBrand
+        : state.tag
+          ? state.tag
+          : state.title || pillar?.name || 'Catalog';
 
   if (titleEl) titleEl.textContent = resolvedTitle;
   if (breadcrumbEl) breadcrumbEl.textContent = resolvedTitle;
   if (subtitleEl) {
     subtitleEl.textContent = state.query
       ? `Showing matching products across our electrical range.`
-      : pillar?.tagline || 'Trade electrical supplies with upfront pricing.';
+      : activeBrand
+        ? `Showing matching products across ${activeBrand} range.`
+        : pillar?.tagline || 'Trade electrical supplies with upfront pricing.';
   }
 }
 

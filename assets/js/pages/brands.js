@@ -165,7 +165,7 @@ function renderFlagshipSpotlight() {
 
   mount.innerHTML = featured
     .map((brand) => {
-      const searchUrl = `search.html?q=${encodeURIComponent(brand.query || brand.name)}&brand=${encodeURIComponent(brand.name)}`;
+      const searchUrl = `search.html?brand=${encodeURIComponent(brand.name)}`;
 
       return `
         <a href="${searchUrl}" class="brand-spotlight-card">
@@ -239,7 +239,7 @@ function renderAzDirectory() {
     .map(([letter, items]) => {
       const cardsHtml = items
         .map((brand) => {
-          const searchUrl = `search.html?q=${encodeURIComponent(brand.query || brand.name)}&brand=${encodeURIComponent(brand.name)}`;
+          const searchUrl = `search.html?brand=${encodeURIComponent(brand.name)}`;
           return `
             <a href="${searchUrl}" class="brand-dir-card">
               <div>

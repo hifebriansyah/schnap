@@ -439,15 +439,60 @@ export async function fetchCategoryCatalog({
 /**
  * Fetches Search or Tag results (`dispatch=products.search` or `dispatch=tags.view`)
  */
-export async function fetchSearchCatalog({ query = '', tag = '', page = 1, sortBy = 'position', sortOrder = 'asc' } = {}) {
+export async function fetchSearchCatalog({
+  query = '',
+  brand = '',
+  tag = '',
+  page = 1,
+  sortBy = 'position',
+  sortOrder = 'asc',
+} = {}) {
   const cleanQ = (query || tag || '').trim();
-  const cacheKey = `search:${cleanQ.toLowerCase()}:tag_${tag}:p${page}:s_${sortBy}_${sortOrder}`;
+  const cleanBrand = (brand || '').trim();
+  const cacheKey = `search:${cleanQ.toLowerCase()}:b_${cleanBrand.toLowerCase()}:tag_${tag}:p${page}:s_${sortBy}_${sortOrder}`;
 
   try {
     const result = await swrFetch(cacheKey, async () => {
       let raw;
+      const brandObj = cleanBrand
+        ? CONFIG.BRANDS.find(
+            (b) =>
+              b.name.toLowerCase() === cleanBrand.toLowerCase() ||
+              b.slug.replace('/', '').toLowerCase() === cleanBrand.toLowerCase() ||
+              (b.query && b.query.toLowerCase() === cleanBrand.toLowerCase())
+          )
+        : null;
+
       if (tag && !query) {
         raw = await rawDispatch('tags.view', { params: { tag, page } });
+      } else if (cleanBrand && !cleanQ) {
+        if (brandObj?.slug) {
+          try {
+            raw = await rawDispatch(brandObj.slug, { params: { page, sort_by: sortBy, sort_order: sortOrder } });
+            const parsedBrand = parseCatalogResponse(raw);
+            if (parsedBrand.products && parsedBrand.products.length > 0) {
+              return parsedBrand;
+            }
+          } catch {
+            // fallback to search
+          }
+        }
+        raw = await rawDispatch('products.search', {
+          params: {
+            q: brandObj?.query || cleanBrand,
+            match: 'all',
+            subcats: 'Y',
+            pcode_from_q: 'Y',
+            pshort: 'Y',
+            pfull: 'Y',
+            pname: 'Y',
+            pkeywords: 'Y',
+            search_performed: 'Y',
+            page,
+            sort_by: sortBy,
+            sort_order: sortOrder,
+          },
+        });
       } else {
         raw = await rawDispatch('products.search', {
           params: {
@@ -493,22 +538,33 @@ export async function fetchSearchCatalog({ query = '', tag = '', page = 1, sortB
     return result.data;
   } catch {
     emitTelemetry({ mode: 'seed-fallback', cacheStatus: 'SEED' });
-    const qLower = cleanQ.toLowerCase();
-    const matched = SEED_PRODUCTS.filter(
-      (p) =>
-        !qLower ||
-        p.title.toLowerCase().includes(qLower) ||
-        p.sku.toLowerCase().includes(qLower) ||
-        p.brand.toLowerCase().includes(qLower) ||
-        (p.specs || []).some((s) => s.toLowerCase().includes(qLower))
-    );
-    const results = matched.length ? matched : SEED_PRODUCTS;
+    let matched = [...SEED_PRODUCTS];
+    if (cleanBrand) {
+      const bLower = cleanBrand.toLowerCase();
+      matched = matched.filter(
+        (p) =>
+          (p.brand || '').toLowerCase() === bLower ||
+          (p.brand || '').toLowerCase().includes(bLower) ||
+          bLower.includes((p.brand || '').toLowerCase())
+      );
+    }
+    if (cleanQ) {
+      const qLower = cleanQ.toLowerCase();
+      matched = matched.filter(
+        (p) =>
+          p.title.toLowerCase().includes(qLower) ||
+          p.sku.toLowerCase().includes(qLower) ||
+          p.brand.toLowerCase().includes(qLower) ||
+          (p.specs || []).some((s) => s.toLowerCase().includes(qLower))
+      );
+    }
+    const results = matched.length ? matched : cleanBrand || cleanQ ? [] : SEED_PRODUCTS;
     return {
       products: results,
       subcategories: [],
       facets: [],
       totalCount: results.length,
-      title: cleanQ ? `Search results for "${cleanQ}"` : 'All Trade Products',
+      title: cleanBrand ? cleanBrand : cleanQ ? `Search results for "${cleanQ}"` : 'All Trade Products',
     };
   }
 }
