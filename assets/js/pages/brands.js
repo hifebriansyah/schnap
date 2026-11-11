@@ -3,11 +3,11 @@
 // Clean, editorial layout with zero external store clutter
 // ==========================================================================
 
-import { CONFIG } from '../core/config.js';
-import { initGlobalShell } from '../components/header.js';
-import { escapeHtml } from '../components/productCard.js';
-import { lucideIcon, hydrateLucideIcons } from '../components/icons.js';
-import { fetchBrandsCatalog } from '../core/dispatch.js';
+import { CONFIG } from '../core/config.js?v=afde963';
+import { initGlobalShell } from '../components/header.js?v=afde963';
+import { escapeHtml } from '../components/productCard.js?v=afde963';
+import { lucideIcon, hydrateLucideIcons } from '../components/icons.js?v=afde963';
+import { fetchBrandsCatalog } from '../core/dispatch.js?v=afde963';
 
 const state = {
   allBrands: [...CONFIG.BRANDS],

@@ -3,18 +3,18 @@
 // Clean 3-step checkout with live store checkout handoff
 // ==========================================================================
 
-import { CONFIG } from '../core/config.js';
-import { initGlobalShell } from '../components/header.js';
-import { formatAud, escapeHtml } from '../components/productCard.js';
-import { lucideIcon, hydrateLucideIcons } from '../components/icons.js';
+import { CONFIG } from '../core/config.js?v=afde963';
+import { initGlobalShell } from '../components/header.js?v=afde963';
+import { formatAud, escapeHtml } from '../components/productCard.js?v=afde963';
+import { lucideIcon, hydrateLucideIcons } from '../components/icons.js?v=afde963';
 import {
   getCartState,
   subscribeCart,
   rawDispatch,
   submitNativeCartHandoff,
-} from '../core/dispatch.js';
-import { normalizeImageUrl, buildSchematicPlaceholder } from '../core/media.js';
-import { showToast } from '../components/notifications.js';
+} from '../core/dispatch.js?v=afde963';
+import { normalizeImageUrl, buildSchematicPlaceholder } from '../core/media.js?v=afde963';
+import { showToast } from '../components/notifications.js?v=afde963';
 
 let selectedFulfillment = 'pickup';
 let selectedPayment = 'card';

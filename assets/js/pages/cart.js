@@ -3,16 +3,16 @@
 // Clean, focused cart management
 // ==========================================================================
 
-import { CONFIG } from '../core/config.js';
-import { initGlobalShell } from '../components/header.js';
+import { CONFIG } from '../core/config.js?v=afde963';
+import { initGlobalShell } from '../components/header.js?v=afde963';
 import {
   formatAud,
   escapeHtml,
   renderProductCard,
   bindProductCatalogEvents,
-} from '../components/productCard.js';
-import { openQuickView } from '../components/quickView.js';
-import { lucideIcon, hydrateLucideIcons } from '../components/icons.js';
+} from '../components/productCard.js?v=afde963';
+import { openQuickView } from '../components/quickView.js?v=afde963';
+import { lucideIcon, hydrateLucideIcons } from '../components/icons.js?v=afde963';
 import {
   subscribeCart,
   addToCart,
@@ -21,10 +21,10 @@ import {
   clearCart,
   syncCartFromBackend,
   fetchSearchCatalog,
-} from '../core/dispatch.js';
-import { normalizeImageUrl, buildSchematicPlaceholder } from '../core/media.js';
-import { showToast } from '../components/notifications.js';
-import { SEED_PRODUCTS } from '../data/pitchSeeds.js';
+} from '../core/dispatch.js?v=afde963';
+import { normalizeImageUrl, buildSchematicPlaceholder } from '../core/media.js?v=afde963';
+import { showToast } from '../components/notifications.js?v=afde963';
+import { SEED_PRODUCTS } from '../data/pitchSeeds.js?v=afde963';
 
 export async function initCartPage() {
   initGlobalShell();

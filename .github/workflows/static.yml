@@ -37,6 +37,9 @@ jobs:
           mkdir _site
           cp *.html CNAME .nojekyll _site/
           cp -r assets _site/
+      - name: Cache bust assets
+        run: |
+          node tools/cache-bust.mjs _site ${{ github.sha }}
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact

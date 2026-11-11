@@ -4,12 +4,12 @@
 // All icons powered by Lucide (icons.js)
 // ==========================================================================
 
-import { fetchProductDetail, addToCart } from '../core/dispatch.js';
-import { normalizeImageUrl, buildSchematicPlaceholder } from '../core/media.js';
-import { formatAud, escapeHtml } from './productCard.js';
-import { showToast } from './notifications.js';
-import { lucideIcon } from './icons.js';
-import { CONFIG } from '../core/config.js';
+import { fetchProductDetail, addToCart } from '../core/dispatch.js?v=afde963';
+import { normalizeImageUrl, buildSchematicPlaceholder } from '../core/media.js?v=afde963';
+import { formatAud, escapeHtml } from './productCard.js?v=afde963';
+import { showToast } from './notifications.js?v=afde963';
+import { lucideIcon } from './icons.js?v=afde963';
+import { CONFIG } from '../core/config.js?v=afde963';
 
 let modalBackdrop = null;
 let activeProduct = null;

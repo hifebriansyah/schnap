@@ -4,11 +4,11 @@
 // All icons powered by Lucide (icons.js)
 // ==========================================================================
 
-import { normalizeImageUrl, getRetinaSrcset, buildSchematicPlaceholder } from '../core/media.js';
-import { addToCart, prefetchResource } from '../core/dispatch.js';
-import { bindHoverPrefetch } from '../core/cache.js';
-import { showToast } from './notifications.js';
-import { lucideIcon } from './icons.js';
+import { normalizeImageUrl, getRetinaSrcset, buildSchematicPlaceholder } from '../core/media.js?v=afde963';
+import { addToCart, prefetchResource } from '../core/dispatch.js?v=afde963';
+import { bindHoverPrefetch } from '../core/cache.js?v=afde963';
+import { showToast } from './notifications.js?v=afde963';
+import { lucideIcon } from './icons.js?v=afde963';
 
 export function formatAud(amount) {
   const num = Number(amount) || 0;

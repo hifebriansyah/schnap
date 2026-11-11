@@ -2,7 +2,7 @@
 // SCHNAP Electric Products — Media & CloudFront Image Resolution Normalizer
 // ==========================================================================
 
-import { CONFIG } from './config.js';
+import { CONFIG } from './config.js?v=afde963';
 
 export function normalizeImageUrl(rawUrl, { upgradeRetina = true, sku = '', brand = '' } = {}) {
   if (!rawUrl || typeof rawUrl !== 'string') {

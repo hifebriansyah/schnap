@@ -3,7 +3,7 @@
 // All icons powered by Lucide (icons.js)
 // ==========================================================================
 
-import { lucideIcon } from './icons.js';
+import { lucideIcon } from './icons.js?v=afde963';
 
 let containerEl = null;
 

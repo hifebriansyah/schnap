@@ -4,19 +4,19 @@
 // All icons powered by Lucide (icons.js)
 // ==========================================================================
 
-import { CONFIG } from '../core/config.js';
+import { CONFIG } from '../core/config.js?v=afde963';
 import {
   fetchSearchCatalog,
   subscribeCart,
   addToCart,
   updateCartQty,
   removeFromCart,
-} from '../core/dispatch.js';
-import { normalizeImageUrl, buildSchematicPlaceholder } from '../core/media.js';
-import { formatAud, escapeHtml } from './productCard.js';
-import { showToast } from './notifications.js';
-import { lucideIcon, lucideStars, hydrateLucideIcons } from './icons.js';
-import { SEED_PRODUCTS } from '../data/pitchSeeds.js';
+} from '../core/dispatch.js?v=afde963';
+import { normalizeImageUrl, buildSchematicPlaceholder } from '../core/media.js?v=afde963';
+import { formatAud, escapeHtml } from './productCard.js?v=afde963';
+import { showToast } from './notifications.js?v=afde963';
+import { lucideIcon, lucideStars, hydrateLucideIcons } from './icons.js?v=afde963';
+import { SEED_PRODUCTS } from '../data/pitchSeeds.js?v=afde963';
 
 // 3-Level Menu Groups (Level 1 Pillar -> Level 2 Category Group -> Level 3 Links)
 const PILLAR_GROUPS_MAP = {

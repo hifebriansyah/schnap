@@ -3,7 +3,7 @@
 // Mitigates slow CS-Cart controller response times (plan.md Section 7)
 // ==========================================================================
 
-import { CONFIG } from './config.js';
+import { CONFIG } from './config.js?v=afde963';
 
 const STORAGE_PREFIX = 'schnap_swr_v1:';
 const memoryCache = new Map();

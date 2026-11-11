@@ -3,20 +3,20 @@
 // Clean, readable catalog & search experience
 // ==========================================================================
 
-import { CONFIG } from '../core/config.js';
-import { initGlobalShell } from '../components/header.js';
+import { CONFIG } from '../core/config.js?v=afde963';
+import { initGlobalShell } from '../components/header.js?v=afde963';
 import {
   renderProductCard,
   renderTradeTable,
   renderSkeletonGrid,
   bindProductCatalogEvents,
   escapeHtml,
-} from '../components/productCard.js';
-import { openQuickView } from '../components/quickView.js';
-import { hydrateLucideIcons, lucideIcon } from '../components/icons.js';
-import { fetchCategoryCatalog, fetchSearchCatalog } from '../core/dispatch.js';
-import { buildCatalogFacets } from '../core/parser.js';
-import { SEED_PRODUCTS } from '../data/pitchSeeds.js';
+} from '../components/productCard.js?v=afde963';
+import { openQuickView } from '../components/quickView.js?v=afde963';
+import { hydrateLucideIcons, lucideIcon } from '../components/icons.js?v=afde963';
+import { fetchCategoryCatalog, fetchSearchCatalog } from '../core/dispatch.js?v=afde963';
+import { buildCatalogFacets } from '../core/parser.js?v=afde963';
+import { SEED_PRODUCTS } from '../data/pitchSeeds.js?v=afde963';
 
 const state = {
   isSearchPage: window.location.pathname.endsWith('search.html'),

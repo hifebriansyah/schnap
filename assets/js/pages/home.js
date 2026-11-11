@@ -3,24 +3,24 @@
 // Clean, spacious layout without the "Browse by Electrical Trade Discipline" section
 // ==========================================================================
 
-import { CONFIG } from '../core/config.js';
-import { initGlobalShell } from '../components/header.js';
+import { CONFIG } from '../core/config.js?v=afde963';
+import { initGlobalShell } from '../components/header.js?v=afde963';
 import {
   renderProductCard,
   renderTradeTable,
   bindProductCatalogEvents,
   escapeHtml,
-} from '../components/productCard.js';
-import { openQuickView } from '../components/quickView.js';
-import { lucideIcon, lucideStars, hydrateLucideIcons } from '../components/icons.js';
-import { fetchHomeCatalog } from '../core/dispatch.js';
+} from '../components/productCard.js?v=afde963';
+import { openQuickView } from '../components/quickView.js?v=afde963';
+import { lucideIcon, lucideStars, hydrateLucideIcons } from '../components/icons.js?v=afde963';
+import { fetchHomeCatalog } from '../core/dispatch.js?v=afde963';
 import {
   SEED_PRODUCTS,
   SEED_REVIEWS,
   SEED_FAQS,
   STORE_VALUE_PROPS,
   STORE_INDUSTRIES,
-} from '../data/pitchSeeds.js';
+} from '../data/pitchSeeds.js?v=afde963';
 
 let currentProducts = [...SEED_PRODUCTS];
 let activePillarFilter = 'all';

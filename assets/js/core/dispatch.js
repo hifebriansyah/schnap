@@ -3,8 +3,8 @@
 // Connects static frontend -> Cloudflare Worker (commerce-worker.situs.id) -> live CS-Cart
 // ==========================================================================
 
-import { CONFIG } from './config.js';
-import { swrFetch, getCached } from './cache.js';
+import { CONFIG } from './config.js?v=afde963';
+import { swrFetch, getCached } from './cache.js?v=afde963';
 import {
   parseCatalogResponse,
   parseSubcategoriesResponse,
@@ -12,8 +12,8 @@ import {
   parseCartResponse,
   parseBrandsResponse,
   extractSecurityHashFromText,
-} from './parser.js';
-import { SEED_PRODUCTS } from '../data/pitchSeeds.js';
+} from './parser.js?v=afde963';
+import { SEED_PRODUCTS } from '../data/pitchSeeds.js?v=afde963';
 
 const SESSION_KEY = 'schnap_x_session_v1';
 const HASH_KEY = 'schnap_security_hash_v1';

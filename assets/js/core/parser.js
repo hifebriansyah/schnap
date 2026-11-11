@@ -3,8 +3,8 @@
 // Converts CS-Cart AJAX JSON envelopes & HTML blocks into clean JS models.
 // ==========================================================================
 
-import { normalizeImageUrl } from './media.js';
-import { CONFIG } from './config.js';
+import { normalizeImageUrl } from './media.js?v=afde963';
+import { CONFIG } from './config.js?v=afde963';
 
 const domParser = typeof DOMParser !== 'undefined' ? new DOMParser() : null;
 
