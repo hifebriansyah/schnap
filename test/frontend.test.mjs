@@ -23,7 +23,7 @@ assert.ok(CONFIG.BRANDS.some((b) => b.name === 'Clipsal' && b.featured));
 assert.ok(CONFIG.BRANDS.some((b) => b.name === 'Hager' && b.featured));
 assert.ok(CONFIG.BRANDS.some((b) => b.name === 'Legrand' && b.featured));
 
-// 2. Media normalizer & SVG schematic fallback (#5D1C25 / #FFFFFF / #C58B2A palette)
+// 2. Media normalizer & SVG schematic fallback (#5C0632 / #FFFFFF / #C58B2A palette)
 const cfUrl =
   'https://d35gtgjy55l0bn.cloudfront.net/images/thumbnails/200/200/detailed/163/LA210.png?t=1770916996';
 assert.strictEqual(normalizeImageUrl(cfUrl), cfUrl);
@@ -36,7 +36,7 @@ const placeholder = buildSchematicPlaceholder('LX620G2', 'LANX');
 assert.ok(placeholder.startsWith('data:image/svg+xml;utf8,'));
 const decodedSvg = decodeURIComponent(placeholder);
 assert.ok(decodedSvg.includes('LX620G2'));
-assert.ok(decodedSvg.includes('#5D1C25'));
+assert.ok(decodedSvg.includes('#5C0632'));
 assert.ok(decodedSvg.includes('#C58B2A'));
 
 // 3. Lucide Icons Component
@@ -79,7 +79,7 @@ assert.strictEqual(typeof parseBrandsResponse, 'function');
 
 // 5. Color Palette, 3-Level Menu & Clean UI Verification
 const tokensCss = fs.readFileSync(new URL('../assets/css/tokens.css', import.meta.url), 'utf8');
-assert.ok(tokensCss.includes('#5D1C25'));
+assert.ok(tokensCss.includes('#5C0632'));
 assert.ok(tokensCss.includes('#5C0632'));
 assert.ok(tokensCss.includes('#747F8A'));
 assert.ok(tokensCss.includes('#FFFFFF'));

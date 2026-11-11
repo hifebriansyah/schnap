@@ -305,6 +305,7 @@ function buildItemHref(item, pillarId) {
 
 function renderHeaderMarkup(activePillar) {
   const { STORE_FACTS, PILLARS } = CONFIG;
+  const isHome = activePillar === 'home';
 
   const pillarsHtml = PILLARS.map((pillar) => {
     const isActive =
@@ -413,73 +414,70 @@ function renderHeaderMarkup(activePillar) {
       </div>
     </div>
 
-    <!-- Main Sticky Header -->
-    <header class="site-header">
-      <div class="container header-main">
-        <a href="index.html" class="brand-logo-link" aria-label="SCHNAP Electric Products Home">
-          <div class="brand-logo-wrap">
-            <img
-              src="${escapeHtml(STORE_FACTS.logoUrl)}"
-              alt="SCHNAP Electric Products"
-              width="132"
-              height="32"
-            />
-          </div>
-        </a>
-
-        <!-- Search Bar -->
-        <div class="header-search-wrap" id="header-search-container">
-          <form class="header-search-form" action="search.html" method="GET" id="header-search-form">
-            <span class="header-search-icon" aria-hidden="true">
-              ${lucideIcon('search', { size: 17, strokeWidth: 2 })}
-            </span>
-            <input
-              type="search"
-              name="q"
-              id="header-search-input"
-              class="header-search-input"
-              placeholder="Search products, part numbers, or brands..."
-              autocomplete="off"
-              aria-label="Search products"
-            />
-            <button type="submit" class="header-search-submit">Search</button>
-          </form>
-
-          <div class="search-dropdown" id="header-search-dropdown" role="listbox" aria-label="Search suggestions"></div>
-        </div>
-
-        <!-- Right Header Actions -->
-        <div class="header-actions">
-          <button
-            type="button"
-            class="header-action-btn header-cart-btn"
-            data-open-drawer="cart"
-            aria-label="Open Cart Drawer"
-          >
-            ${lucideIcon('shopping-cart', { size: 17, strokeWidth: 2 })}
-            <span class="cart-badge-count" id="header-cart-count">0</span>
-            <span class="cart-badge-subtotal" id="header-cart-subtotal">$0.00</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- 3-Level Mega-Menu Bar -->
-      <nav class="mega-nav-bar" aria-label="Primary Categories">
+    <!-- Main Sticky Header & Navigation Bar -->
+    <header class="site-header ${isHome ? 'site-header--home' : ''}">
+      <nav class="mega-nav-bar" aria-label="Primary Navigation">
         <div class="container mega-nav-inner">
-          <ul class="mega-nav-list">
-            ${pillarsHtml}
-            <li>
-              <a href="brands.html" class="mega-nav-link ${activePillar === 'brands' ? 'is-active' : ''}">
-                <span>Brands</span>
-              </a>
-            </li>
-          </ul>
+          <div class="mega-nav-left">
+            <a href="index.html" class="brand-logo-link" aria-label="SCHNAP Electric Products Home">
+              <div class="brand-logo-wrap">
+                <img
+                  src="${escapeHtml(STORE_FACTS.logoUrl)}"
+                  alt="SCHNAP Electric Products"
+                  width="132"
+                  height="30"
+                />
+              </div>
+            </a>
+
+            <ul class="mega-nav-list">
+              ${pillarsHtml}
+              <li>
+                <a href="brands.html" class="mega-nav-link ${activePillar === 'brands' ? 'is-active' : ''}">
+                  <span>Brands</span>
+                </a>
+              </li>
+            </ul>
+          </div>
 
           <div class="mega-nav-right">
-            <span class="delivery-rule-chip" id="nav-delivery-chip">
-              ${lucideIcon('check-circle-2', { size: 13 })}
-              <span>Free 7-Day Kingsgrove Pickup</span>
-            </span>
+            ${
+              isHome
+                ? ''
+                : `
+            <!-- Search Bar -->
+            <div class="header-search-wrap" id="header-search-container">
+              <form class="header-search-form" action="search.html" method="GET" id="header-search-form">
+                <span class="header-search-icon" aria-hidden="true">
+                  ${lucideIcon('search', { size: 16, strokeWidth: 2 })}
+                </span>
+                <input
+                  type="search"
+                  name="q"
+                  id="header-search-input"
+                  class="header-search-input"
+                  placeholder="Search products, part numbers, or brands..."
+                  autocomplete="off"
+                  aria-label="Search products"
+                />
+                <button type="submit" class="header-search-submit sr-only">Search</button>
+              </form>
+
+              <div class="search-dropdown" id="header-search-dropdown" role="listbox" aria-label="Search suggestions"></div>
+            </div>
+            `
+            }
+
+            <button
+              type="button"
+              class="header-action-btn header-cart-btn"
+              data-open-drawer="cart"
+              aria-label="Open Cart Drawer"
+            >
+              ${lucideIcon('shopping-cart', { size: 16, strokeWidth: 2 })}
+              <span class="cart-badge-count" id="header-cart-count">0</span>
+              <span class="cart-badge-subtotal" id="header-cart-subtotal">$0.00</span>
+            </button>
           </div>
         </div>
       </nav>
@@ -656,7 +654,7 @@ function ensureDrawersMounted() {
           for="photo-upload-input"
           style="border:1.5px dashed var(--color-slate-300);border-radius:var(--radius-lg);padding:2rem 1rem;text-align:center;cursor:pointer;background:var(--color-slate-50)"
         >
-          <div style="font-weight:600;color:#5D1C25;margin-bottom:4px;display:flex;align-items:center;justify-content:center;gap:6px">
+          <div style="font-weight:600;color:#5C0632;margin-bottom:4px;display:flex;align-items:center;justify-content:center;gap:6px">
             ${lucideIcon('camera', { size: 18 })}
             <span>Select Product Photo</span>
           </div>
@@ -726,10 +724,38 @@ function bindHeaderEvents() {
   document.addEventListener('keydown', (e) => {
     if (e.key === '/' && document.activeElement !== searchInput && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) {
       e.preventDefault();
-      searchInput?.focus();
+      const targetInput = searchInput || document.getElementById('home-search-bridge-input');
+      targetInput?.focus();
     } else if (e.key === 'Escape') {
       searchDropdown?.classList.remove('is-open');
       closeAllDrawers();
+    }
+  });
+
+  // Seamless Mega-Menu Hover Intent (eliminates accidental dismissal when moving mouse to subnav)
+  document.querySelectorAll('.mega-nav-item').forEach((item) => {
+    let closeTimer = null;
+    const openMenu = () => {
+      clearTimeout(closeTimer);
+      document.querySelectorAll('.mega-nav-item').forEach((other) => {
+        if (other !== item) other.classList.remove('is-open');
+      });
+      item.classList.add('is-open');
+    };
+    const scheduleClose = () => {
+      clearTimeout(closeTimer);
+      closeTimer = setTimeout(() => {
+        item.classList.remove('is-open');
+      }, 240); // 240ms grace period for smooth cursor transit to subnav
+    };
+
+    item.addEventListener('mouseenter', openMenu);
+    item.addEventListener('mouseleave', scheduleClose);
+
+    const panel = item.querySelector('.mega-panel');
+    if (panel) {
+      panel.addEventListener('mouseenter', openMenu);
+      panel.addEventListener('mouseleave', scheduleClose);
     }
   });
 
@@ -905,17 +931,10 @@ function bindCartDrawerEvents() {
     const countEl = document.getElementById('header-cart-count');
     const subEl = document.getElementById('header-cart-subtotal');
     const drawerBadge = document.getElementById('drawer-cart-badge');
-    const navChip = document.getElementById('nav-delivery-chip');
 
     if (countEl) countEl.textContent = String(state.itemCount);
     if (subEl) subEl.textContent = formatAud(state.subtotal);
     if (drawerBadge) drawerBadge.textContent = `${state.itemCount}`;
-
-    if (navChip) {
-      navChip.innerHTML = state.isDeliveryUnlocked
-        ? `${lucideIcon('check-circle-2', { size: 13 })}<span>Australia-Wide Delivery Unlocked</span>`
-        : `${lucideIcon('map-pin', { size: 13 })}<span>Free 7-Day Kingsgrove Pickup</span>`;
-    }
 
     const delivBox = document.getElementById('drawer-delivery-box');
     const delivText = document.getElementById('drawer-delivery-text');
@@ -933,7 +952,7 @@ function bindCartDrawerEvents() {
       if (state.items.length === 0) {
         itemsContainer.innerHTML = `
           <div style="text-align:center;padding:3rem 1rem;color:var(--text-muted)">
-            <div style="font-size:15px;font-weight:700;color:#5D1C25;margin-bottom:6px">Your Cart is Empty</div>
+            <div style="font-size:15px;font-weight:700;color:#5C0632;margin-bottom:6px">Your Cart is Empty</div>
             <p style="font-size:12px;margin-bottom:1.25rem">Explore our electrical range or search by part number above.</p>
             <a href="category.html?category_id=4257&slug=electrical.html" class="btn btn-primary btn-sm">Browse Catalog</a>
           </div>

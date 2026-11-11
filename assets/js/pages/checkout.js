@@ -64,7 +64,7 @@ function renderFulfillmentStep(state) {
     } else {
       ruleAlert.innerHTML = `
         <div style="background:var(--color-gold-50);border:1px solid var(--color-gold-200);border-radius:var(--radius-lg);padding:0.85rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem;flex-wrap:wrap">
-          <div style="font-size:13px;color:#5D1C25">
+          <div style="font-size:13px;color:#5C0632">
             <strong style="display:flex;align-items:center;gap:6px">
               ${lucideIcon('map-pin', { size: 15 })}
               <span>Orders under $150 are Pickup Only at Kingsgrove</span>
@@ -89,7 +89,7 @@ function renderFulfillmentStep(state) {
           <span class="badge badge-emerald">Open 7 Days</span>
           <span class="mono" style="font-weight:700">FREE</span>
         </div>
-        <div style="font-weight:700;font-size:15px;color:#5D1C25;display:flex;align-items:center;gap:6px">
+        <div style="font-weight:700;font-size:15px;color:#5C0632;display:flex;align-items:center;gap:6px">
           ${lucideIcon('map-pin', { size: 15 })}
           <span>Kingsgrove Counter Pickup</span>
         </div>
@@ -108,7 +108,7 @@ function renderFulfillmentStep(state) {
           </span>
           <span class="mono" style="font-weight:700">${canDeliver ? 'FREE' : 'Locked'}</span>
         </div>
-        <div style="font-weight:700;font-size:15px;color:#5D1C25;display:flex;align-items:center;gap:6px">
+        <div style="font-weight:700;font-size:15px;color:#5C0632;display:flex;align-items:center;gap:6px">
           ${lucideIcon('truck', { size: 15 })}
           <span>Australia-Wide Delivery</span>
         </div>
@@ -143,7 +143,7 @@ function renderOrderSummary(state) {
               <div class="mono" style="font-size:11px;font-weight:600;color:var(--color-gold-600)">${escapeHtml(item.sku)} × ${item.qty}</div>
               <div style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(item.title)}</div>
             </div>
-            <div class="mono" style="font-weight:700;font-size:13px;color:#5D1C25">${formatAud(item.price * item.qty)}</div>
+            <div class="mono" style="font-weight:700;font-size:13px;color:#5C0632">${formatAud(item.price * item.qty)}</div>
           </div>
         `;
       })
@@ -237,7 +237,7 @@ function bindCheckoutEvents() {
             ${lucideIcon('check', { size: 26, strokeWidth: 2.5 })}
           </div>
           <span class="badge badge-emerald mono" style="margin-bottom:8px">ORDER ${orderRef}</span>
-          <h2 style="font-family:var(--font-display);font-size:1.4rem;font-weight:800;color:#5D1C25;margin-bottom:0.5rem">
+          <h2 style="font-family:var(--font-display);font-size:1.4rem;font-weight:800;color:#5C0632;margin-bottom:0.5rem">
             Order Ready
           </h2>
           <p style="font-size:13px;color:var(--text-secondary);max-width:44ch;margin:0 auto 1.25rem">
@@ -255,7 +255,7 @@ function bindCheckoutEvents() {
             </div>
             <div style="display:flex;justify-content:space-between;padding-top:6px;border-top:1px solid var(--border-subtle)">
               <span style="font-weight:700">Total (AUD Inc. GST):</span>
-              <strong class="mono" style="font-size:16px;color:#5D1C25">${formatAud(state.subtotal + shippingCost)}</strong>
+              <strong class="mono" style="font-size:16px;color:#5C0632">${formatAud(state.subtotal + shippingCost)}</strong>
             </div>
           </div>
 

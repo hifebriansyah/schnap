@@ -343,7 +343,7 @@ function renderProductsAndPagination() {
     productsMount.className = '';
     productsMount.innerHTML = `
       <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-xl);padding:3rem 1.5rem;text-align:center">
-        <h3 style="font-size:1.1rem;font-weight:700;color:#5D1C25;margin-bottom:0.5rem">No products match your selected filters</h3>
+        <h3 style="font-size:1.1rem;font-weight:700;color:#5C0632;margin-bottom:0.5rem">No products match your selected filters</h3>
         <p style="color:var(--text-muted);font-size:13px;margin-bottom:1.25rem">Reset your filters to view all available items.</p>
         <button type="button" class="btn btn-primary btn-sm" id="empty-reset-filters-btn">
           ${lucideIcon('rotate-ccw', { size: 14 })}

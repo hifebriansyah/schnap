@@ -158,7 +158,7 @@ function renderQuickViewContent(container, product, { loadingSpecs = false } = {
           <span class="badge badge-emerald">${lucideIcon('shield-check', { size: 12 })}<span>AS/NZS Compliant</span></span>
         </div>
 
-        <h2 style="font-family:var(--font-display);font-size:1.35rem;font-weight:800;line-height:1.25;color:#5D1C25">${title}</h2>
+        <h2 style="font-family:var(--font-display);font-size:1.35rem;font-weight:800;line-height:1.25;color:#5C0632">${title}</h2>
 
         <div class="pdp-price-panel">
           <div>

@@ -1,7 +1,7 @@
 /* ==========================================================================
    SCHNAP Electric Products — Qatar Airways-Inspired Storefront Design Tokens
    Official Qatar Airways Palette:
-   - Qatar Burgundy (#5C0632 / #5D1C25) & Deep Maroon (#1C030F)
+   - Qatar Burgundy (#5C0632 / #5C0632) & Deep Maroon (#1C030F)
    - Qatar Cool Slate / Overcast (#747F8A / #5E6A71)
    - Crisp Pure White (#FFFFFF) & Cool Platinum Canvas (#F8FAFC)
    - Cool Platinum & Silver Accents (#CBD5E1 / #94A3B8 / #C58B2A)
@@ -10,10 +10,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
 
 :root {
-  /* Core Qatar Airways Burgundy Surfaces (Pantone 229 C: #5C0632 / #5D1C25) */
+  /* Core Qatar Airways Burgundy Surfaces (Pantone 229 C: #5C0632 / #5C0632) */
   --color-burgundy-950: #1C030F;
   --color-burgundy-900: #5C0632; /* Official Qatar Airways Maroon */
-  --color-burgundy-850: #460425;
+  --color-burgundy-850: #480527;
   --color-burgundy-800: #4D0529;
   --color-burgundy-700: #70093E;
   --color-burgundy-600: #8C0D4F;
@@ -22,7 +22,7 @@
   /* Mapped to structural variable names */
   --color-navy-950: #1C030F;
   --color-navy-900: #5C0632;
-  --color-navy-800: #460425;
+  --color-navy-800: #480527;
   --color-navy-700: #3D0520;
   --color-navy-600: #5E0932;
 
@@ -56,7 +56,7 @@
   --color-gold-400: #D8B4C6; /* Cool rose-silver highlight on dark burgundy */
   --color-gold-500: #747F8A; /* Qatar Overcast Grey (#C58B2A alias fallback) */
   --color-gold-600: #5C0632; /* Qatar Burgundy text */
-  --color-gold-700: #460425;
+  --color-gold-700: #480527;
 
   /* Mapped to existing accent token names */
   --color-amber-50: var(--color-gold-50);

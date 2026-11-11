@@ -97,7 +97,7 @@ function renderProductDetail(product) {
       <span>/</span>
       <a href="category.html?category_id=${encodeURIComponent(pillar.id)}&slug=${encodeURIComponent(pillar.slug)}">${escapeHtml(pillar.name)}</a>
       <span>/</span>
-      <span class="mono" style="color:#5D1C25;font-weight:600">${escapeHtml(product.sku)}</span>
+      <span class="mono" style="color:#5C0632;font-weight:600">${escapeHtml(product.sku)}</span>
     `;
   }
 
@@ -280,7 +280,7 @@ function renderProductDetail(product) {
       <div class="pdp-tab-panel" id="pdp-panel-delivery">
         <div class="pdp-fulfillment-card">
           <div>
-            <h4 style="font-weight:700;color:#5D1C25;margin-bottom:4px;display:flex;align-items:center;gap:6px">
+            <h4 style="font-weight:700;color:#5C0632;margin-bottom:4px;display:flex;align-items:center;gap:6px">
               ${lucideIcon('map-pin', { size: 15 })}
               <span>Kingsgrove Counter Pickup</span>
             </h4>
@@ -289,7 +289,7 @@ function renderProductDetail(product) {
             </p>
           </div>
           <div>
-            <h4 style="font-weight:700;color:#5D1C25;margin-bottom:4px;display:flex;align-items:center;gap:6px">
+            <h4 style="font-weight:700;color:#5C0632;margin-bottom:4px;display:flex;align-items:center;gap:6px">
               ${lucideIcon('truck', { size: 15 })}
               <span>Australia-Wide Delivery</span>
             </h4>
@@ -318,13 +318,13 @@ function updateFulfillmentClarityBox() {
   box.innerHTML = `
     <div class="pdp-fulfillment-card">
       <div>
-        <div style="display:flex;align-items:center;gap:6px;font-weight:600;font-size:12.5px;color:${qualifiesDelivery ? 'var(--color-emerald-700)' : '#5D1C25'}">
+        <div style="display:flex;align-items:center;gap:6px;font-weight:600;font-size:12.5px;color:${qualifiesDelivery ? 'var(--color-emerald-700)' : '#5C0632'}">
           ${qualifiesDelivery ? lucideIcon('check-circle-2', { size: 14 }) : lucideIcon('truck', { size: 14 })}
           <span>${qualifiesDelivery ? 'Eligible for Australia-Wide Delivery' : `Add ${formatAud(shortfall)} for Delivery`}</span>
         </div>
       </div>
       <div>
-        <div style="display:flex;align-items:center;gap:6px;font-weight:600;font-size:12.5px;color:#5D1C25">
+        <div style="display:flex;align-items:center;gap:6px;font-weight:600;font-size:12.5px;color:#5C0632">
           ${lucideIcon('map-pin', { size: 14 })}
           <span>Free 7-Day Kingsgrove Pickup</span>
         </div>

@@ -57,7 +57,7 @@ function renderFulfillmentTracker(state) {
           }
         </div>
         <div>
-          <h2 style="font-size:1rem;font-weight:700;color:#5D1C25">
+          <h2 style="font-size:1rem;font-weight:700;color:#5C0632">
             ${
               state.isDeliveryUnlocked
                 ? 'Australia-Wide Delivery Unlocked'
@@ -73,7 +73,7 @@ function renderFulfillmentTracker(state) {
           </p>
         </div>
       </div>
-      <div class="mono" style="font-size:13px;font-weight:700;color:#5D1C25">
+      <div class="mono" style="font-size:13px;font-weight:700;color:#5C0632">
         ${formatAud(state.subtotal)} / ${formatAud(state.threshold)}
       </div>
     </div>
@@ -98,7 +98,7 @@ function renderCartTable(state) {
     tbody.innerHTML = `
       <tr>
         <td colspan="5" style="text-align:center;padding:3.5rem 1.5rem">
-          <div style="font-size:1.1rem;font-weight:700;color:#5D1C25;margin-bottom:0.5rem">Your Cart is Empty</div>
+          <div style="font-size:1.1rem;font-weight:700;color:#5C0632;margin-bottom:0.5rem">Your Cart is Empty</div>
           <p style="color:var(--text-muted);font-size:13px;margin-bottom:1.25rem">
             Use the Quick-Add SKU bar above or browse our catalog.
           </p>
@@ -140,7 +140,7 @@ function renderCartTable(state) {
             </div>
           </td>
           <td class="mono" style="white-space:nowrap">
-            <strong style="font-size:15px;color:#5D1C25">${formatAud(item.price)}</strong>
+            <strong style="font-size:15px;color:#5C0632">${formatAud(item.price)}</strong>
           </td>
           <td style="white-space:nowrap">
             <div class="qty-stepper">
@@ -160,7 +160,7 @@ function renderCartTable(state) {
               </button>
             </div>
           </td>
-          <td class="mono" style="white-space:nowrap;font-weight:700;font-size:15px;color:#5D1C25">
+          <td class="mono" style="white-space:nowrap;font-weight:700;font-size:15px;color:#5C0632">
             ${formatAud(lineTotal)}
           </td>
           <td style="text-align:right">
@@ -194,7 +194,7 @@ function renderCartSummary(state) {
   if (deliveryEl) {
     deliveryEl.innerHTML = state.isDeliveryUnlocked
       ? `<span style="color:var(--color-emerald-600);font-weight:600">Delivery Unlocked</span>`
-      : `<span style="color:#5D1C25;font-weight:600">Kingsgrove Pickup</span>`;
+      : `<span style="color:#5C0632;font-weight:600">Kingsgrove Pickup</span>`;
   }
   if (totalEl) totalEl.textContent = formatAud(state.subtotal);
 }

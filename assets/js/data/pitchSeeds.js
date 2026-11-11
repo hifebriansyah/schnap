@@ -525,7 +525,45 @@ export const SEED_REVIEWS = [
   },
 ];
 
+export const STORE_VALUE_PROPS = [
+  {
+    icon: 'badge-dollar-sign',
+    title: 'Transparent Pricing',
+    description: 'Clear, upfront trade pricing on every product.',
+  },
+  {
+    icon: 'package-check',
+    title: 'Streamlined Ordering',
+    description: "Find and order from Australia's largest electrical range in seconds.",
+  },
+  {
+    icon: 'truck',
+    title: 'Australia-Wide Delivery',
+    description: 'Same-day dispatch from Sydney. Delivered Australia-wide on orders over $150.',
+  },
+  {
+    icon: 'handshake',
+    title: 'End-to-End Support',
+    description: 'Order tracking from checkout to doorstep, plus a trade team on the phone 7 days.',
+  },
+];
+
+export const STORE_INDUSTRIES = [
+  { name: 'Residential', icon: 'home', query: 'downlight' },
+  { name: 'Trade', icon: 'hard-hat', query: 'rcbo' },
+  { name: 'Commercial', icon: 'building-2', query: 'DALI' },
+  { name: 'Government', icon: 'landmark', query: 'Hager' },
+  { name: 'Medical', icon: 'heart-pulse', query: 'Legrand' },
+  { name: 'Education', icon: 'graduation-cap', query: 'exit' },
+  { name: 'Aviation', icon: 'plane', query: 'AJAX' },
+  { name: 'Mining', icon: 'pickaxe', query: 'industrial' },
+];
+
 export const SEED_FAQS = [
+  {
+    q: 'How do ordering and delivery work?',
+    a: "Order online or at our Kingsgrove trade counter, and your order is dispatched same-day from our Sydney warehouse. Same-day delivery is available across Sydney on eligible orders. Delivery Australia-wide is available on orders over $150; under $150, collect free from Kingsgrove, open 7 days. Returns are accepted within 100 days of purchase, and everything comes with the manufacturer's warranty. Our trade team helps you find the right product for residential, commercial and industrial jobs.",
+  },
   {
     q: 'Do I need a trade account to buy from SCHNAP?',
     a: 'No account is needed to order at standard trade pricing, which is shown on every product. Licensed electricians can register and log in for additional licensed pricing.',
@@ -537,10 +575,6 @@ export const SEED_FAQS = [
   {
     q: 'Is there a minimum order?',
     a: 'Orders over $150 can be delivered Australia-wide. Orders under $150 are collection-only — free from our Kingsgrove counter, open 7 days.',
-  },
-  {
-    q: 'Where is SCHNAP located?',
-    a: 'Our trade counter is at Unit 3/192A Kingsgrove Rd, Kingsgrove NSW 2208, open seven days.',
   },
   {
     q: 'What is your returns policy?',

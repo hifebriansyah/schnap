@@ -14,7 +14,13 @@ import {
 import { openQuickView } from '../components/quickView.js';
 import { lucideIcon, lucideStars, hydrateLucideIcons } from '../components/icons.js';
 import { fetchHomeCatalog } from '../core/dispatch.js';
-import { SEED_PRODUCTS, SEED_REVIEWS, SEED_FAQS } from '../data/pitchSeeds.js';
+import {
+  SEED_PRODUCTS,
+  SEED_REVIEWS,
+  SEED_FAQS,
+  STORE_VALUE_PROPS,
+  STORE_INDUSTRIES,
+} from '../data/pitchSeeds.js';
 
 let currentProducts = [...SEED_PRODUCTS];
 let activePillarFilter = 'all';
@@ -30,6 +36,7 @@ export async function initHomePage() {
 
   renderTradeHighlights();
   renderBrandsRibbon();
+  renderValuePropsAndIndustries();
   renderReviewsAndFaq();
   bindHomeInteractions();
   hydrateLucideIcons(document);
@@ -93,8 +100,10 @@ function renderBrandsRibbon() {
   const mount = document.getElementById('home-brands-mount');
   if (!mount) return;
 
-  mount.innerHTML = CONFIG.BRANDS.filter((b) => b.featured)
-    .slice(0, 8)
+  const brands = CONFIG.BRANDS.filter((b) => b.featured || b.logo || b.tier === 'flagship');
+  const displayBrands = brands.length >= 12 ? brands : CONFIG.BRANDS.slice(0, 18);
+
+  mount.innerHTML = displayBrands
     .map((b) => {
       const initials = b.name
         .split(/[\s-]+/)
@@ -119,6 +128,54 @@ function renderBrandsRibbon() {
       `;
     })
     .join('');
+
+  const prevBtn = document.getElementById('brands-prev-btn');
+  const nextBtn = document.getElementById('brands-next-btn');
+  if (prevBtn && mount) {
+    prevBtn.addEventListener('click', () => {
+      mount.scrollBy({ left: -360, behavior: 'smooth' });
+    });
+  }
+  if (nextBtn && mount) {
+    nextBtn.addEventListener('click', () => {
+      mount.scrollBy({ left: 360, behavior: 'smooth' });
+    });
+  }
+}
+
+function renderValuePropsAndIndustries() {
+  const vpMount = document.getElementById('home-value-props-mount');
+  if (vpMount) {
+    vpMount.innerHTML = STORE_VALUE_PROPS.map(
+      (vp) => `
+        <div class="value-prop-card">
+          <div class="value-prop-icon">
+            ${lucideIcon(vp.icon, { size: 20, strokeWidth: 2 })}
+          </div>
+          <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;color:#5C0632">
+            ${escapeHtml(vp.title)}
+          </h3>
+          <p style="font-size:13px;color:var(--text-secondary);line-height:1.55">
+            ${escapeHtml(vp.description)}
+          </p>
+        </div>
+      `
+    ).join('');
+  }
+
+  const indMount = document.getElementById('home-industries-mount');
+  if (indMount) {
+    indMount.innerHTML = STORE_INDUSTRIES.map(
+      (ind) => `
+        <a href="search.html?q=${encodeURIComponent(ind.query)}" class="industry-card">
+          <span class="industry-card__icon">
+            ${lucideIcon(ind.icon, { size: 18, strokeWidth: 2 })}
+          </span>
+          <span style="font-size:14px">${escapeHtml(ind.name)}</span>
+        </a>
+      `
+    ).join('');
+  }
 }
 
 function renderReviewsAndFaq() {
@@ -135,7 +192,7 @@ function renderReviewsAndFaq() {
             <p style="font-size:14px;color:var(--text-primary);line-height:1.6">"${escapeHtml(r.quote)}"</p>
           </div>
           <div style="padding-top:0.75rem;border-top:1px solid var(--color-slate-100);font-size:12px">
-            <strong style="color:#5D1C25;display:block">${escapeHtml(r.author)}</strong>
+            <strong style="color:#5C0632;display:block">${escapeHtml(r.author)}</strong>
             <span style="color:var(--text-muted)">${escapeHtml(r.date)}</span>
           </div>
         </article>
@@ -146,8 +203,8 @@ function renderReviewsAndFaq() {
   const faqMount = document.getElementById('home-faq-mount');
   if (faqMount) {
     faqMount.innerHTML = SEED_FAQS.map(
-      (item, idx) => `
-        <div class="faq-item ${idx === 0 ? 'is-open' : ''}">
+      (item) => `
+        <div class="faq-item">
           <button type="button" class="faq-question" data-faq-toggle>
             <span>${escapeHtml(item.q)}</span>
             <span style="color:var(--color-gold-600)">${lucideIcon('chevron-down', { size: 16 })}</span>
@@ -184,6 +241,8 @@ function bindHomeInteractions() {
     const item = btn.closest('.faq-item');
     item?.classList.toggle('is-open');
   });
+
+
 }
 
 if (document.readyState === 'loading') {

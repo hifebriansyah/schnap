@@ -188,7 +188,7 @@ export function renderTradeTable(products = []) {
             }
           </td>
           <td style="white-space:nowrap" class="mono">
-            <strong style="font-size:15px;color:#5D1C25">${formatAud(product.price)}</strong>
+            <strong style="font-size:15px;color:#5C0632">${formatAud(product.price)}</strong>
             ${
               product.listPrice > product.price
                 ? `<div style="font-size:11px;color:var(--color-slate-400);text-decoration:line-through">${formatAud(product.listPrice)}</div>`

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="schnap-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7A0943"/>
+      <stop offset="100%" stop-color="#480527"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#5C0632"/>
+  <rect width="60" height="60" x="2" y="2" rx="12" fill="url(#schnap-grad)"/>
+  <path d="M35 9L17 33h13l-4 22 21-28H33l5-18z" fill="#FFFFFF"/>
+</svg>
