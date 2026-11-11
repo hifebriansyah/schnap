@@ -158,7 +158,7 @@ export const CONFIG = {
       query: 'Clipsal',
       category: 'Electrical',
       featured: true,
-      logo: 'https://d35gtgjy55l0bn.cloudfront.net/images/thumbnails/75/75/feature_variant/381/dd5517_c4d0354e28964f258c594e3b3a1fdd34~mv2.png?t=1770909322',
+      logo: 'assets/img/clipsal.svg',
       specialty: 'Iconic Switches, Wiser Smart Home & Switchgear',
       description: 'Australia’s benchmark for residential and commercial wiring devices, Iconic GPOs, Wiser smart home mechs, and circuit protection.',
     },

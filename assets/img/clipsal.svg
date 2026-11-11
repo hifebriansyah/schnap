@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60" fill="none">
+  <!-- Clipsal Signature Dual Lozenge Bars -->
+  <rect x="14" y="13" width="6" height="26" rx="3" fill="#00843D" transform="skewX(-12)" />
+  <rect x="24" y="13" width="6" height="26" rx="3" fill="#00843D" transform="skewX(-12)" />
+  <!-- CLIPSAL Wordmark -->
+  <text x="38" y="35" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="23" font-weight="900" font-style="italic" letter-spacing="0.5" fill="#00843D">CLIPSAL</text>
+  <!-- Endorsement -->
+  <text x="39" y="47" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="7.5" font-weight="600" letter-spacing="0.8" fill="#4B5563">by Schneider Electric</text>
+</svg>
