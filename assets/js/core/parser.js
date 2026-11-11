@@ -280,12 +280,34 @@ export function parseCatalogResponse(payload) {
 
   // Extract total products count
   let totalCount = products.length;
-  const sortTitleEl = doc.querySelector('.schnap-sorting_title');
-  if (sortTitleEl) {
-    const text = sortTitleEl.textContent || '';
-    const outOfMatch = text.match(/out of\s*(\d[\d,]*)/i) || text.match(/found:\s*(\d[\d,]*)/i);
+  const paginationTotalEl = doc.querySelector(
+    '.schnap-sorting_title, .ty-pagination__total, .ty-pagination, .ty-sort-container'
+  );
+  if (paginationTotalEl) {
+    const text = paginationTotalEl.textContent || '';
+    const outOfMatch =
+      text.match(/out of\s*([\d,]+)/i) ||
+      text.match(/found:\s*([\d,]+)/i) ||
+      text.match(/\(([\d,]+)\s*(?:items|products)?\)/i) ||
+      text.match(/of\s*([\d,]+)\s*(?:items|products)/i) ||
+      text.match(/([\d,]+)\s*(?:items|products)/i);
     if (outOfMatch) {
       totalCount = parseInt(outOfMatch[1].replace(/,/g, ''), 10) || products.length;
+    }
+  }
+
+  // Check pagination links if totalCount not yet found
+  const pageLinks = doc.querySelectorAll('.ty-pagination__item, .ty-pagination a');
+  if (pageLinks.length > 0) {
+    let maxPage = 1;
+    for (const a of pageLinks) {
+      const pNum = parseInt(a.textContent.trim(), 10);
+      if (Number.isFinite(pNum) && pNum > maxPage) {
+        maxPage = pNum;
+      }
+    }
+    if (maxPage > 1 && totalCount <= products.length) {
+      totalCount = maxPage * Math.max(16, products.length);
     }
   }
 

@@ -334,9 +334,14 @@ function renderProductsAndPagination() {
     btn.classList.toggle('is-active', btn.getAttribute('data-view-mode') === state.viewMode);
   });
 
-  const hasActiveFacet =
-    state.selectedBrands.size > 0 || state.selectedSpecs.size > 0 || state.selectedPrices.size > 0;
-  const displayedTotal = hasActiveFacet
+  const isServerBrandFiltered = state.selectedBrands.size === 1 && !state.query;
+  const hasClientFacet =
+    state.selectedBrands.size > 1 ||
+    (state.selectedBrands.size > 0 && !isServerBrandFiltered) ||
+    state.selectedSpecs.size > 0 ||
+    state.selectedPrices.size > 0;
+
+  const displayedTotal = hasClientFacet
     ? state.filteredProducts.length
     : Math.max(state.totalCount, state.filteredProducts.length);
 
@@ -376,25 +381,35 @@ function renderProductsAndPagination() {
   });
 
   if (paginationMount) {
-    const totalPages = Math.min(8, Math.max(1, Math.ceil(displayedTotal / 35)));
+    const totalPages = Math.min(250, Math.max(1, Math.ceil(displayedTotal / 16)));
     if (totalPages <= 1) {
       paginationMount.innerHTML = '';
       return;
     }
 
-    const pagesHtml = Array.from({ length: totalPages }, (_, i) => i + 1)
-      .map(
-        (p) =>
-          `<button type="button" class="page-btn ${p === state.page ? 'is-active' : ''}" data-page-num="${p}">${p}</button>`
-      )
-      .join('');
+    const maxVisiblePages = 8;
+    const startPage = Math.max(1, Math.min(state.page - 3, totalPages - maxVisiblePages + 1));
+    const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    const pagesHtml = [];
+    if (state.page > 1) {
+      pagesHtml.push(`<button type="button" class="page-btn page-btn--prev" data-page-num="${state.page - 1}">Prev</button>`);
+    }
+    for (let p = startPage; p <= endPage; p++) {
+      pagesHtml.push(
+        `<button type="button" class="page-btn ${p === state.page ? 'is-active' : ''}" data-page-num="${p}">${p}</button>`
+      );
+    }
+    if (state.page < totalPages) {
+      pagesHtml.push(`<button type="button" class="page-btn page-btn--next" data-page-num="${state.page + 1}">Next</button>`);
+    }
 
     paginationMount.innerHTML = `
       <div style="font-size:12px;color:var(--text-muted)">
-        Page <strong class="mono">${state.page}</strong> of <strong class="mono">${totalPages}</strong>
+        Page <strong class="mono">${state.page}</strong> of <strong class="mono">${totalPages.toLocaleString('en-AU')}</strong>
       </div>
       <div class="pagination-pages">
-        ${pagesHtml}
+        ${pagesHtml.join('')}
       </div>
     `;
   }
