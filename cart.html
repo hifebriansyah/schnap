@@ -22,7 +22,7 @@
           <nav class="breadcrumb-nav" aria-label="Breadcrumb">
             <a href="index.html">Trade Home</a>
             <span>/</span>
-            <span style="color:var(--color-navy-900);font-weight:700">Trade Cart &amp; BOM Builder</span>
+            <span style="color:#5D1C25;font-weight:700">Trade Cart &amp; BOM Builder</span>
           </nav>
           <h1 class="section-title">Trade Cart &amp; Project BOM Review</h1>
         </div>
@@ -43,15 +43,17 @@
               <strong style="font-size:15px">Configured Trade Line Items</strong>
               <span class="badge badge-amber mono" id="cart-header-count">0 Units</span>
             </div>
-            <button type="button" class="btn btn-ghost btn-sm" id="cart-clear-all-btn" style="color:var(--color-slate-300)">
-              Clear BOM
+            <button type="button" class="btn btn-ghost btn-sm" id="cart-clear-all-btn" style="color:var(--text-on-dark-muted)">
+              <i data-lucide="trash-2" data-lucide-size="13"></i>
+              <span>Clear BOM</span>
             </button>
           </div>
 
           <!-- Quick-Add by Known SKU / Part Number Bar -->
           <form class="quick-add-sku-bar" id="quick-add-sku-form">
-            <div style="font-size:12px;font-weight:800;text-transform:uppercase;color:var(--color-navy-800);white-space:nowrap">
-              ⚡ Quick-Add by SKU:
+            <div style="font-size:12px;font-weight:800;text-transform:uppercase;color:#5D1C25;white-space:nowrap;display:inline-flex;align-items:center;gap:5px">
+              <i data-lucide="zap" data-lucide-size="14" style="color:#EB1B24"></i>
+              <span>Quick-Add by SKU:</span>
             </div>
             <input
               type="text"
@@ -70,7 +72,8 @@
               aria-label="Quantity"
             />
             <button type="submit" class="btn btn-navy btn-sm" style="height:38px;padding-inline:1rem">
-              + Append to Cart
+              <i data-lucide="plus" data-lucide-size="14"></i>
+              <span>Append to Cart</span>
             </button>
           </form>
 
@@ -101,7 +104,7 @@
       <!-- Right Column: Trade Summary & Live CS-Cart Handoff -->
       <aside class="summary-sidebar-card" aria-label="Trade Order Summary">
         <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:0.75rem;border-bottom:1px solid var(--border-subtle)">
-          <h3 style="font-family:var(--font-display);font-size:1.1rem;font-weight:800">Trade Order Summary</h3>
+          <h3 style="font-family:var(--font-display);font-size:1.1rem;font-weight:800;color:#5D1C25">Trade Order Summary</h3>
           <span class="badge badge-emerald">AUD Inc. GST</span>
         </div>
 
@@ -128,22 +131,30 @@
         </div>
 
         <a href="checkout.html" class="btn btn-primary btn-lg" style="width:100%">
-          <span>Proceed to 3-Step Trade Checkout →</span>
+          <span>Proceed to 3-Step Trade Checkout</span>
+          <i data-lucide="arrow-right" data-lucide-size="16"></i>
         </a>
 
         <!-- Approach B: Live Native HTML Form Handoff to www.schnap.com.au -->
         <div class="live-handoff-box">
-          <h4>⚡ Live CS-Cart Server Handoff</h4>
+          <h4>
+            <i data-lucide="zap" data-lucide-size="14"></i>
+            <span>Live CS-Cart Server Handoff</span>
+          </h4>
           <p>
             Want to complete checkout directly on <strong>www.schnap.com.au</strong>? Click below to submit a native CS-Cart <code class="mono">dispatch[checkout.add]</code> POST form and open your live cart in a new tab.
           </p>
-          <button type="button" class="btn btn-amber btn-primary btn-sm" id="cart-live-handoff-btn" style="width:100%">
-            Transfer Cart to Live SCHNAP.com.au ↗
+          <button type="button" class="btn btn-primary btn-sm" id="cart-live-handoff-btn" style="width:100%">
+            <span>Transfer Cart to Live SCHNAP.com.au</span>
+            <i data-lucide="arrow-up-right" data-lucide-size="14"></i>
           </button>
         </div>
 
-        <div style="font-size:11px;color:var(--text-muted);line-height:1.5">
-          <strong>📍 Kingsgrove Trade Counter:</strong> Unit 3/192A Kingsgrove Rd, Kingsgrove NSW 2208 • Open 7 Days (Mon–Fri 6:30am–5pm, Sat–Sun 8am–2pm).
+        <div style="font-size:11px;color:var(--text-muted);line-height:1.5;display:flex;align-items:flex-start;gap:6px">
+          <i data-lucide="map-pin" data-lucide-size="14" style="color:#EB1B24;margin-top:2px"></i>
+          <div>
+            <strong>Kingsgrove Trade Counter:</strong> Unit 3/192A Kingsgrove Rd, Kingsgrove NSW 2208 • Open 7 Days (Mon–Fri 6:30am–5pm, Sat–Sun 8am–2pm).
+          </div>
         </div>
       </aside>
     </section>

@@ -1,12 +1,12 @@
 // ==========================================================================
 // SCHNAP Electric Products — Global Shell: Utility Bar, Sticky Header,
 // 6-Pillar Mega-Menu, Live Search Dropdown, Mini-Cart & Quote Drawers
+// All icons powered by Lucide (icons.js)
 // ==========================================================================
 
 import { CONFIG } from '../core/config.js';
 import {
   fetchSearchCatalog,
-  getCartState,
   subscribeCart,
   addToCart,
   updateCartQty,
@@ -17,6 +17,7 @@ import {
 import { normalizeImageUrl, buildSchematicPlaceholder } from '../core/media.js';
 import { formatAud, escapeHtml } from './productCard.js';
 import { showToast } from './notifications.js';
+import { lucideIcon, lucideStars, hydrateLucideIcons } from './icons.js';
 import { SEED_PRODUCTS } from '../data/pitchSeeds.js';
 
 export function initGlobalShell({ activePillar = '' } = {}) {
@@ -31,6 +32,7 @@ export function initGlobalShell({ activePillar = '' } = {}) {
   }
 
   ensureDrawersMounted();
+  hydrateLucideIcons(document);
   bindHeaderEvents();
   bindCartDrawerEvents();
   bindTelemetrySubscription();
@@ -53,7 +55,7 @@ function renderHeaderMarkup(activePillar) {
         return `
           <a href="${url}" class="mega-subcat-link">
             <span>${escapeHtml(sub.name)}</span>
-            <span style="color:var(--color-slate-400);font-size:12px">→</span>
+            ${lucideIcon('arrow-right', { size: 13 })}
           </a>
         `;
       })
@@ -67,9 +69,7 @@ function renderHeaderMarkup(activePillar) {
           data-prefetch-key="catalog:cat_${pillar.id}"
         >
           <span>${escapeHtml(pillar.name)}</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <path d="M6 9l6 6 6-6"/>
-          </svg>
+          ${lucideIcon('chevron-down', { size: 14, strokeWidth: 2.2 })}
         </a>
         <div class="mega-panel" role="region" aria-label="${escapeHtml(pillar.name)} subcategories">
           <div class="container mega-panel-inner">
@@ -83,7 +83,8 @@ function renderHeaderMarkup(activePillar) {
                 href="category.html?category_id=${encodeURIComponent(pillar.id)}&slug=${encodeURIComponent(pillar.slug)}"
                 class="btn btn-navy btn-sm"
               >
-                Browse All ${escapeHtml(pillar.name)} →
+                <span>Browse All ${escapeHtml(pillar.name)}</span>
+                ${lucideIcon('arrow-right', { size: 14 })}
               </a>
             </div>
             <div class="mega-subcat-grid">
@@ -92,11 +93,12 @@ function renderHeaderMarkup(activePillar) {
             <div class="mega-panel-promo">
               <div>
                 <span class="badge badge-discount">TRADE DIRECT</span>
-                <h4>Project & Bulk Pricing</h4>
+                <h4>Project &amp; Bulk Pricing</h4>
                 <p>Need full drum quantities, pre-wired distribution boards, or a commercial luminaire schedule?</p>
               </div>
               <button type="button" class="btn btn-primary btn-sm" data-open-drawer="quote">
-                Request Bulk Trade Quote
+                ${lucideIcon('file-text', { size: 14 })}
+                <span>Request Bulk Trade Quote</span>
               </button>
             </div>
           </div>
@@ -111,29 +113,22 @@ function renderHeaderMarkup(activePillar) {
       <div class="container trade-utility-inner">
         <div class="trade-utility-facts">
           <a href="${STORE_FACTS.phoneHref}" class="trade-fact" title="Call SCHNAP Trade Desk">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
-            </svg>
+            ${lucideIcon('phone', { size: 14, strokeWidth: 2.2 })}
             <strong>${escapeHtml(STORE_FACTS.phone)}</strong>
           </a>
           <span class="trade-utility-divider"></span>
           <span class="trade-fact">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
-            </svg>
+            ${lucideIcon('clock', { size: 14, strokeWidth: 2.2 })}
             <span>Kingsgrove Trade Counter: <strong>${escapeHtml(STORE_FACTS.hoursShort)}</strong></span>
           </span>
           <span class="trade-utility-divider"></span>
           <span class="trade-fact trade-fact--emerald">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
-              <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
-            </svg>
+            ${lucideIcon('truck', { size: 14, strokeWidth: 2.2 })}
             <span><strong>Same-Day Sydney Dispatch</strong> &amp; $150+ Aus-Wide Delivery</span>
           </span>
           <span class="trade-utility-divider"></span>
           <span class="trade-fact">
-            <span style="color:#FBBF24">★★★★★</span>
+            ${lucideStars(5, { size: 12 })}
             <strong>${escapeHtml(STORE_FACTS.rating)}</strong>
             <span>(${escapeHtml(STORE_FACTS.reviewCount)})</span>
           </span>
@@ -150,18 +145,12 @@ function renderHeaderMarkup(activePillar) {
           </span>
 
           <button type="button" class="utility-action-btn" data-open-drawer="photo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
-              <circle cx="12" cy="13" r="4"/>
-            </svg>
+            ${lucideIcon('camera', { size: 13, strokeWidth: 2.2 })}
             <span>Send Us a Photo</span>
           </button>
 
           <button type="button" class="utility-action-btn" data-open-drawer="quote">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-              <polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
-            </svg>
+            ${lucideIcon('file-text', { size: 13, strokeWidth: 2.2 })}
             <span>Bulk Quote</span>
           </button>
         </div>
@@ -190,9 +179,7 @@ function renderHeaderMarkup(activePillar) {
         <div class="header-search-wrap" id="header-search-container">
           <form class="header-search-form" action="search.html" method="GET" id="header-search-form">
             <span class="header-search-icon" aria-hidden="true">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-              </svg>
+              ${lucideIcon('search', { size: 18, strokeWidth: 2.2 })}
             </span>
             <input
               type="search"
@@ -214,10 +201,7 @@ function renderHeaderMarkup(activePillar) {
         <!-- Right Trade Actions & Mini-Cart Trigger -->
         <div class="header-actions">
           <a href="cart.html" class="header-action-btn" title="Quick Order / BOM Cart">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
-              <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
-            </svg>
+            ${lucideIcon('list', { size: 17, strokeWidth: 2 })}
             <span>BOM Cart</span>
           </a>
 
@@ -227,10 +211,7 @@ function renderHeaderMarkup(activePillar) {
             data-open-drawer="cart"
             aria-label="Open Trade Cart Drawer"
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-              <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
-            </svg>
+            ${lucideIcon('shopping-cart', { size: 18, strokeWidth: 2.2 })}
             <span class="cart-badge-count" id="header-cart-count">0</span>
             <span class="cart-badge-subtotal" id="header-cart-subtotal">$0.00</span>
           </button>
@@ -243,20 +224,23 @@ function renderHeaderMarkup(activePillar) {
           <ul class="mega-nav-list">
             <li>
               <a href="index.html" class="mega-nav-link ${activePillar === 'home' ? 'is-active' : ''}">
+                ${lucideIcon('home', { size: 14, strokeWidth: 2.2 })}
                 <span>Trade Home</span>
               </a>
             </li>
             ${pillarsHtml}
             <li>
-              <a href="search.html?q=Clipsal" class="mega-nav-link ${activePillar === 'brands' ? 'is-active' : ''}">
-                <span>Brands A–Z</span>
+              <a href="brands.html" class="mega-nav-link ${activePillar === 'brands' ? 'is-active' : ''}">
+                ${lucideIcon('award', { size: 14, strokeWidth: 2.2 })}
+                <span>Brands</span>
               </a>
             </li>
           </ul>
 
           <div class="mega-nav-right">
             <span class="delivery-rule-chip" id="nav-delivery-chip">
-              ✓ Free 7-Day Kingsgrove Pickup • $150+ Aus-Wide Delivery
+              ${lucideIcon('shield-check', { size: 14 })}
+              <span>Free 7-Day Kingsgrove Pickup • $150+ Aus-Wide Delivery</span>
             </span>
           </div>
         </div>
@@ -274,13 +258,16 @@ function renderFooterMarkup() {
           <div class="brand-logo-wrap" style="width:fit-content;margin-bottom:1rem">
             <img src="${escapeHtml(STORE_FACTS.logoUrl)}" alt="SCHNAP Electric Products" width="136" height="34" />
           </div>
-          <p style="font-size:13px;line-height:1.6;color:var(--color-slate-300)">
+          <p style="font-size:13px;line-height:1.6;color:var(--text-on-dark-muted)">
             Australia’s fastest-growing trade electrical wholesaler. Supplying licensed electricians, solar installers, and industrial switchboard builders with upfront trade pricing 7 days a week.
           </p>
           <div class="footer-counter-card">
-            <strong>📍 Kingsgrove Trade Counter &amp; Warehouse</strong>
+            <strong>
+              ${lucideIcon('map-pin', { size: 14 })}
+              <span>Kingsgrove Trade Counter &amp; Warehouse</span>
+            </strong>
             <div>${escapeHtml(STORE_FACTS.address)}</div>
-            <div style="color:var(--color-amber-400);margin-top:4px;font-weight:600">${escapeHtml(STORE_FACTS.hoursShort)}</div>
+            <div style="color:#FF7A80;margin-top:4px;font-weight:600">${escapeHtml(STORE_FACTS.hoursShort)}</div>
             <div style="margin-top:4px">Phone: <a href="${STORE_FACTS.phoneHref}" style="color:#fff;font-weight:700">${escapeHtml(STORE_FACTS.phone)}</a></div>
           </div>
         </div>
@@ -290,40 +277,46 @@ function renderFooterMarkup() {
           <ul class="footer-links">
             ${PILLARS.map(
               (p) =>
-                `<li><a href="category.html?category_id=${encodeURIComponent(p.id)}&slug=${encodeURIComponent(p.slug)}">${escapeHtml(p.name)} (${escapeHtml(p.badge)})</a></li>`
+                `<li><a href="category.html?category_id=${encodeURIComponent(p.id)}&slug=${encodeURIComponent(p.slug)}">${lucideIcon('chevron-right', { size: 13 })}<span>${escapeHtml(p.name)} (${escapeHtml(p.badge)})</span></a></li>`
             ).join('')}
-            <li><a href="search.html?q=rcbo">6kA Type A RCBOs &amp; Protection</a></li>
+            <li><a href="brands.html">${lucideIcon('award', { size: 13 })}<span>Authorized Brands Directory (200+)</span></a></li>
+            <li><a href="search.html?q=rcbo">${lucideIcon('zap', { size: 13 })}<span>6kA Type A RCBOs &amp; Protection</span></a></li>
           </ul>
         </div>
 
         <div class="footer-col">
           <h4>Trade Services &amp; Fulfillment</h4>
           <ul class="footer-links">
-            <li><a href="cart.html">Trade Cart &amp; Quick SKU Entry</a></li>
-            <li><a href="checkout.html">Streamlined 3-Step Trade Checkout</a></li>
-            <li><a href="#quote" data-open-drawer="quote">Request Bulk Project Quote</a></li>
-            <li><a href="#photo" data-open-drawer="photo">Send Us a Photo (Part ID Desk)</a></li>
-            <li><a href="https://www.schnap.com.au/payment-and-shipping/" target="_blank" rel="noopener">$150 Delivery &amp; Kingsgrove Pickup Policy ↗</a></li>
+            <li><a href="cart.html">${lucideIcon('shopping-cart', { size: 13 })}<span>Trade Cart &amp; Quick SKU Entry</span></a></li>
+            <li><a href="checkout.html">${lucideIcon('check-circle-2', { size: 13 })}<span>Streamlined 3-Step Trade Checkout</span></a></li>
+            <li><a href="#quote" data-open-drawer="quote">${lucideIcon('file-text', { size: 13 })}<span>Request Bulk Project Quote</span></a></li>
+            <li><a href="#photo" data-open-drawer="photo">${lucideIcon('camera', { size: 13 })}<span>Send Us a Photo (Part ID Desk)</span></a></li>
+            <li><a href="https://www.schnap.com.au/payment-and-shipping/" target="_blank" rel="noopener">${lucideIcon('truck', { size: 13 })}<span>$150 Delivery &amp; Kingsgrove Pickup Policy</span>${lucideIcon('arrow-up-right', { size: 12 })}</a></li>
           </ul>
         </div>
 
         <div class="footer-col">
           <h4>Zero-Access Edge Architecture</h4>
-          <p style="font-size:12px;line-height:1.55;color:var(--color-slate-400);margin-bottom:0.75rem">
-            Decoupled static B2B frontend powered by live CS-Cart controller dispatches (<code class="mono" style="color:var(--color-amber-400)">index.php?dispatch=...</code>) via Cloudflare Edge Gateway (<code class="mono">ap-southeast-2</code>) and CloudFront CDN media hotlinking.
+          <p style="font-size:12px;line-height:1.55;color:var(--text-on-dark-muted);margin-bottom:0.75rem">
+            Decoupled static B2B frontend powered by live CS-Cart controller dispatches (<code class="mono" style="color:#FF7A80">index.php?dispatch=...</code>) via Cloudflare Edge Gateway (<code class="mono">ap-southeast-2</code>) and CloudFront CDN media hotlinking.
           </p>
           <div style="display:flex;flex-direction:column;gap:0.5rem">
-            <span class="badge badge-emerald" style="width:fit-content">✓ AS/NZS 3000 Compliant Range</span>
-            <span class="badge badge-amber" style="width:fit-content">✓ Zero Server Modification Required</span>
+            <span class="badge badge-emerald" style="width:fit-content">${lucideIcon('shield-check', { size: 12 })}<span>AS/NZS 3000 Compliant Range</span></span>
+            <span class="badge badge-amber" style="width:fit-content">${lucideIcon('check', { size: 12 })}<span>Zero Server Modification Required</span></span>
           </div>
         </div>
       </div>
 
       <div class="container footer-bottom">
-        <div>© ${new Date().getFullYear()} SCHNAP Electric Products Pty Ltd. All prices in AUD inc. GST.</div>
+        <div>© 2008 – ${new Date().getFullYear()} SCHNAP Electric Products Pty Ltd (ABN 80 099 079 848). All prices in AUD inc. GST.</div>
         <div style="display:flex;gap:1.25rem;align-items:center">
-          <a href="https://www.schnap.com.au/" target="_blank" rel="noopener" style="color:var(--color-amber-400);font-weight:600">
-            Live Production Store (www.schnap.com.au) ↗
+          <a href="https://www.schnap.com.au/brands" target="_blank" rel="noopener" style="color:#FF7A80;font-weight:600;display:inline-flex;align-items:center;gap:4px">
+            <span>Live SCHNAP Brands</span>
+            ${lucideIcon('arrow-up-right', { size: 13 })}
+          </a>
+          <a href="https://www.schnap.com.au/" target="_blank" rel="noopener" style="color:#FFFFFF;font-weight:600;display:inline-flex;align-items:center;gap:4px">
+            <span>Live Production Store (www.schnap.com.au)</span>
+            ${lucideIcon('arrow-up-right', { size: 13 })}
           </a>
         </div>
       </div>
@@ -342,14 +335,13 @@ function ensureDrawersMounted() {
     <aside class="slide-drawer" id="drawer-cart" aria-label="Trade Mini-Cart">
       <div class="drawer-header">
         <div class="drawer-title">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2.2">
-            <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-            <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
-          </svg>
+          ${lucideIcon('shopping-cart', { size: 20, strokeWidth: 2.2 })}
           <span>Trade Order Cart</span>
           <span class="badge badge-amber mono" id="drawer-cart-badge">0 items</span>
         </div>
-        <button type="button" class="drawer-close-btn" data-close-drawer aria-label="Close Cart Drawer">✕</button>
+        <button type="button" class="drawer-close-btn" data-close-drawer aria-label="Close Cart Drawer">
+          ${lucideIcon('x', { size: 18 })}
+        </button>
       </div>
 
       <!-- Dynamic $150 Delivery Eligibility Progress Bar -->
@@ -378,7 +370,10 @@ function ensureDrawersMounted() {
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem">
           <a href="cart.html" class="btn btn-outline">View Full Cart</a>
-          <a href="checkout.html" class="btn btn-primary">Trade Checkout →</a>
+          <a href="checkout.html" class="btn btn-primary">
+            <span>Trade Checkout</span>
+            ${lucideIcon('arrow-right', { size: 15 })}
+          </a>
         </div>
         <button
           type="button"
@@ -386,7 +381,8 @@ function ensureDrawersMounted() {
           id="drawer-live-handoff-btn"
           title="Submits native HTML POST form to transfer items directly to www.schnap.com.au"
         >
-          <span>⚡ Push Cart to Live SCHNAP.com.au</span>
+          ${lucideIcon('zap', { size: 14 })}
+          <span>Push Cart to Live SCHNAP.com.au</span>
         </button>
       </div>
     </aside>
@@ -398,7 +394,9 @@ function ensureDrawersMounted() {
           <span class="badge badge-amber">TRADE DESK</span>
           <span>Request Bulk / Project Quote</span>
         </div>
-        <button type="button" class="drawer-close-btn" data-close-drawer aria-label="Close Quote Drawer">✕</button>
+        <button type="button" class="drawer-close-btn" data-close-drawer aria-label="Close Quote Drawer">
+          ${lucideIcon('x', { size: 18 })}
+        </button>
       </div>
       <div class="drawer-body">
         <p style="font-size:13px;color:var(--text-secondary);margin-bottom:1rem">
@@ -428,7 +426,8 @@ function ensureDrawersMounted() {
             ></textarea>
           </div>
           <button type="submit" class="btn btn-primary btn-lg">
-            Send Quote Request via WhatsApp &amp; Trade Desk →
+            <span>Send Quote Request via WhatsApp &amp; Trade Desk</span>
+            ${lucideIcon('arrow-right', { size: 16 })}
           </button>
         </form>
       </div>
@@ -441,12 +440,14 @@ function ensureDrawersMounted() {
           <span class="badge badge-emerald">PART ID DESK</span>
           <span>Send Us a Photo</span>
         </div>
-        <button type="button" class="drawer-close-btn" data-close-drawer aria-label="Close Photo Drawer">✕</button>
+        <button type="button" class="drawer-close-btn" data-close-drawer aria-label="Close Photo Drawer">
+          ${lucideIcon('x', { size: 18 })}
+        </button>
       </div>
       <div class="drawer-body" style="display:flex;flex-direction:column;gap:1rem">
-        <div style="background:var(--color-amber-50);border:1px solid var(--color-amber-200);border-radius:var(--radius-lg);padding:1rem;font-size:13px">
-          <strong style="color:var(--color-amber-700)">On-site with an obsolete breaker, contactor, or fitting?</strong>
-          <p style="margin-top:4px;color:var(--color-navy-800)">
+        <div style="background:var(--color-red-50);border:1px solid var(--color-red-200);border-radius:var(--radius-lg);padding:1rem;font-size:13px">
+          <strong style="color:#5D1C25">On-site with an obsolete breaker, contactor, or fitting?</strong>
+          <p style="margin-top:4px;color:var(--text-secondary)">
             Snap a photo of the nameplate or switchboard DIN rail. Our Kingsgrove trade counter engineers will identify the exact drop-in replacement within minutes.
           </p>
         </div>
@@ -455,7 +456,10 @@ function ensureDrawersMounted() {
           for="photo-upload-input"
           style="border:2px dashed var(--color-slate-300);border-radius:var(--radius-lg);padding:2rem 1rem;text-align:center;cursor:pointer;background:var(--color-slate-50)"
         >
-          <div style="font-weight:700;color:var(--color-navy-900);margin-bottom:4px">📸 Drop Switchboard / Nameplate Photo Here</div>
+          <div style="font-weight:700;color:#5D1C25;margin-bottom:4px;display:flex;align-items:center;justify-content:center;gap:6px">
+            ${lucideIcon('camera', { size: 18 })}
+            <span>Drop Switchboard / Nameplate Photo Here</span>
+          </div>
           <div style="font-size:12px;color:var(--text-muted)" id="photo-file-label">Supports JPG, PNG, HEIC from phone camera</div>
           <input type="file" id="photo-upload-input" accept="image/*" style="display:none" />
         </label>
@@ -472,7 +476,9 @@ function ensureDrawersMounted() {
           class="btn btn-emerald btn-lg"
           id="photo-whatsapp-link"
         >
-          Open WhatsApp Trade Identification Desk ↗
+          ${lucideIcon('message-circle', { size: 17 })}
+          <span>Open WhatsApp Trade Identification Desk</span>
+          ${lucideIcon('arrow-up-right', { size: 15 })}
         </a>
       </div>
     </aside>
@@ -543,7 +549,6 @@ function bindHeaderEvents() {
       }
 
       searchTimer = setTimeout(async () => {
-        // Immediate local match first for 0ms responsiveness
         const qLower = q.toLowerCase();
         const localHits = SEED_PRODUCTS.filter(
           (p) =>
@@ -670,7 +675,8 @@ function renderSearchDropdown(dropdownEl, query, products, { isSyncing = false, 
           <div class="search-dropdown-right">
             <div class="search-dropdown-price">${formatAud(p.price)}</div>
             <button type="button" class="btn btn-primary btn-sm" data-search-add data-product-json="${safeJson}">
-              + Add
+              ${lucideIcon('plus', { size: 12, strokeWidth: 2.5 })}
+              <span>Add</span>
             </button>
           </div>
         </div>
@@ -686,7 +692,8 @@ function renderSearchDropdown(dropdownEl, query, products, { isSyncing = false, 
     <div>${rows}</div>
     <div class="search-dropdown-footer">
       <a href="search.html?q=${encodeURIComponent(query)}" class="btn btn-navy btn-sm" style="width:100%">
-        View All ${totalCount || ''} Results for "${escapeHtml(query)}" →
+        <span>View All ${totalCount || ''} Results for "${escapeHtml(query)}"</span>
+        ${lucideIcon('arrow-right', { size: 14 })}
       </a>
     </div>
   `;
@@ -725,7 +732,6 @@ function bindCartDrawerEvents() {
   });
 
   subscribeCart((state) => {
-    // Update Header Badge
     const countEl = document.getElementById('header-cart-count');
     const subEl = document.getElementById('header-cart-subtotal');
     const drawerBadge = document.getElementById('drawer-cart-badge');
@@ -736,9 +742,9 @@ function bindCartDrawerEvents() {
     if (drawerBadge) drawerBadge.textContent = `${state.itemCount} ${state.itemCount === 1 ? 'unit' : 'units'}`;
 
     if (navChip) {
-      navChip.textContent = state.isDeliveryUnlocked
-        ? `✓ $150+ Australia-Wide Delivery Unlocked (${formatAud(state.subtotal)})`
-        : `Add ${formatAud(state.remainingForDelivery)} for Aus-Wide Delivery • Free Kingsgrove Pickup`;
+      navChip.innerHTML = state.isDeliveryUnlocked
+        ? `${lucideIcon('check-circle-2', { size: 14 })}<span>$150+ Australia-Wide Delivery Unlocked (${formatAud(state.subtotal)})</span>`
+        : `${lucideIcon('truck', { size: 14 })}<span>Add ${formatAud(state.remainingForDelivery)} for Aus-Wide Delivery • Free Kingsgrove Pickup</span>`;
     }
 
     // Update $150 Delivery Threshold Progress Bar in Drawer
@@ -750,7 +756,7 @@ function bindCartDrawerEvents() {
       delivBox.classList.toggle('is-unlocked', state.isDeliveryUnlocked);
       delivBar.style.width = `${state.progressPct}%`;
       delivText.innerHTML = state.isDeliveryUnlocked
-        ? `<span>✓ <strong>Australia-Wide Delivery &amp; Same-Day Sydney Dispatch Unlocked!</strong></span><span class="mono">${formatAud(state.subtotal)} / $150</span>`
+        ? `<span style="display:inline-flex;align-items:center;gap:4px">${lucideIcon('check-circle-2', { size: 14 })}<strong>Australia-Wide Delivery &amp; Same-Day Sydney Dispatch Unlocked!</strong></span><span class="mono">${formatAud(state.subtotal)} / $150</span>`
         : `<span>Add <strong>${formatAud(state.remainingForDelivery)}</strong> more for Australia-wide delivery, or collect <strong>FREE from Kingsgrove</strong></span><span class="mono">${state.progressPct}%</span>`;
     }
 
@@ -759,7 +765,7 @@ function bindCartDrawerEvents() {
       if (state.items.length === 0) {
         itemsContainer.innerHTML = `
           <div style="text-align:center;padding:3rem 1rem;color:var(--text-muted)">
-            <div style="font-size:15px;font-weight:700;color:var(--color-navy-900);margin-bottom:6px">Your Trade Cart is Empty</div>
+            <div style="font-size:15px;font-weight:700;color:#5D1C25;margin-bottom:6px">Your Trade Cart is Empty</div>
             <p style="font-size:12px;margin-bottom:1.25rem">Browse our 6-pillar electrical catalog or search by SKU above.</p>
             <a href="category.html?category_id=4257&slug=electrical.html" class="btn btn-primary btn-sm">Browse Trade Catalog</a>
           </div>
@@ -779,16 +785,23 @@ function bindCartDrawerEvents() {
                   <a href="product.html?id=${encodeURIComponent(item.id)}" class="mini-cart-title">${escapeHtml(item.title)}</a>
                   <div class="mini-cart-controls">
                     <div class="qty-stepper" style="height:28px">
-                      <button type="button" class="qty-stepper__btn" style="width:24px" data-id="${escapeHtml(item.id)}" data-drawer-qty="${item.qty - 1}">&minus;</button>
+                      <button type="button" class="qty-stepper__btn" style="width:24px" data-id="${escapeHtml(item.id)}" data-drawer-qty="${item.qty - 1}">
+                        ${lucideIcon('minus', { size: 11, strokeWidth: 2.5 })}
+                      </button>
                       <input type="text" class="qty-stepper__input" style="width:32px;font-size:11px" value="${item.qty}" readonly />
-                      <button type="button" class="qty-stepper__btn" style="width:24px" data-id="${escapeHtml(item.id)}" data-drawer-qty="${item.qty + 1}">&#43;</button>
+                      <button type="button" class="qty-stepper__btn" style="width:24px" data-id="${escapeHtml(item.id)}" data-drawer-qty="${item.qty + 1}">
+                        ${lucideIcon('plus', { size: 11, strokeWidth: 2.5 })}
+                      </button>
                     </div>
                     <span class="mono" style="font-size:11px;color:var(--text-muted)">@ ${formatAud(item.price)}</span>
                   </div>
                 </div>
                 <div class="mini-cart-price-col">
                   <span class="mini-cart-line-total">${formatAud(item.price * item.qty)}</span>
-                  <button type="button" class="mini-cart-remove" data-drawer-remove="${escapeHtml(item.id)}">Remove</button>
+                  <button type="button" class="mini-cart-remove" data-drawer-remove="${escapeHtml(item.id)}">
+                    ${lucideIcon('trash-2', { size: 12 })}
+                    <span>Remove</span>
+                  </button>
                 </div>
               </div>
             `;
@@ -805,8 +818,8 @@ function bindCartDrawerEvents() {
     if (savEl) savEl.textContent = `-${formatAud(state.tradeSavings)}`;
     if (fulEl) {
       fulEl.innerHTML = state.isDeliveryUnlocked
-        ? `<span style="color:var(--color-emerald-600)">✓ Aus-Wide Delivery / Kingsgrove Pickup</span>`
-        : `<span style="color:var(--color-amber-600)">Free Kingsgrove 7-Day Pickup</span>`;
+        ? `<span style="color:var(--color-emerald-600);display:inline-flex;align-items:center;gap:4px">${lucideIcon('check', { size: 13 })}<span>Aus-Wide Delivery / Kingsgrove Pickup</span></span>`
+        : `<span style="color:#5D1C25">Free Kingsgrove 7-Day Pickup</span>`;
     }
     if (totEl) totEl.textContent = formatAud(state.subtotal);
   });

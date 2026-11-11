@@ -22,7 +22,7 @@
         <nav class="breadcrumb-nav" aria-label="Breadcrumb">
           <a href="index.html">Trade Home</a>
           <span>/</span>
-          <span id="catalog-breadcrumb-current" style="color:var(--color-navy-900);font-weight:700">Electrical Catalog</span>
+          <span id="catalog-breadcrumb-current" style="color:#5D1C25;font-weight:700">Electrical Catalog</span>
         </nav>
 
         <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;flex-wrap:wrap">
@@ -47,9 +47,13 @@
       <!-- Left Technical Facet Filter Sidebar -->
       <aside class="filter-sidebar" aria-label="Technical Filters">
         <div class="filter-sidebar-header">
-          <strong style="font-size:13px;text-transform:uppercase;letter-spacing:0.04em">Technical Filters</strong>
-          <button type="button" class="btn btn-ghost btn-sm" id="clear-filters-btn" style="padding:2px 6px;color:var(--color-amber-600)">
-            Reset All
+          <strong style="font-size:13px;text-transform:uppercase;letter-spacing:0.04em;display:inline-flex;align-items:center;gap:6px;color:#5D1C25">
+            <i data-lucide="filter" data-lucide-size="14"></i>
+            <span>Technical Filters</span>
+          </strong>
+          <button type="button" class="btn btn-ghost btn-sm" id="clear-filters-btn" style="padding:2px 6px;color:#C4121A">
+            <i data-lucide="rotate-ccw" data-lucide-size="12"></i>
+            <span>Reset All</span>
           </button>
         </div>
 
@@ -79,10 +83,12 @@
 
             <div class="view-mode-toggle" role="group" aria-label="Switch Grid or BOM Table View">
               <button type="button" class="view-mode-btn is-active" data-view-mode="grid">
-                <span>⊞ Grid View</span>
+                <i data-lucide="layout-grid" data-lucide-size="14"></i>
+                <span>Grid View</span>
               </button>
               <button type="button" class="view-mode-btn" data-view-mode="table">
-                <span>☰ Trade Table (BOM)</span>
+                <i data-lucide="table-2" data-lucide-size="14"></i>
+                <span>Trade Table (BOM)</span>
               </button>
             </div>
           </div>

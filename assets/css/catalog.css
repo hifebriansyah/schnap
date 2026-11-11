@@ -1,15 +1,17 @@
 /* ==========================================================================
-   SCHNAP Electric Products — Catalog, Home, Product Cards, Table View, PDP & QuickView
+   SCHNAP Electric Products — Catalog, Home, Brands Page, Product Cards,
+   Table View, PDP & QuickView Styles
+   Palette: Deep Burgundy (#5D1C25), Pure White (#FFFFFF), Crimson Red (#EB1B24)
    ========================================================================== */
 
 /* ==========================================================================
    1. Home Page Hero & Bento Grid
    ========================================================================== */
 .hero-section {
-  background: radial-gradient(circle at 82% 20%, rgba(249, 115, 22, 0.16) 0%, transparent 45%),
-              linear-gradient(135deg, var(--color-navy-950) 0%, var(--color-navy-900) 60%, var(--color-navy-800) 100%);
+  background: radial-gradient(circle at 82% 20%, rgba(235, 27, 36, 0.28) 0%, transparent 48%),
+              linear-gradient(135deg, #350D13 0%, #5D1C25 58%, #4A151D 100%);
   color: var(--color-white);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 2px solid #EB1B24;
   padding-block: clamp(2rem, 4vw, 3.5rem);
   position: relative;
   overflow: hidden;
@@ -26,15 +28,19 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  background: rgba(249, 115, 22, 0.14);
-  border: 1px solid rgba(249, 115, 22, 0.35);
-  color: var(--color-amber-400);
+  background: rgba(235, 27, 36, 0.22);
+  border: 1px solid rgba(255, 122, 128, 0.45);
+  color: var(--color-white);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 600;
   padding: 0.3rem 0.75rem;
   border-radius: var(--radius-full);
   margin-bottom: var(--space-4);
+}
+
+.hero-eyebrow svg {
+  color: #FF7A80;
 }
 
 .hero-title {
@@ -47,12 +53,15 @@
 }
 
 .hero-title span {
-  color: var(--color-amber-400);
+  color: #FF7A80;
+  text-decoration: underline;
+  text-decoration-color: #EB1B24;
+  text-underline-offset: 6px;
 }
 
 .hero-subtitle {
   font-size: var(--text-md);
-  color: var(--color-slate-300);
+  color: var(--text-on-dark-muted);
   max-width: 60ch;
   margin-bottom: var(--space-6);
   line-height: 1.6;
@@ -71,7 +80,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-3);
   padding-top: var(--space-5);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 .hero-trust-item {
@@ -89,13 +98,13 @@
 
 .hero-trust-label {
   font-size: var(--text-xs);
-  color: var(--color-slate-400);
+  color: var(--text-on-dark-muted);
 }
 
 /* Right Hero Trade Dispatch Card */
 .hero-feature-panel {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: var(--radius-xl);
   padding: var(--space-5);
   backdrop-filter: blur(8px);
@@ -109,8 +118,8 @@
   position: relative;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  background: var(--color-navy-950);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #350D13;
+  border: 1px solid rgba(255, 255, 255, 0.14);
   aspect-ratio: 16 / 9;
 }
 
@@ -121,8 +130,8 @@
 }
 
 .hero-quick-sku-box {
-  background: rgba(15, 23, 42, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(53, 13, 19, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: var(--radius-lg);
   padding: var(--space-4);
 }
@@ -148,15 +157,18 @@
   font-weight: 600;
   padding: 0.28rem 0.6rem;
   border-radius: var(--radius-xs);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: var(--color-slate-200);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--color-white);
   transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .hero-quick-tag:hover {
-  background: var(--color-amber-500);
-  border-color: var(--color-amber-500);
+  background: #EB1B24;
+  border-color: #EB1B24;
   color: var(--color-white);
 }
 
@@ -180,7 +192,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--color-amber-600);
+  color: #C4121A;
   margin-bottom: 4px;
 }
 
@@ -188,7 +200,7 @@
   font-family: var(--font-display);
   font-size: var(--text-2xl);
   font-weight: 800;
-  color: var(--color-navy-900);
+  color: #5D1C25;
   letter-spacing: -0.02em;
 }
 
@@ -220,7 +232,7 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: var(--color-amber-500);
+  background: #EB1B24;
   transform: scaleX(0);
   transform-origin: left;
   transition: transform var(--transition-base);
@@ -229,7 +241,7 @@
 .bento-card:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow-lg);
-  border-color: var(--color-slate-300);
+  border-color: #5D1C25;
 }
 
 .bento-card:hover::before {
@@ -247,19 +259,24 @@
   width: 46px;
   height: 46px;
   border-radius: var(--radius-md);
-  background: var(--color-navy-900);
-  color: var(--color-amber-400);
+  background: #5D1C25;
+  color: var(--color-white);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  box-shadow: 0 3px 8px rgba(93, 28, 37, 0.22);
+}
+
+.bento-card:hover .bento-icon-box {
+  background: #EB1B24;
 }
 
 .bento-card h3 {
   font-family: var(--font-display);
   font-size: var(--text-lg);
   font-weight: 800;
-  color: var(--color-navy-900);
+  color: #5D1C25;
   margin-bottom: 4px;
 }
 
@@ -280,12 +297,12 @@
   padding: 0.25rem 0.55rem;
   border-radius: var(--radius-xs);
   background: var(--color-slate-100);
-  color: var(--color-navy-700);
+  color: #5D1C25;
   transition: all var(--transition-fast);
 }
 
 .bento-subpill:hover {
-  background: var(--color-navy-900);
+  background: #5D1C25;
   color: var(--color-white);
 }
 
@@ -297,7 +314,7 @@
   border-top: 1px solid var(--color-slate-100);
   font-size: var(--text-xs);
   font-weight: 700;
-  color: var(--color-amber-600);
+  color: #C4121A;
 }
 
 /* ==========================================================================
@@ -323,7 +340,7 @@
 .product-card:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
-  border-color: var(--color-slate-300);
+  border-color: #5D1C25;
 }
 
 .product-card__badges {
@@ -346,9 +363,9 @@
   width: 32px;
   height: 32px;
   border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.94);
   border: 1px solid var(--border-subtle);
-  color: var(--color-navy-700);
+  color: #5D1C25;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -357,9 +374,9 @@
 }
 
 .product-card__qv-trigger:hover {
-  background: var(--color-navy-900);
+  background: #5D1C25;
   color: var(--color-white);
-  border-color: var(--color-navy-900);
+  border-color: #5D1C25;
 }
 
 .product-card__media {
@@ -409,8 +426,8 @@
   gap: 0.3rem;
   font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 600;
-  color: var(--color-navy-700);
+  font-weight: 700;
+  color: #5D1C25;
   background: var(--color-slate-100);
   border: 1px solid var(--color-slate-200);
   padding: 0.15rem 0.45rem;
@@ -423,9 +440,9 @@
 }
 
 .sku-copy-pill:hover {
-  background: var(--color-navy-900);
-  color: var(--color-amber-400);
-  border-color: var(--color-navy-900);
+  background: #5D1C25;
+  color: var(--color-white);
+  border-color: #5D1C25;
 }
 
 .sku-copy-pill.is-copied {
@@ -445,7 +462,7 @@
 .product-card__title {
   font-size: var(--text-base);
   font-weight: 600;
-  color: var(--color-navy-900);
+  color: var(--text-primary);
   line-height: 1.38;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -455,7 +472,7 @@
 }
 
 .product-card__title:hover {
-  color: var(--color-amber-600);
+  color: #EB1B24;
 }
 
 .product-card__specs {
@@ -473,7 +490,7 @@
   border-radius: 3px;
   background: var(--color-slate-50);
   border: 1px solid var(--color-slate-200);
-  color: var(--color-navy-700);
+  color: #5D1C25;
 }
 
 .product-card__pricing {
@@ -489,7 +506,7 @@
   font-family: var(--font-mono);
   font-size: var(--text-xl);
   font-weight: 800;
-  color: var(--color-navy-900);
+  color: #5D1C25;
   letter-spacing: -0.02em;
 }
 
@@ -543,7 +560,7 @@
 }
 
 .trade-table th {
-  background: var(--color-navy-900);
+  background: #5D1C25;
   color: var(--color-white);
   font-size: var(--text-xs);
   font-weight: 700;
@@ -575,12 +592,12 @@
 
 .trade-table__title {
   font-weight: 600;
-  color: var(--color-navy-900);
+  color: var(--text-primary);
   display: block;
 }
 
 .trade-table__title:hover {
-  color: var(--color-amber-600);
+  color: #EB1B24;
 }
 
 /* ==========================================================================
@@ -603,7 +620,7 @@
 }
 
 .breadcrumb-nav a:hover {
-  color: var(--color-amber-600);
+  color: #EB1B24;
 }
 
 .subcat-pills-bar {
@@ -618,23 +635,28 @@
 .subcat-pill {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: 0.4rem;
   padding: 0.48rem 0.9rem;
-  background: var(--color-slate-50);
+  background: var(--color-white);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-full);
   font-size: var(--text-xs);
   font-weight: 600;
-  color: var(--color-navy-800);
+  color: #5D1C25;
   white-space: nowrap;
   transition: all var(--transition-fast);
 }
 
-.subcat-pill:hover,
+.subcat-pill:hover {
+  border-color: #EB1B24;
+  color: #EB1B24;
+  background: var(--color-red-50);
+}
+
 .subcat-pill.is-active {
-  background: var(--color-navy-900);
-  border-color: var(--color-navy-900);
-  color: var(--color-amber-400);
+  background: #5D1C25;
+  border-color: #5D1C25;
+  color: var(--color-white);
 }
 
 .catalog-layout {
@@ -678,7 +700,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--color-navy-800);
+  color: #5D1C25;
   margin-bottom: var(--space-2);
   display: flex;
   align-items: center;
@@ -707,13 +729,17 @@
 
 .filter-checkbox-label:hover {
   background: var(--color-slate-50);
-  color: var(--color-navy-900);
+  color: #5D1C25;
 }
 
 .filter-checkbox-left {
   display: flex;
   align-items: center;
   gap: 0.45rem;
+}
+
+.filter-checkbox-left input[type="checkbox"] {
+  accent-color: #EB1B24;
 }
 
 .filter-count {
@@ -750,7 +776,7 @@
   font-size: var(--text-xs);
   font-weight: 600;
   background: var(--color-white);
-  color: var(--color-navy-900);
+  color: #5D1C25;
 }
 
 .view-mode-toggle {
@@ -774,8 +800,8 @@
 }
 
 .view-mode-btn.is-active {
-  background: var(--color-white);
-  color: var(--color-navy-900);
+  background: #5D1C25;
+  color: var(--color-white);
   box-shadow: var(--shadow-xs);
 }
 
@@ -814,17 +840,18 @@
 }
 
 .page-btn:hover {
-  border-color: var(--color-navy-900);
+  border-color: #EB1B24;
+  color: #EB1B24;
 }
 
 .page-btn.is-active {
-  background: var(--color-navy-900);
-  border-color: var(--color-navy-900);
+  background: #5D1C25;
+  border-color: #5D1C25;
   color: var(--color-white);
 }
 
 /* ==========================================================================
-   5. Brands Ribbon & Reviews / FAQ
+   5. Brands Ribbon & Full Brands Directory Page (brands.html)
    ========================================================================== */
 .brands-ribbon {
   display: grid;
@@ -842,12 +869,12 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  min-height: 96px;
+  min-height: 104px;
   transition: all var(--transition-fast);
 }
 
 .brand-tile:hover {
-  border-color: var(--color-amber-500);
+  border-color: #EB1B24;
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
 }
@@ -861,7 +888,355 @@
 .brand-tile span {
   font-size: var(--text-xs);
   font-weight: 700;
-  color: var(--color-navy-800);
+  color: #5D1C25;
+}
+
+/* Brands Page Hero & Directory Controls */
+.brands-hero {
+  background: radial-gradient(circle at 85% 22%, rgba(235, 27, 36, 0.28) 0%, transparent 48%),
+              linear-gradient(135deg, #350D13 0%, #5D1C25 60%, #4A151D 100%);
+  color: var(--color-white);
+  border-bottom: 3px solid #EB1B24;
+  padding-block: clamp(2rem, 3.8vw, 3.25rem);
+}
+
+.brands-filter-bar {
+  background: var(--color-white);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-md);
+  margin-top: calc(var(--space-6) * -1);
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.brands-search-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.brands-search-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 0.65rem 1rem;
+  background: var(--color-slate-50);
+  transition: all var(--transition-fast);
+}
+
+.brands-search-input-wrap:focus-within {
+  border-color: #EB1B24;
+  background: var(--color-white);
+  box-shadow: 0 0 0 3px rgba(235, 27, 36, 0.16);
+}
+
+.brands-search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.alphabet-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-slate-100);
+}
+
+.alpha-btn {
+  min-width: 34px;
+  height: 34px;
+  padding-inline: 0.55rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  background: var(--color-slate-50);
+  color: #5D1C25;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.alpha-btn:hover:not(:disabled) {
+  border-color: #EB1B24;
+  color: #EB1B24;
+  background: var(--color-red-50);
+}
+
+.alpha-btn.is-active {
+  background: #EB1B24;
+  border-color: #EB1B24;
+  color: var(--color-white);
+  box-shadow: 0 2px 8px rgba(235, 27, 36, 0.3);
+}
+
+.alpha-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Flagship Brand Spotlight Cards */
+.brand-spotlight-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: var(--space-5);
+}
+
+.brand-spotlight-card {
+  background: var(--color-white);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-4);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.brand-spotlight-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #5D1C25 0%, #EB1B24 100%);
+}
+
+.brand-spotlight-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: #5D1C25;
+}
+
+.brand-spotlight-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.brand-logo-box {
+  width: 84px;
+  height: 52px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-slate-200);
+  background: var(--color-white);
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.brand-logo-box img {
+  max-height: 38px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.brand-monogram {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-sm);
+  color: #5D1C25;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Alphabetical Brand Group Sections */
+.brand-alpha-section {
+  padding-block: var(--space-5);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.brand-alpha-section:last-child {
+  border-bottom: none;
+}
+
+.brand-alpha-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.brand-alpha-letter {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  background: #5D1C25;
+  color: var(--color-white);
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(93, 28, 37, 0.22);
+}
+
+.brand-directory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--space-4);
+}
+
+.brand-dir-card {
+  background: var(--color-white);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-3);
+  transition: all var(--transition-fast);
+}
+
+.brand-dir-card:hover {
+  border-color: #EB1B24;
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.brand-dir-card__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.brand-dir-card__logo {
+  width: 58px;
+  height: 44px;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--color-slate-100);
+  background: var(--color-white);
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.brand-dir-card__logo img {
+  max-height: 32px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.brand-dir-card__title {
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: 800;
+  color: #5D1C25;
+}
+
+.brand-dir-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-slate-100);
+  font-size: var(--text-xs);
+  font-weight: 700;
+}
+
+/* 4-Pillar Trade Value Prop Grid & Industries Strip */
+.value-props-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-5);
+}
+
+.value-prop-card {
+  background: var(--color-white);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.value-prop-card:hover {
+  border-color: #5D1C25;
+  box-shadow: var(--shadow-md);
+}
+
+.value-prop-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--color-red-50);
+  color: #EB1B24;
+  border: 1px solid var(--color-red-200);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.industries-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+
+.industry-card {
+  background: var(--color-white);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-weight: 700;
+  color: #5D1C25;
+  transition: all var(--transition-fast);
+}
+
+.industry-card:hover {
+  background: #5D1C25;
+  border-color: #5D1C25;
+  color: var(--color-white);
+  transform: translateY(-2px);
+}
+
+.industry-card__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--color-slate-100);
+  color: #EB1B24;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.industry-card:hover .industry-card__icon {
+  background: #EB1B24;
+  color: var(--color-white);
 }
 
 .reviews-grid {
@@ -882,9 +1257,11 @@
 }
 
 .review-stars {
-  color: #F59E0B;
+  color: #EB1B24;
   font-size: var(--text-sm);
-  letter-spacing: 2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
 }
 
 .faq-list {
@@ -906,6 +1283,7 @@
   padding: var(--space-4) var(--space-5);
   font-weight: 700;
   font-size: var(--text-base);
+  color: #5D1C25;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -992,7 +1370,7 @@
 
 .pdp-thumb-btn.is-active,
 .pdp-thumb-btn:hover {
-  border-color: var(--color-amber-500);
+  border-color: #EB1B24;
 }
 
 .pdp-thumb-btn img {
@@ -1016,7 +1394,7 @@
   font-family: var(--font-display);
   font-size: clamp(1.35rem, 2.2vw, 1.75rem);
   font-weight: 800;
-  color: var(--color-navy-900);
+  color: #5D1C25;
   line-height: 1.22;
 }
 
@@ -1036,7 +1414,7 @@
   font-family: var(--font-mono);
   font-size: var(--text-3xl);
   font-weight: 800;
-  color: var(--color-navy-900);
+  color: #5D1C25;
   line-height: 1;
 }
 
@@ -1055,15 +1433,15 @@
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-strong);
   background: var(--color-white);
-  color: var(--color-navy-800);
+  color: #5D1C25;
   transition: all var(--transition-fast);
 }
 
 .pack-pill-btn:hover,
 .pack-pill-btn.is-active {
-  background: var(--color-navy-900);
-  color: var(--color-amber-400);
-  border-color: var(--color-navy-900);
+  background: #5D1C25;
+  color: var(--color-white);
+  border-color: #5D1C25;
 }
 
 .pdp-fulfillment-card {
@@ -1102,9 +1480,9 @@
 }
 
 .pdp-tab-btn.is-active {
-  color: var(--color-navy-900);
+  color: #5D1C25;
   background: var(--color-white);
-  border-bottom-color: var(--color-amber-500);
+  border-bottom-color: #EB1B24;
 }
 
 .pdp-tab-panel {
@@ -1136,12 +1514,12 @@
 .spec-table th {
   width: 34%;
   font-weight: 700;
-  color: var(--color-navy-800);
+  color: #5D1C25;
 }
 
 .spec-table td {
   font-family: var(--font-mono);
-  color: var(--color-navy-900);
+  color: var(--text-primary);
 }
 
 /* ==========================================================================
@@ -1150,7 +1528,7 @@
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(9, 13, 22, 0.65);
+  background: rgba(53, 13, 19, 0.68);
   backdrop-filter: blur(4px);
   z-index: var(--z-modal);
   display: flex;
@@ -1188,11 +1566,14 @@
 @media (max-width: 1024px) {
   .hero-grid,
   .pdp-grid,
-  .quickview-grid {
+  .quickview-grid,
+  .brands-search-row {
     grid-template-columns: 1fr;
   }
   .bento-grid,
-  .reviews-grid {
+  .reviews-grid,
+  .value-props-grid,
+  .industries-grid {
     grid-template-columns: repeat(2, 1fr);
   }
   .catalog-layout {
@@ -1206,7 +1587,9 @@
 @media (max-width: 640px) {
   .bento-grid,
   .reviews-grid,
-  .pdp-fulfillment-card {
+  .pdp-fulfillment-card,
+  .value-props-grid,
+  .industries-grid {
     grid-template-columns: 1fr;
   }
 }

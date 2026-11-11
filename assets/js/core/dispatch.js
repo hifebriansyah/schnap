@@ -4,12 +4,13 @@
 // ==========================================================================
 
 import { CONFIG } from './config.js';
-import { swrFetch, getCached, setCached } from './cache.js';
+import { swrFetch, getCached } from './cache.js';
 import {
   parseCatalogResponse,
   parseSubcategoriesResponse,
   parseProductDetailResponse,
   parseCartResponse,
+  parseBrandsResponse,
   extractSecurityHashFromText,
 } from './parser.js';
 import { SEED_PRODUCTS } from '../data/pitchSeeds.js';
@@ -155,7 +156,11 @@ export async function rawDispatch(
   }
 
   const startTime = performance.now();
-  const isSeoPath = dispatchOrPath.includes('.html') || dispatchOrPath.endsWith('/');
+  const isSeoPath =
+    dispatchOrPath === 'brands' ||
+    dispatchOrPath === '/brands' ||
+    dispatchOrPath.includes('.html') ||
+    dispatchOrPath.endsWith('/');
 
   const url = new URL(
     isSeoPath
@@ -261,8 +266,52 @@ export async function rawDispatch(
 }
 
 // ==========================================================================
-// High-Level Catalog, Subcategory, Search & Product Controllers (with SWR Cache + Seed Fallback)
+// High-Level Catalog, Brands, Subcategory, Search & Product Controllers (with SWR Cache + Seed Fallback)
 // ==========================================================================
+
+/**
+ * Fetches Brands Directory (`/cscart/brands` -> `https://www.schnap.com.au/brands`)
+ */
+export async function fetchBrandsCatalog({ onRevalidate } = {}) {
+  const cacheKey = 'brands:directory:v1';
+  try {
+    const result = await swrFetch(
+      cacheKey,
+      async () => {
+        const raw = await rawDispatch('brands');
+        const parsed = parseBrandsResponse(raw);
+        const byName = new Map();
+        for (const b of CONFIG.BRANDS) {
+          byName.set(b.name.toLowerCase(), { ...b });
+        }
+        for (const liveBrand of parsed.brands || []) {
+          const key = liveBrand.name.toLowerCase();
+          if (byName.has(key)) {
+            const existing = byName.get(key);
+            if (!existing.logo && liveBrand.logo) existing.logo = liveBrand.logo;
+          } else {
+            byName.set(key, liveBrand);
+          }
+        }
+        return {
+          brands: [...byName.values()],
+          title: parsed.title || 'Authorized Electrical Brands',
+        };
+      },
+      { onRevalidate }
+    );
+    if (result.source === 'session-cache') {
+      emitTelemetry({ cacheStatus: 'SWR-CACHE', latencyMs: 1 });
+    }
+    return result.data;
+  } catch {
+    emitTelemetry({ mode: 'seed-fallback', cacheStatus: 'SEED' });
+    return {
+      brands: [...CONFIG.BRANDS],
+      title: 'Authorized Electrical Brands',
+    };
+  }
+}
 
 /**
  * Fetches Homepage / Trade Highlights (`dispatch=index.index` & `dispatch=products.newest`)
@@ -736,10 +785,6 @@ export async function syncCartFromBackend() {
 
 /**
  * Approach B (plan.md Section 2): Native HTML Form Handoff to Live CS-Cart
- * Submits a standard off-screen HTML POST form via our Edge Worker gateway
- * (`${CONFIG.PROXY_BASE}/index.php`) with the active session (`_x_session`) and
- * `security_hash`, so CS-Cart's `fn_csrf_check_request` validates the CSRF token,
- * syncs all cart items, and opens the live CS-Cart cart/checkout in a new tab.
  */
 export function submitNativeCartHandoff(targetDispatch = 'checkout.cart') {
   const { items } = getCartState();

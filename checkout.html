@@ -24,7 +24,7 @@
             <span>/</span>
             <a href="cart.html">Trade Cart</a>
             <span>/</span>
-            <span style="color:var(--color-navy-900);font-weight:700">3-Step Trade Checkout</span>
+            <span style="color:#5D1C25;font-weight:700">3-Step Trade Checkout</span>
           </nav>
           <h1 class="section-title">Streamlined 3-Step Trade Checkout</h1>
         </div>
@@ -142,7 +142,7 @@
 
             <!-- Delivery Address Inputs (Visible when $150+ Delivery is active) -->
             <div id="checkout-delivery-address-block" style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border-subtle);display:none">
-              <h4 style="font-size:13px;font-weight:800;text-transform:uppercase;margin-bottom:0.85rem;color:var(--color-navy-900)">
+              <h4 style="font-size:13px;font-weight:800;text-transform:uppercase;margin-bottom:0.85rem;color:#5D1C25">
                 Site / Workshop Delivery Address (Australia-Wide)
               </h4>
               <div class="form-grid-2">
@@ -218,7 +218,7 @@
                   <span class="badge badge-navy">INSTANT</span>
                   <span class="mono" style="font-size:11px">Visa / MC / Amex</span>
                 </div>
-                <strong style="font-size:14px">Credit / Trade Debit Card</strong>
+                <strong style="font-size:14px;color:#5D1C25">Credit / Trade Debit Card</strong>
                 <p style="font-size:12px;color:var(--text-secondary)">Immediate payment processing with zero card surcharge on trade debit.</p>
               </div>
 
@@ -227,13 +227,17 @@
                   <span class="badge badge-amber">NATIVE CS-CART</span>
                   <span class="mono" style="font-size:11px">www.schnap.com.au</span>
                 </div>
-                <strong style="font-size:14px">Complete on Live SCHNAP Gateway ↗</strong>
+                <strong style="font-size:14px;color:#5D1C25;display:inline-flex;align-items:center;gap:4px">
+                  <span>Complete on Live SCHNAP Gateway</span>
+                  <i data-lucide="arrow-up-right" data-lucide-size="14"></i>
+                </strong>
                 <p style="font-size:12px;color:var(--text-secondary)">Transfers cart via native HTML POST directly to SCHNAP's live checkout.</p>
               </div>
             </div>
 
             <button type="submit" class="btn btn-primary btn-lg" id="place-order-submit-btn" style="width:100%">
-              Complete Trade Order (dispatch=checkout.place_order) →
+              <span>Complete Trade Order (dispatch=checkout.place_order)</span>
+              <i data-lucide="arrow-right" data-lucide-size="16"></i>
             </button>
           </div>
         </div>
@@ -242,8 +246,8 @@
       <!-- Right Column: Sticky Order Summary & Live CS-Cart Handoff -->
       <aside class="summary-sidebar-card" aria-label="Checkout Order Summary">
         <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:0.75rem;border-bottom:1px solid var(--border-subtle)">
-          <h3 style="font-family:var(--font-display);font-size:1.1rem;font-weight:800">BOM Summary</h3>
-          <a href="cart.html" style="font-size:12px;font-weight:700;color:var(--color-amber-600)">Edit Cart</a>
+          <h3 style="font-family:var(--font-display);font-size:1.1rem;font-weight:800;color:#5D1C25">BOM Summary</h3>
+          <a href="cart.html" style="font-size:12px;font-weight:700;color:#C4121A">Edit Cart</a>
         </div>
 
         <div id="checkout-summary-items" style="max-height:280px;overflow-y:auto"></div>
@@ -267,12 +271,16 @@
         </div>
 
         <div class="live-handoff-box">
-          <h4>⚡ Magic Pitch Moment: Live Handoff</h4>
+          <h4>
+            <i data-lucide="zap" data-lucide-size="14"></i>
+            <span>Magic Pitch Moment: Live Handoff</span>
+          </h4>
           <p>
             Click below to transfer these exact SKUs and quantities directly into a live checkout session on <strong>www.schnap.com.au</strong>.
           </p>
           <button type="button" class="btn btn-primary btn-sm" id="checkout-live-handoff-btn" style="width:100%">
-            Proceed to Live SCHNAP.com.au Checkout ↗
+            <span>Proceed to Live SCHNAP.com.au Checkout</span>
+            <i data-lucide="arrow-up-right" data-lucide-size="14"></i>
           </button>
         </div>
       </aside>

@@ -58,8 +58,9 @@ export function extractSecurityHashFromText(text) {
 
 function normalizeNotifications(rawNotifications) {
   if (!rawNotifications) return [];
-  const entries = Array.isArray(rawNotifications) ? rawNotifications : Object.values(rawNotifications);
-  return entries
+  const entries = Array.Array ? (Array.isArray(rawNotifications) ? rawNotifications : Object.values(rawNotifications)) : [];
+  const list = Array.isArray(rawNotifications) ? rawNotifications : Object.values(rawNotifications);
+  return list
     .filter((n) => n && (n.message || n.title))
     .map((n) => ({
       type: n.type === 'N' ? 'success' : n.type === 'E' ? 'error' : 'info',
@@ -150,6 +151,10 @@ export function inferBrandFromTitle(title = '') {
     'Schneider',
     'Mean Well',
     'Sunny',
+    'Connected Switchgear',
+    'Domus',
+    'Matelec',
+    'CW Brands',
   ];
   for (const b of knownBrands) {
     if (new RegExp(`\\b${b.replace('.', '\\.')}\\b`, 'i').test(title)) {
@@ -304,6 +309,48 @@ export function parseCatalogResponse(payload) {
     notifications,
     securityHash,
   };
+}
+
+/**
+ * Parses `dispatch=product_features.view_all` or `/brands` response
+ */
+export function parseBrandsResponse(payload) {
+  const { htmlText, title, securityHash } = unwrapEnvelope(payload);
+  const doc = parseHtmlDocument(htmlText);
+  if (!doc) return { brands: [], title, securityHash };
+
+  const brands = [];
+  const seen = new Set();
+  const anchors = doc.querySelectorAll(
+    '.ty-features-all__list-a, .brands-item a, .brand-card a, a[href*="variant_id="]'
+  );
+
+  for (const a of anchors) {
+    const imgEl = a.querySelector('img');
+    const name = cleanText(a.getAttribute('title') || imgEl?.getAttribute('alt') || a.textContent || '');
+    if (!name || name.length < 2 || seen.has(name.toLowerCase())) continue;
+    seen.add(name.toLowerCase());
+
+    const href = a.getAttribute('href') || '';
+    const slug = href.startsWith(CONFIG.UPSTREAM_ORIGIN)
+      ? href.slice(CONFIG.UPSTREAM_ORIGIN.length).replace(/^\//, '')
+      : href;
+    const rawLogo = imgEl?.getAttribute('src') || imgEl?.getAttribute('data-src') || '';
+    const logo = rawLogo ? normalizeImageUrl(rawLogo, { upgradeRetina: false, brand: name }) : '';
+
+    brands.push({
+      name,
+      slug: slug || `${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}/`,
+      query: name,
+      category: 'Electrical',
+      featured: false,
+      logo,
+      specialty: 'Authorized Trade Electrical Range',
+      description: `Genuine ${name} electrical supplies backed by manufacturer warranty at SCHNAP.`,
+    });
+  }
+
+  return { brands, title, securityHash };
 }
 
 /**

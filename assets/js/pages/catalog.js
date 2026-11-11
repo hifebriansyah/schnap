@@ -2,6 +2,7 @@
 // SCHNAP Electric Products — Catalog & Search Page Controller (catalog.js)
 // Hydrates category.html (categories.view / categories.subcategories)
 // and search.html (products.search / tags.view)
+// All icons powered by Lucide (icons.js)
 // ==========================================================================
 
 import { CONFIG } from '../core/config.js';
@@ -14,6 +15,7 @@ import {
   escapeHtml,
 } from '../components/productCard.js';
 import { openQuickView } from '../components/quickView.js';
+import { hydrateLucideIcons, lucideIcon } from '../components/icons.js';
 import { fetchCategoryCatalog, fetchSearchCatalog } from '../core/dispatch.js';
 import { buildCatalogFacets } from '../core/parser.js';
 import { SEED_PRODUCTS } from '../data/pitchSeeds.js';
@@ -44,6 +46,7 @@ export async function initCatalogPage() {
 
   const activePillar = state.parentId || state.categoryId || (state.isSearchPage ? 'search' : '4257');
   initGlobalShell({ activePillar });
+  hydrateLucideIcons(document);
 
   const searchInput = document.getElementById('header-search-input');
   if (searchInput && state.query) {
@@ -282,7 +285,12 @@ function applyClientFiltersAndSort() {
   // Brand filter
   if (state.selectedBrands.size > 0) {
     list = list.filter((p) =>
-      [...state.selectedBrands].some((b) => (p.brand || '').toLowerCase() === b.toLowerCase())
+      [...state.selectedBrands].some(
+        (b) =>
+          (p.brand || '').toLowerCase() === b.toLowerCase() ||
+          (p.brand || '').toLowerCase().includes(b.toLowerCase()) ||
+          b.toLowerCase().includes((p.brand || '').toLowerCase())
+      )
     );
   }
 
@@ -350,9 +358,12 @@ function renderProductsAndPagination() {
     productsMount.className = '';
     productsMount.innerHTML = `
       <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-xl);padding:3rem 1.5rem;text-align:center">
-        <h3 style="font-size:1.15rem;font-weight:800;margin-bottom:0.5rem">No products match those exact filter criteria</h3>
+        <h3 style="font-size:1.15rem;font-weight:800;color:#5D1C25;margin-bottom:0.5rem">No products match those exact filter criteria</h3>
         <p style="color:var(--text-muted);font-size:13px;margin-bottom:1.25rem">Reset your active technical filters or search across all 29,000+ SCHNAP SKUs.</p>
-        <button type="button" class="btn btn-primary btn-sm" id="empty-reset-filters-btn">Clear Technical Filters</button>
+        <button type="button" class="btn btn-primary btn-sm" id="empty-reset-filters-btn">
+          ${lucideIcon('rotate-ccw', { size: 14 })}
+          <span>Clear Technical Filters</span>
+        </button>
       </div>
     `;
     document.getElementById('empty-reset-filters-btn')?.addEventListener('click', clearAllFacets);

@@ -1,11 +1,13 @@
 // ==========================================================================
 // SCHNAP Electric Products — 3-Step Trade Checkout Controller (checkout.js)
 // Hydrates checkout.html via dispatch=checkout.checkout, checkout.update_steps, checkout.place_order
+// All icons powered by Lucide (icons.js)
 // ==========================================================================
 
 import { CONFIG } from '../core/config.js';
 import { initGlobalShell } from '../components/header.js';
 import { formatAud, escapeHtml } from '../components/productCard.js';
+import { lucideIcon, hydrateLucideIcons } from '../components/icons.js';
 import {
   getCartState,
   subscribeCart,
@@ -16,19 +18,19 @@ import {
 import { normalizeImageUrl, buildSchematicPlaceholder } from '../core/media.js';
 import { showToast } from '../components/notifications.js';
 
-let selectedFulfillment = 'pickup'; // 'pickup' | 'sydney_same_day' | 'aus_courier'
+let selectedFulfillment = 'pickup'; // 'pickup' | 'sydney_same_day'
 let selectedPayment = 'card';
 let shippingCost = 0;
 
 export async function initCheckoutPage() {
   initGlobalShell();
+  hydrateLucideIcons(document);
 
   subscribeCart((state) => {
-    // Enforce $150 Delivery Rule automatically
     if (!state.isDeliveryUnlocked) {
       selectedFulfillment = 'pickup';
       shippingCost = 0;
-    } else if (selectedFulfillment === 'pickup' && ! document.body.dataset.userChosePickup) {
+    } else if (selectedFulfillment === 'pickup' && !document.body.dataset.userChosePickup) {
       selectedFulfillment = 'sydney_same_day';
       shippingCost = 0;
     }
@@ -38,7 +40,6 @@ export async function initCheckoutPage() {
 
   bindCheckoutEvents();
 
-  // Sync live checkout session from CS-Cart (dispatch=checkout.checkout)
   try {
     await rawDispatch('checkout.checkout');
   } catch {
@@ -55,21 +56,26 @@ function renderFulfillmentStep(state) {
     if (state.isDeliveryUnlocked) {
       ruleAlert.innerHTML = `
         <div style="background:var(--color-emerald-50);border:1px solid var(--color-emerald-500);border-radius:var(--radius-lg);padding:0.85rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem">
-          <div style="font-size:13px;color:var(--color-emerald-700)">
-            <strong>✓ $150+ Australia-Wide Delivery Unlocked!</strong> Choose courier delivery to your site/workshop or free Kingsgrove counter pickup.
+          <div style="font-size:13px;color:var(--color-emerald-700);display:flex;align-items:center;gap:6px">
+            ${lucideIcon('check-circle-2', { size: 16 })}
+            <span><strong>$150+ Australia-Wide Delivery Unlocked!</strong> Choose courier delivery to your site/workshop or free Kingsgrove counter pickup.</span>
           </div>
           <span class="badge badge-emerald mono">${formatAud(state.subtotal)}</span>
         </div>
       `;
     } else {
       ruleAlert.innerHTML = `
-        <div style="background:var(--color-amber-50);border:1px solid var(--color-amber-400);border-radius:var(--radius-lg);padding:0.85rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem;flex-wrap:wrap">
-          <div style="font-size:13px;color:var(--color-navy-900)">
-            <strong>📍 Orders under $150.00 AUD are Pickup Only at Kingsgrove NSW</strong><br/>
-            <span style="font-size:12px;color:var(--text-secondary)">Add <strong>${formatAud(state.remainingForDelivery)}</strong> more to unlock Australia-wide courier delivery, or collect free 7 days a week from <strong>${escapeHtml(CONFIG.STORE_FACTS.address)}</strong>.</span>
+        <div style="background:var(--color-red-50);border:1px solid var(--color-red-200);border-radius:var(--radius-lg);padding:0.85rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem;flex-wrap:wrap">
+          <div style="font-size:13px;color:#5D1C25">
+            <strong style="display:flex;align-items:center;gap:6px">
+              ${lucideIcon('map-pin', { size: 15 })}
+              <span>Orders under $150.00 AUD are Pickup Only at Kingsgrove NSW</span>
+            </strong>
+            <span style="font-size:12px;color:var(--text-secondary);display:block;margin-top:2px">Add <strong>${formatAud(state.remainingForDelivery)}</strong> more to unlock Australia-wide courier delivery, or collect free 7 days a week from <strong>${escapeHtml(CONFIG.STORE_FACTS.address)}</strong>.</span>
           </div>
           <a href="category.html?category_id=4257&slug=electrical.html" class="btn btn-outline btn-sm">
-            + Top Up Order
+            ${lucideIcon('plus', { size: 13 })}
+            <span>Top Up Order</span>
           </a>
         </div>
       `;
@@ -85,8 +91,9 @@ function renderFulfillmentStep(state) {
           <span class="badge badge-emerald">FREE • OPEN 7 DAYS</span>
           <span class="mono" style="font-weight:800">$0.00</span>
         </div>
-        <div style="font-weight:800;font-size:15px;color:var(--color-navy-900)">
-          Kingsgrove Trade Counter Pickup
+        <div style="font-weight:800;font-size:15px;color:#5D1C25;display:flex;align-items:center;gap:6px">
+          ${lucideIcon('map-pin', { size: 16 })}
+          <span>Kingsgrove Trade Counter Pickup</span>
         </div>
         <p style="font-size:12px;color:var(--text-secondary)">
           ${escapeHtml(CONFIG.STORE_FACTS.address)}<br/>
@@ -104,8 +111,9 @@ function renderFulfillmentStep(state) {
           </span>
           <span class="mono" style="font-weight:800">${canDeliver ? 'FREE / INCLUDED' : 'LOCKED'}</span>
         </div>
-        <div style="font-weight:800;font-size:15px;color:var(--color-navy-900)">
-          Australia-Wide Courier &amp; Same-Day Sydney Dispatch
+        <div style="font-weight:800;font-size:15px;color:#5D1C25;display:flex;align-items:center;gap:6px">
+          ${lucideIcon('truck', { size: 16 })}
+          <span>Australia-Wide Courier &amp; Same-Day Sydney Dispatch</span>
         </div>
         <p style="font-size:12px;color:var(--text-secondary)">
           ${
@@ -144,10 +152,10 @@ function renderOrderSummary(state) {
           <div style="display:grid;grid-template-columns:46px 1fr auto;gap:0.65rem;align-items:center;padding-block:0.5rem;border-bottom:1px solid var(--color-slate-100)">
             <img src="${escapeHtml(imgUrl)}" alt="" style="width:46px;height:46px;object-fit:contain;border:1px solid var(--border-subtle);border-radius:4px;padding:3px" onerror="this.src='${fallbackSvg}'" />
             <div style="min-width:0">
-              <div class="mono" style="font-size:11px;font-weight:700;color:var(--color-amber-600)">${escapeHtml(item.sku)} × ${item.qty}</div>
+              <div class="mono" style="font-size:11px;font-weight:700;color:#C4121A">${escapeHtml(item.sku)} × ${item.qty}</div>
               <div style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(item.title)}</div>
             </div>
-            <div class="mono" style="font-weight:700;font-size:13px">${formatAud(item.price * item.qty)}</div>
+            <div class="mono" style="font-weight:700;font-size:13px;color:#5D1C25">${formatAud(item.price * item.qty)}</div>
           </div>
         `;
       })
@@ -190,11 +198,9 @@ function bindCheckoutEvents() {
     renderFulfillmentStep(state);
     renderOrderSummary(state);
 
-    // Trigger CS-Cart dispatch=checkout.update_steps
     triggerUpdateSteps();
   });
 
-  // Suburb / Postcode / State live rate recalculation (dispatch=checkout.update_steps)
   ['checkout-city', 'checkout-state', 'checkout-zipcode'].forEach((id) => {
     document.getElementById(id)?.addEventListener('change', () => {
       triggerUpdateSteps();
@@ -252,10 +258,10 @@ function bindCheckoutEvents() {
       modalContent.innerHTML = `
         <div style="text-align:center;padding:1rem 0">
           <div style="width:56px;height:56px;border-radius:50%;background:var(--color-emerald-100);color:var(--color-emerald-700);display:inline-flex;align-items:center;justify-content:center;margin-bottom:1rem">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6L9 17l-5-5"/></svg>
+            ${lucideIcon('check', { size: 28, strokeWidth: 2.6 })}
           </div>
           <span class="badge badge-emerald mono" style="margin-bottom:8px">ORDER REFERENCE: ${orderRef}</span>
-          <h2 style="font-family:var(--font-display);font-size:1.5rem;font-weight:800;margin-bottom:0.5rem">
+          <h2 style="font-family:var(--font-display);font-size:1.5rem;font-weight:800;color:#5D1C25;margin-bottom:0.5rem">
             Trade Order Ready for Processing
           </h2>
           <p style="font-size:13px;color:var(--text-secondary);max-width:48ch;margin:0 auto 1.25rem">
@@ -265,11 +271,13 @@ function bindCheckoutEvents() {
           <div style="background:var(--color-slate-50);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);padding:1rem;text-align:left;font-size:13px;margin-bottom:1.25rem">
             <div style="display:flex;justify-content:space-between;margin-bottom:6px">
               <span style="color:var(--text-muted)">Fulfillment Method:</span>
-              <strong>${
-                selectedFulfillment === 'pickup'
-                  ? '📍 Free Kingsgrove Counter Pickup (3/192A Kingsgrove Rd)'
-                  : '🚚 Australia-Wide Courier / Same-Day Sydney Dispatch'
-              }</strong>
+              <strong style="display:inline-flex;align-items:center;gap:4px">
+                ${
+                  selectedFulfillment === 'pickup'
+                    ? `${lucideIcon('map-pin', { size: 14 })}<span>Free Kingsgrove Counter Pickup (3/192A Kingsgrove Rd)</span>`
+                    : `${lucideIcon('truck', { size: 14 })}<span>Australia-Wide Courier / Same-Day Sydney Dispatch</span>`
+                }
+              </strong>
             </div>
             <div style="display:flex;justify-content:space-between;margin-bottom:6px">
               <span style="color:var(--text-muted)">Payment Method:</span>
@@ -277,13 +285,15 @@ function bindCheckoutEvents() {
             </div>
             <div style="display:flex;justify-content:space-between;padding-top:6px;border-top:1px solid var(--border-subtle)">
               <span style="font-weight:700">Total (AUD Inc. GST):</span>
-              <strong class="mono" style="font-size:16px;color:var(--color-navy-900)">${formatAud(state.subtotal + shippingCost)}</strong>
+              <strong class="mono" style="font-size:16px;color:#5D1C25">${formatAud(state.subtotal + shippingCost)}</strong>
             </div>
           </div>
 
           <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap">
             <button type="button" class="btn btn-primary" id="modal-handoff-live-btn">
-              ⚡ Complete Payment on Live SCHNAP.com.au ↗
+              ${lucideIcon('zap', { size: 16 })}
+              <span>Complete Payment on Live SCHNAP.com.au</span>
+              ${lucideIcon('arrow-up-right', { size: 15 })}
             </button>
             <a href="index.html" class="btn btn-outline">Return to Storefront</a>
           </div>
@@ -298,7 +308,7 @@ function bindCheckoutEvents() {
 
     if (submitBtn) {
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Complete Trade Order (dispatch=checkout.place_order)';
+      submitBtn.innerHTML = `<span>Complete Trade Order (dispatch=checkout.place_order)</span>${lucideIcon('arrow-right', { size: 16 })}`;
     }
   });
 }

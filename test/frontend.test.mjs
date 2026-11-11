@@ -1,5 +1,6 @@
-// Tests frontend core modules (config, media, parser, cache, pitchSeeds). Run: node test/frontend.test.mjs
+// Tests frontend core modules (config, media, parser, cache, pitchSeeds, icons). Run: node test/frontend.test.mjs
 import assert from 'node:assert';
+import fs from 'node:fs';
 import { CONFIG } from '../assets/js/core/config.js';
 import { normalizeImageUrl, getRetinaSrcset, buildSchematicPlaceholder } from '../assets/js/core/media.js';
 import {
@@ -7,16 +8,22 @@ import {
   inferElectricalSpecs,
   inferBrandFromTitle,
   unwrapEnvelope,
+  parseBrandsResponse,
 } from '../assets/js/core/parser.js';
+import { lucideIcon, lucideStars } from '../assets/js/components/icons.js';
 import { SEED_PRODUCTS, SEED_REVIEWS, SEED_FAQS } from '../assets/js/data/pitchSeeds.js';
 
-// 1. Config & $150 Delivery Threshold
+// 1. Config, Brands Directory & $150 Delivery Threshold
 assert.strictEqual(CONFIG.FREE_DELIVERY_THRESHOLD, 150.0);
 assert.strictEqual(CONFIG.PILLARS.length, 6);
 assert.ok(CONFIG.PILLARS.some((p) => p.id === '4255' && p.name === 'Cable'));
 assert.ok(CONFIG.PILLARS.some((p) => p.id === '4264' && p.name === 'Tools'));
+assert.ok(CONFIG.BRANDS.length >= 25);
+assert.ok(CONFIG.BRANDS.some((b) => b.name === 'Clipsal' && b.featured));
+assert.ok(CONFIG.BRANDS.some((b) => b.name === 'Hager' && b.featured));
+assert.ok(CONFIG.BRANDS.some((b) => b.name === 'Legrand' && b.featured));
 
-// 2. Media normalizer & SVG schematic fallback
+// 2. Media normalizer & SVG schematic fallback (#5D1C25 / #FFFFFF / #EB1B24 palette)
 const cfUrl =
   'https://d35gtgjy55l0bn.cloudfront.net/images/thumbnails/200/200/detailed/163/LA210.png?t=1770916996';
 assert.strictEqual(normalizeImageUrl(cfUrl), cfUrl);
@@ -27,9 +34,19 @@ assert.strictEqual(
 );
 const placeholder = buildSchematicPlaceholder('LX620G2', 'LANX');
 assert.ok(placeholder.startsWith('data:image/svg+xml;utf8,'));
-assert.ok(decodeURIComponent(placeholder).includes('LX620G2'));
+const decodedSvg = decodeURIComponent(placeholder);
+assert.ok(decodedSvg.includes('LX620G2'));
+assert.ok(decodedSvg.includes('#5D1C25'));
+assert.ok(decodedSvg.includes('#EB1B24'));
 
-// 3. Parser utilities
+// 3. Lucide Icons Component
+const zapSvg = lucideIcon('zap', { size: 18 });
+assert.ok(zapSvg.includes('class="lucide lucide-zap"'));
+assert.ok(zapSvg.includes('width="18"'));
+const starsSvg = lucideStars(5);
+assert.ok(starsSvg.includes('lucide-star'));
+
+// 4. Parser utilities
 const hash = extractSecurityHashFromText(
   '<input type="hidden" name="security_hash" class="cm-no-hide-input" value="a6483cb4675e205177a15a42be8f3262" />'
 );
@@ -58,7 +75,19 @@ assert.strictEqual(env.title, 'Tools & Test');
 assert.strictEqual(env.securityHash, '0123456789abcdef0123456789abcdef');
 assert.strictEqual(env.notifications[0].type, 'success');
 
-// 4. Pitch seeds integrity
+assert.strictEqual(typeof parseBrandsResponse, 'function');
+
+// 5. Color Palette & Brands Page Verification
+const tokensCss = fs.readFileSync(new URL('../assets/css/tokens.css', import.meta.url), 'utf8');
+assert.ok(tokensCss.includes('#5D1C25'));
+assert.ok(tokensCss.includes('#FFFFFF'));
+assert.ok(tokensCss.includes('#EB1B24'));
+
+const brandsHtml = fs.readFileSync(new URL('../brands.html', import.meta.url), 'utf8');
+assert.ok(brandsHtml.includes('assets/js/pages/brands.js'));
+assert.ok(brandsHtml.includes('data-lucide='));
+
+// 6. Pitch seeds integrity
 assert.ok(SEED_PRODUCTS.length >= 14);
 for (const p of SEED_PRODUCTS) {
   assert.ok(p.id && p.sku && p.title && p.price > 0);

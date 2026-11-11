@@ -1,6 +1,7 @@
 // ==========================================================================
 // SCHNAP Electric Products — Product Detail Page Controller (product.js)
 // Hydrates product.html via dispatch=products.view&product_id={id}
+// All icons powered by Lucide (icons.js)
 // ==========================================================================
 
 import { CONFIG } from '../core/config.js';
@@ -12,6 +13,7 @@ import {
   escapeHtml,
 } from '../components/productCard.js';
 import { openQuickView } from '../components/quickView.js';
+import { lucideIcon, hydrateLucideIcons } from '../components/icons.js';
 import {
   fetchProductDetail,
   addToCart,
@@ -36,8 +38,8 @@ export async function initProductPage() {
     SEED_PRODUCTS[0];
 
   initGlobalShell({ activePillar: seedMatch?.categoryId || '4257' });
+  hydrateLucideIcons(document);
 
-  // Render seed product immediately if matched so there is zero layout shift
   if (seedMatch && String(seedMatch.id) === String(idParam)) {
     currentProduct = seedMatch;
     renderProductDetail(currentProduct);
@@ -96,7 +98,7 @@ function renderProductDetail(product) {
       <span>/</span>
       <a href="category.html?category_id=${encodeURIComponent(pillar.id)}&slug=${encodeURIComponent(pillar.slug)}">${escapeHtml(pillar.name)}</a>
       <span>/</span>
-      <span class="mono" style="color:var(--color-amber-600);font-weight:700">${escapeHtml(product.sku)}</span>
+      <span class="mono" style="color:#C4121A;font-weight:700">${escapeHtml(product.sku)}</span>
     `;
   }
 
@@ -163,7 +165,10 @@ function renderProductDetail(product) {
       </div>
 
       <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--color-slate-100);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--text-muted)">
-        <span>✓ Direct CloudFront CDN Media (<code class="mono">d35gtgjy55l0bn.cloudfront.net</code>)</span>
+        <span style="display:inline-flex;align-items:center;gap:4px">
+          ${lucideIcon('check', { size: 13 })}
+          <span>Direct CloudFront CDN Media (<code class="mono">d35gtgjy55l0bn.cloudfront.net</code>)</span>
+        </span>
         <span>Hover to inspect detail</span>
       </div>
     </div>
@@ -172,7 +177,7 @@ function renderProductDetail(product) {
     <div class="pdp-buy-box">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem;flex-wrap:wrap">
         <div style="display:flex;align-items:center;gap:0.5rem">
-          <span class="badge badge-navy">${escapeHtml(product.brand || 'SCHNAP Trade')}</span>
+          <a href="search.html?q=${encodeURIComponent(product.brand || 'SCHNAP')}" class="badge badge-navy">${escapeHtml(product.brand || 'SCHNAP Trade')}</a>
           <button
             type="button"
             class="sku-copy-pill"
@@ -181,13 +186,13 @@ function renderProductDetail(product) {
             style="font-size:12px;padding:4px 10px"
           >
             <span>SKU: ${escapeHtml(product.sku)}</span>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <rect x="9" y="9" width="13" height="13" rx="2"/>
-              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
-            </svg>
+            ${lucideIcon('copy', { size: 12, strokeWidth: 2.2 })}
           </button>
         </div>
-        <span class="badge badge-emerald">● In Stock — Immediate Dispatch</span>
+        <span class="badge badge-emerald">
+          ${lucideIcon('check-circle-2', { size: 12 })}
+          <span>In Stock — Immediate Dispatch</span>
+        </span>
       </div>
 
       <h1 class="pdp-title">${escapeHtml(product.title)}</h1>
@@ -226,7 +231,7 @@ function renderProductDetail(product) {
       <!-- Quick Contractor Quantity Pack Increments -->
       <div>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem">
-          <span style="font-size:12px;font-weight:700;color:var(--color-navy-800)">Select Trade Quantity / Box Pack:</span>
+          <span style="font-size:12px;font-weight:700;color:#5D1C25">Select Trade Quantity / Box Pack:</span>
           <span class="mono" style="font-size:12px;color:var(--text-muted)" id="pdp-line-total-preview">
             Line Total: <strong>${formatAud(product.price * selectedQty)}</strong>
           </span>
@@ -242,7 +247,9 @@ function renderProductDetail(product) {
       <!-- Primary Add to Cart Action Row -->
       <div style="display:grid;grid-template-columns:auto 1fr;gap:0.75rem;align-items:center">
         <div class="qty-stepper" style="height:48px">
-          <button type="button" class="qty-stepper__btn" data-pdp-step="-1" style="width:42px;font-size:18px">&minus;</button>
+          <button type="button" class="qty-stepper__btn" data-pdp-step="-1" style="width:42px">
+            ${lucideIcon('minus', { size: 16, strokeWidth: 2.5 })}
+          </button>
           <input
             type="text"
             inputmode="numeric"
@@ -252,14 +259,13 @@ function renderProductDetail(product) {
             style="width:56px;font-size:15px"
             aria-label="Order quantity"
           />
-          <button type="button" class="qty-stepper__btn" data-pdp-step="1" style="width:42px;font-size:18px">&#43;</button>
+          <button type="button" class="qty-stepper__btn" data-pdp-step="1" style="width:42px">
+            ${lucideIcon('plus', { size: 16, strokeWidth: 2.5 })}
+          </button>
         </div>
         <button type="button" class="btn btn-primary btn-lg" id="pdp-add-to-cart-btn" style="height:48px">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-            <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-            <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
-          </svg>
-          <span>Add to Trade Cart — ${formatAud(product.price * selectedQty)}</span>
+          ${lucideIcon('shopping-cart', { size: 18, strokeWidth: 2.4 })}
+          <span id="pdp-add-btn-label">Add to Trade Cart — ${formatAud(product.price * selectedQty)}</span>
         </button>
       </div>
 
@@ -275,7 +281,8 @@ function renderProductDetail(product) {
           class="btn btn-emerald"
           id="pdp-whatsapp-quote-btn"
         >
-          <span>💬 WhatsApp Bulk Quote</span>
+          ${lucideIcon('message-circle', { size: 16 })}
+          <span>WhatsApp Bulk Quote</span>
         </a>
         <button
           type="button"
@@ -283,7 +290,8 @@ function renderProductDetail(product) {
           data-open-drawer="quote"
           data-quote-prefill="${escapeHtml(`${selectedQty}x ${product.sku} — ${product.title}`)}"
         >
-          <span>📋 Add to Project Quote BOM</span>
+          ${lucideIcon('clipboard-list', { size: 16 })}
+          <span>Add to Project Quote BOM</span>
         </button>
       </div>
     </div>
@@ -311,7 +319,7 @@ function renderProductDetail(product) {
       <div class="pdp-tab-panel is-active" id="pdp-panel-specs">
         <div style="display:grid;grid-template-columns:1.2fr 0.8fr;gap:2rem;align-items:start">
           <div>
-            <h3 style="font-size:1rem;font-weight:800;margin-bottom:0.75rem">Technical Data Sheet — ${escapeHtml(product.sku)}</h3>
+            <h3 style="font-size:1rem;font-weight:800;color:#5D1C25;margin-bottom:0.75rem">Technical Data Sheet — ${escapeHtml(product.sku)}</h3>
             <table class="spec-table">
               <tbody>
                 ${specRowsHtml}
@@ -319,18 +327,18 @@ function renderProductDetail(product) {
             </table>
           </div>
           <div style="background:var(--color-slate-50);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);padding:1.25rem">
-            <h4 style="font-size:14px;font-weight:800;margin-bottom:0.5rem">Contractor Application Notes</h4>
+            <h4 style="font-size:14px;font-weight:800;color:#5D1C25;margin-bottom:0.5rem">Contractor Application Notes</h4>
             <ul style="list-style:disc;padding-left:1.2rem;font-size:13px;color:var(--text-secondary);display:flex;flex-direction:column;gap:0.4rem">
               <li>Must be installed by a licensed electrician in accordance with <strong>AS/NZS 3000 Wiring Rules</strong>.</li>
               <li>Stocked in commercial project quantities at SCHNAP Kingsgrove NSW Warehouse.</li>
-              <li>Backed by 30-day trade return guarantee and full manufacturer warranty.</li>
+              <li>Backed by 100-day trade return policy and full manufacturer warranty.</li>
             </ul>
           </div>
         </div>
       </div>
 
       <div class="pdp-tab-panel" id="pdp-panel-compliance">
-        <h3 style="font-size:1rem;font-weight:800;margin-bottom:0.75rem">Australian Regulatory &amp; Standards Compliance</h3>
+        <h3 style="font-size:1rem;font-weight:800;color:#5D1C25;margin-bottom:0.75rem">Australian Regulatory &amp; Standards Compliance</h3>
         <p style="font-size:14px;color:var(--text-secondary);line-height:1.6;max-width:75ch">
           All electrical protection, cable, and lighting equipment distributed by SCHNAP Electric Products complies with Australian Regulatory Compliance Mark (RCM) requirements and relevant AS/NZS standards. Tax invoices with full ABN and part number itemization are issued automatically upon checkout.
         </p>
@@ -339,14 +347,20 @@ function renderProductDetail(product) {
       <div class="pdp-tab-panel" id="pdp-panel-delivery">
         <div class="pdp-fulfillment-card">
           <div>
-            <h4 style="font-weight:800;margin-bottom:4px">📍 Free 7-Day Kingsgrove Trade Counter Pickup</h4>
+            <h4 style="font-weight:800;color:#5D1C25;margin-bottom:4px;display:flex;align-items:center;gap:6px">
+              ${lucideIcon('map-pin', { size: 16 })}
+              <span>Free 7-Day Kingsgrove Trade Counter Pickup</span>
+            </h4>
             <p style="font-size:13px;color:var(--text-secondary)">
               Available on <strong>all orders (no minimum spend)</strong>. Collect from <strong>${escapeHtml(CONFIG.STORE_FACTS.address)}</strong>.<br/>
               Hours: <strong>${escapeHtml(CONFIG.STORE_FACTS.hoursShort)}</strong>.
             </p>
           </div>
           <div>
-            <h4 style="font-weight:800;margin-bottom:4px">🚚 Australia-Wide Courier &amp; Same-Day Sydney Delivery</h4>
+            <h4 style="font-weight:800;color:#5D1C25;margin-bottom:4px;display:flex;align-items:center;gap:6px">
+              ${lucideIcon('truck', { size: 16 })}
+              <span>Australia-Wide Courier &amp; Same-Day Sydney Delivery</span>
+            </h4>
             <p style="font-size:13px;color:var(--text-secondary)">
               Unlocked automatically when your cart reaches <strong>$150.00 AUD or more</strong>. Same-day Sydney metro courier dispatch available on weekday morning trade orders.
             </p>
@@ -372,8 +386,9 @@ function updateFulfillmentClarityBox() {
   box.innerHTML = `
     <div class="pdp-fulfillment-card" style="border-color:${qualifiesDelivery ? 'var(--color-emerald-500)' : 'var(--border-strong)'}">
       <div>
-        <div style="display:flex;align-items:center;gap:6px;font-weight:700;font-size:13px;color:${qualifiesDelivery ? 'var(--color-emerald-700)' : 'var(--color-navy-900)'}">
-          <span>${qualifiesDelivery ? '✓ Qualifies for Australia-Wide Delivery' : '🚚 Australia-Wide Courier Delivery ($150+ Rule)'}</span>
+        <div style="display:flex;align-items:center;gap:6px;font-weight:700;font-size:13px;color:${qualifiesDelivery ? 'var(--color-emerald-700)' : '#5D1C25'}">
+          ${qualifiesDelivery ? lucideIcon('check-circle-2', { size: 15 }) : lucideIcon('truck', { size: 15 })}
+          <span>${qualifiesDelivery ? 'Qualifies for Australia-Wide Delivery' : 'Australia-Wide Courier Delivery ($150+ Rule)'}</span>
         </div>
         <p style="font-size:12px;color:var(--text-secondary);margin-top:4px">
           ${
@@ -384,8 +399,9 @@ function updateFulfillmentClarityBox() {
         </p>
       </div>
       <div>
-        <div style="font-weight:700;font-size:13px;color:var(--color-navy-900)">
-          📍 Free Kingsgrove Counter Pickup (Open 7 Days)
+        <div style="display:flex;align-items:center;gap:6px;font-weight:700;font-size:13px;color:#5D1C25">
+          ${lucideIcon('map-pin', { size: 15 })}
+          <span>Free Kingsgrove Counter Pickup (Open 7 Days)</span>
         </div>
         <p style="font-size:12px;color:var(--text-secondary);margin-top:4px">
           Unit 3/192A Kingsgrove Rd, Kingsgrove NSW 2208 • Ready for collection 7 days a week.
@@ -403,13 +419,13 @@ function bindPdpEvents() {
     selectedQty = Math.max(1, parseInt(qty, 10) || 1);
     const input = document.getElementById('pdp-qty-input');
     const preview = document.getElementById('pdp-line-total-preview');
-    const addBtn = document.getElementById('pdp-add-to-cart-btn');
+    const addBtnLabel = document.getElementById('pdp-add-btn-label');
     if (input) input.value = String(selectedQty);
     if (preview && currentProduct) {
       preview.innerHTML = `Line Total: <strong>${formatAud(currentProduct.price * selectedQty)}</strong>`;
     }
-    if (addBtn && currentProduct) {
-      addBtn.querySelector('span').textContent = `Add to Trade Cart — ${formatAud(currentProduct.price * selectedQty)}`;
+    if (addBtnLabel && currentProduct) {
+      addBtnLabel.textContent = `Add to Trade Cart — ${formatAud(currentProduct.price * selectedQty)}`;
     }
     updateFulfillmentClarityBox();
   };

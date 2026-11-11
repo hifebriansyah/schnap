@@ -1,6 +1,7 @@
 // ==========================================================================
 // SCHNAP Electric Products — Full Trade Cart & BOM Controller (cart.js)
 // Hydrates cart.html via dispatch=checkout.cart, checkout.update, checkout.delete
+// All icons powered by Lucide (icons.js)
 // ==========================================================================
 
 import { CONFIG } from '../core/config.js';
@@ -12,6 +13,7 @@ import {
   bindProductCatalogEvents,
 } from '../components/productCard.js';
 import { openQuickView } from '../components/quickView.js';
+import { lucideIcon, hydrateLucideIcons } from '../components/icons.js';
 import {
   subscribeCart,
   addToCart,
@@ -28,6 +30,7 @@ import { SEED_PRODUCTS } from '../data/pitchSeeds.js';
 
 export async function initCartPage() {
   initGlobalShell();
+  hydrateLucideIcons(document);
   bindCartPageEvents();
 
   subscribeCart((state) => {
@@ -51,15 +54,15 @@ function renderFulfillmentTracker(state) {
         <div class="fulfillment-icon-circle">
           ${
             state.isDeliveryUnlocked
-              ? `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>`
-              : `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`
+              ? lucideIcon('check', { size: 22, strokeWidth: 2.5 })
+              : lucideIcon('truck', { size: 22, strokeWidth: 2.2 })
           }
         </div>
         <div>
-          <h2 style="font-size:1.05rem;font-weight:800;color:var(--color-navy-900)">
+          <h2 style="font-size:1.05rem;font-weight:800;color:#5D1C25">
             ${
               state.isDeliveryUnlocked
-                ? '✓ Australia-Wide Courier Delivery & Same-Day Sydney Dispatch Unlocked!'
+                ? 'Australia-Wide Courier Delivery & Same-Day Sydney Dispatch Unlocked!'
                 : `Add ${formatAud(state.remainingForDelivery)} more to unlock Australia-Wide Courier Delivery`
             }
           </h2>
@@ -72,7 +75,7 @@ function renderFulfillmentTracker(state) {
           </p>
         </div>
       </div>
-      <div class="mono" style="font-size:13px;font-weight:800;color:var(--color-navy-900)">
+      <div class="mono" style="font-size:13px;font-weight:800;color:#5D1C25">
         ${formatAud(state.subtotal)} / ${formatAud(state.threshold)}
       </div>
     </div>
@@ -83,20 +86,20 @@ function renderFulfillmentTracker(state) {
 
     <div class="fulfillment-dual-options">
       <div class="fulfillment-option-pill ${!state.isDeliveryUnlocked ? 'is-active' : ''}">
-        <span style="font-size:16px">📍</span>
+        <span style="color:#EB1B24;margin-top:2px">${lucideIcon('map-pin', { size: 18 })}</span>
         <div>
-          <strong style="display:block;color:var(--color-navy-900)">Free 7-Day Kingsgrove Trade Counter Pickup</strong>
+          <strong style="display:block;color:#5D1C25">Free 7-Day Kingsgrove Trade Counter Pickup</strong>
           <span style="color:var(--text-muted)">Always unlocked ($0 minimum) • ${escapeHtml(CONFIG.STORE_FACTS.address)}</span>
         </div>
       </div>
       <div class="fulfillment-option-pill ${state.isDeliveryUnlocked ? 'is-active' : ''}">
-        <span style="font-size:16px">🚚</span>
+        <span style="color:${state.isDeliveryUnlocked ? 'var(--color-emerald-600)' : '#EB1B24'};margin-top:2px">${lucideIcon('truck', { size: 18 })}</span>
         <div>
-          <strong style="display:block;color:${state.isDeliveryUnlocked ? 'var(--color-emerald-700)' : 'var(--color-navy-900)'}">
+          <strong style="display:block;color:${state.isDeliveryUnlocked ? 'var(--color-emerald-700)' : '#5D1C25'}">
             Australia-Wide Delivery &amp; Same-Day Sydney Dispatch
           </strong>
           <span style="color:var(--text-muted)">
-            ${state.isDeliveryUnlocked ? '✓ Unlocked ($150+ order)' : `Requires $150.00+ order (${formatAud(state.remainingForDelivery)} away)`}
+            ${state.isDeliveryUnlocked ? 'Unlocked ($150+ order)' : `Requires $150.00+ order (${formatAud(state.remainingForDelivery)} away)`}
           </span>
         </div>
       </div>
@@ -118,12 +121,13 @@ function renderCartTable(state) {
     tbody.innerHTML = `
       <tr>
         <td colspan="5" style="text-align:center;padding:3.5rem 1.5rem">
-          <div style="font-size:1.15rem;font-weight:800;color:var(--color-navy-900);margin-bottom:0.5rem">Your Trade Cart is Empty</div>
+          <div style="font-size:1.15rem;font-weight:800;color:#5D1C25;margin-bottom:0.5rem">Your Trade Cart is Empty</div>
           <p style="color:var(--text-muted);font-size:13px;margin-bottom:1.25rem">
             Use the Quick-Add by SKU bar above or browse our 6-pillar electrical catalog.
           </p>
           <a href="category.html?category_id=4257&slug=electrical.html" class="btn btn-primary btn-sm">
-            Browse Electrical Catalog →
+            <span>Browse Electrical Catalog</span>
+            ${lucideIcon('arrow-right', { size: 14 })}
           </a>
         </td>
       </tr>
@@ -151,18 +155,19 @@ function renderCartTable(state) {
                 </div>
                 <a
                   href="product.html?id=${encodeURIComponent(item.id)}"
-                  style="font-weight:700;color:var(--color-navy-900);font-size:14px;line-height:1.35;display:block"
+                  style="font-weight:700;color:var(--text-primary);font-size:14px;line-height:1.35;display:block"
                 >
                   ${escapeHtml(item.title)}
                 </a>
-                <div style="font-size:11px;color:var(--color-emerald-600);font-weight:600;margin-top:3px">
-                  ● In Stock — Kingsgrove Warehouse
+                <div style="font-size:11px;color:var(--color-emerald-600);font-weight:600;margin-top:3px;display:inline-flex;align-items:center;gap:4px">
+                  ${lucideIcon('check-circle-2', { size: 12 })}
+                  <span>In Stock — Kingsgrove Warehouse</span>
                 </div>
               </div>
             </div>
           </td>
           <td class="mono" style="white-space:nowrap">
-            <strong style="font-size:15px">${formatAud(item.price)}</strong>
+            <strong style="font-size:15px;color:#5D1C25">${formatAud(item.price)}</strong>
             ${
               item.listPrice > item.price
                 ? `<div style="font-size:11px;color:var(--color-slate-400);text-decoration:line-through">${formatAud(item.listPrice)}</div>`
@@ -171,7 +176,9 @@ function renderCartTable(state) {
           </td>
           <td style="white-space:nowrap">
             <div class="qty-stepper">
-              <button type="button" class="qty-stepper__btn" data-cart-qty="${item.qty - 1}" data-id="${escapeHtml(item.id)}">&minus;</button>
+              <button type="button" class="qty-stepper__btn" data-cart-qty="${item.qty - 1}" data-id="${escapeHtml(item.id)}">
+                ${lucideIcon('minus', { size: 13, strokeWidth: 2.5 })}
+              </button>
               <input
                 type="text"
                 inputmode="numeric"
@@ -180,10 +187,12 @@ function renderCartTable(state) {
                 data-cart-input="${escapeHtml(item.id)}"
                 aria-label="Quantity for ${escapeHtml(item.sku)}"
               />
-              <button type="button" class="qty-stepper__btn" data-cart-qty="${item.qty + 1}" data-id="${escapeHtml(item.id)}">&#43;</button>
+              <button type="button" class="qty-stepper__btn" data-cart-qty="${item.qty + 1}" data-id="${escapeHtml(item.id)}">
+                ${lucideIcon('plus', { size: 13, strokeWidth: 2.5 })}
+              </button>
             </div>
           </td>
-          <td class="mono" style="white-space:nowrap;font-weight:800;font-size:16px;color:var(--color-navy-900)">
+          <td class="mono" style="white-space:nowrap;font-weight:800;font-size:16px;color:#5D1C25">
             ${formatAud(lineTotal)}
           </td>
           <td style="text-align:right">
@@ -192,9 +201,10 @@ function renderCartTable(state) {
               class="btn btn-ghost btn-sm"
               data-cart-delete="${escapeHtml(item.id)}"
               title="Remove line item (dispatch=checkout.delete)"
-              style="color:var(--color-slate-400)"
+              style="color:var(--color-slate-500)"
             >
-              ✕ Remove
+              ${lucideIcon('trash-2', { size: 14 })}
+              <span>Remove</span>
             </button>
           </td>
         </tr>
@@ -218,7 +228,7 @@ function renderCartSummary(state) {
   if (deliveryEl) {
     deliveryEl.innerHTML = state.isDeliveryUnlocked
       ? `<span style="color:var(--color-emerald-600);font-weight:700">Eligible ($150+ Unlocked)</span>`
-      : `<span style="color:var(--color-amber-600);font-weight:700">Free Kingsgrove Pickup</span>`;
+      : `<span style="color:#5D1C25;font-weight:700">Free Kingsgrove Pickup</span>`;
   }
   if (totalEl) totalEl.textContent = formatAud(state.subtotal);
 }

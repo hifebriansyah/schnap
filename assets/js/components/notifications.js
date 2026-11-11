@@ -1,7 +1,10 @@
 // ==========================================================================
 // SCHNAP Electric Products — Toast Notifications Component (notifications.js)
 // Maps CS-Cart's notifications envelope & optimistic trade actions into toasts.
+// All icons powered by Lucide (icons.js)
 // ==========================================================================
+
+import { lucideIcon } from './icons.js';
 
 let containerEl = null;
 
@@ -22,10 +25,10 @@ export function showToast({ title = 'SCHNAP Trade', message = '', type = 'info',
 
   const iconSvg =
     type === 'success'
-      ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>`
+      ? `<span style="color:#10B981">${lucideIcon('check-circle-2', { size: 18, strokeWidth: 2.4 })}</span>`
       : type === 'error'
-        ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>`
-        : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>`;
+        ? `<span style="color:#EB1B24">${lucideIcon('circle-alert', { size: 18, strokeWidth: 2.4 })}</span>`
+        : `<span style="color:#FF7A80">${lucideIcon('info', { size: 18, strokeWidth: 2.4 })}</span>`;
 
   toast.innerHTML = `
     <div style="margin-top:2px;flex-shrink:0">${iconSvg}</div>

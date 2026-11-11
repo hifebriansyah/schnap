@@ -1,12 +1,14 @@
 // ==========================================================================
 // SCHNAP Electric Products — Reusable B2B Product Card & Trade Table Component
 // Supports Grid View & Compact Trade Table View (Power-User BOM Mode)
+// All icons powered by Lucide (icons.js)
 // ==========================================================================
 
 import { normalizeImageUrl, getRetinaSrcset, buildSchematicPlaceholder } from '../core/media.js';
 import { addToCart, prefetchResource } from '../core/dispatch.js';
 import { bindHoverPrefetch } from '../core/cache.js';
 import { showToast } from './notifications.js';
+import { lucideIcon } from './icons.js';
 
 export function formatAud(amount) {
   const num = Number(amount) || 0;
@@ -62,10 +64,7 @@ export function renderProductCard(product) {
           title="Quick View Technical Sheet"
           aria-label="Quick View ${title}"
         >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-            <circle cx="12" cy="12" r="3"/>
-          </svg>
+          ${lucideIcon('eye', { size: 15, strokeWidth: 2.2 })}
         </button>
       </div>
 
@@ -90,10 +89,7 @@ export function renderProductCard(product) {
             title="Click to copy part number ${sku}"
           >
             <span>${sku}</span>
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <rect x="9" y="9" width="13" height="13" rx="2"/>
-              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
-            </svg>
+            ${lucideIcon('copy', { size: 11, strokeWidth: 2.2 })}
           </button>
           <span class="product-card__brand">${brand}</span>
         </div>
@@ -116,7 +112,9 @@ export function renderProductCard(product) {
 
         <div class="product-card__actions">
           <div class="qty-stepper" aria-label="Quantity selector">
-            <button type="button" class="qty-stepper__btn" data-qty-step="-1" aria-label="Decrease quantity">&minus;</button>
+            <button type="button" class="qty-stepper__btn" data-qty-step="-1" aria-label="Decrease quantity">
+              ${lucideIcon('minus', { size: 13, strokeWidth: 2.5 })}
+            </button>
             <input
               type="text"
               inputmode="numeric"
@@ -125,17 +123,16 @@ export function renderProductCard(product) {
               min="1"
               aria-label="Quantity for ${sku}"
             />
-            <button type="button" class="qty-stepper__btn" data-qty-step="1" aria-label="Increase quantity">&#43;</button>
+            <button type="button" class="qty-stepper__btn" data-qty-step="1" aria-label="Increase quantity">
+              ${lucideIcon('plus', { size: 13, strokeWidth: 2.5 })}
+            </button>
           </div>
           <button
             type="button"
             class="btn btn-primary product-card__add-btn"
             data-add-to-cart="${id}"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-              <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
-            </svg>
+            ${lucideIcon('shopping-cart', { size: 14, strokeWidth: 2.4 })}
             <span>Add</span>
           </button>
         </div>
@@ -175,10 +172,7 @@ export function renderTradeTable(products = []) {
           <td style="white-space:nowrap">
             <button type="button" class="sku-copy-pill" data-copy-sku="${sku}" title="Copy SKU">
               <span>${sku}</span>
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                <rect x="9" y="9" width="13" height="13" rx="2"/>
-                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
-              </svg>
+              ${lucideIcon('copy', { size: 11, strokeWidth: 2.2 })}
             </button>
             <div style="font-size:11px;color:var(--text-muted);margin-top:3px;font-weight:600">${brand}</div>
           </td>
@@ -194,7 +188,7 @@ export function renderTradeTable(products = []) {
             }
           </td>
           <td style="white-space:nowrap" class="mono">
-            <strong style="font-size:15px;color:var(--color-navy-900)">${formatAud(product.price)}</strong>
+            <strong style="font-size:15px;color:#5D1C25">${formatAud(product.price)}</strong>
             ${
               product.listPrice > product.price
                 ? `<div style="font-size:11px;color:var(--color-slate-400);text-decoration:line-through">${formatAud(product.listPrice)}</div>`
@@ -204,17 +198,20 @@ export function renderTradeTable(products = []) {
           <td style="white-space:nowrap;width:230px">
             <div style="display:flex;align-items:center;gap:8px">
               <div class="qty-stepper">
-                <button type="button" class="qty-stepper__btn" data-qty-step="-1">&minus;</button>
+                <button type="button" class="qty-stepper__btn" data-qty-step="-1">
+                  ${lucideIcon('minus', { size: 12, strokeWidth: 2.5 })}
+                </button>
                 <input type="text" inputmode="numeric" class="qty-stepper__input" value="1" min="1" aria-label="Qty for ${sku}" />
-                <button type="button" class="qty-stepper__btn" data-qty-step="1">&#43;</button>
+                <button type="button" class="qty-stepper__btn" data-qty-step="1">
+                  ${lucideIcon('plus', { size: 12, strokeWidth: 2.5 })}
+                </button>
               </div>
               <button type="button" class="btn btn-primary btn-sm" data-add-to-cart="${id}">
-                + Add
+                ${lucideIcon('plus', { size: 13, strokeWidth: 2.5 })}
+                <span>Add</span>
               </button>
               <button type="button" class="product-card__qv-trigger" data-quick-view="${id}" title="Quick View">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-                </svg>
+                ${lucideIcon('eye', { size: 14, strokeWidth: 2.2 })}
               </button>
             </div>
           </td>
@@ -230,10 +227,10 @@ export function renderTradeTable(products = []) {
           <tr>
             <th>Item</th>
             <th>Part Number / SKU</th>
-            <th>Description & Electrical Ratings</th>
+            <th>Description &amp; Electrical Ratings</th>
             <th>Trade Disc.</th>
             <th>Trade Price</th>
-            <th>Order Qty & Action</th>
+            <th>Order Qty &amp; Action</th>
           </tr>
         </thead>
         <tbody>
@@ -324,7 +321,7 @@ export function bindProductCatalogEvents(containerEl, { getProducts, onQuickView
       if (product) {
         const nextCart = addToCart(product, qty);
         const origHtml = addBtn.innerHTML;
-        addBtn.innerHTML = `<span>✓ Added (${qty})</span>`;
+        addBtn.innerHTML = `${lucideIcon('check', { size: 14, strokeWidth: 2.5 })}<span>Added (${qty})</span>`;
         addBtn.classList.add('btn-emerald');
         showToast({
           title: `Added ${qty}× ${product.sku}`,

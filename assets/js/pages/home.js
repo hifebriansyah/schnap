@@ -1,6 +1,7 @@
 // ==========================================================================
 // SCHNAP Electric Products — Home Page Controller (home.js)
 // Hydrates index.html via dispatch=index.index & dispatch=products.newest
+// All icons powered by Lucide (icons.js)
 // ==========================================================================
 
 import { CONFIG } from '../core/config.js';
@@ -12,6 +13,7 @@ import {
   escapeHtml,
 } from '../components/productCard.js';
 import { openQuickView } from '../components/quickView.js';
+import { lucideIcon, lucideStars, hydrateLucideIcons } from '../components/icons.js';
 import { fetchHomeCatalog } from '../core/dispatch.js';
 import { SEED_PRODUCTS, SEED_REVIEWS, SEED_FAQS } from '../data/pitchSeeds.js';
 
@@ -27,6 +29,7 @@ export async function initHomePage() {
   renderBrandsRibbon();
   renderReviewsAndFaq();
   bindHomeInteractions();
+  hydrateLucideIcons(document);
 
   // Hydrate with live CS-Cart products (dispatch=products.newest) while keeping featured homepage items
   try {
@@ -61,13 +64,13 @@ function renderBentoCategories() {
   const mount = document.getElementById('home-bento-grid');
   if (!mount) return;
 
-  const icons = {
-    '4255': `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9h16M4 15h16M10 3L8 21M16 3l-2 18"/></svg>`,
-    '4257': `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
-    '4258': `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 00-4 12.7V17h8v-2.3A7 7 0 0012 2z"/></svg>`,
-    '4261': `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2"/></svg>`,
-    '4263': `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-2.82 1.18V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00-1.18-2.82H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9"/></svg>`,
-    '4264': `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>`,
+  const pillarIcons = {
+    '4255': 'cable',
+    '4257': 'zap',
+    '4258': 'lightbulb',
+    '4261': 'sun',
+    '4263': 'factory',
+    '4264': 'wrench',
   };
 
   mount.innerHTML = CONFIG.PILLARS.map((pillar) => {
@@ -91,7 +94,7 @@ function renderBentoCategories() {
               <h3><a href="${pillarUrl}">${escapeHtml(pillar.name)}</a></h3>
             </div>
             <div class="bento-icon-box">
-              ${icons[pillar.id] || icons['4257']}
+              ${lucideIcon(pillarIcons[pillar.id] || 'zap', { size: 22, strokeWidth: 2.2 })}
             </div>
           </div>
           <p style="margin-top:4px">${escapeHtml(pillar.tagline)}</p>
@@ -103,7 +106,7 @@ function renderBentoCategories() {
 
         <a href="${pillarUrl}" class="bento-card-footer">
           <span>Open ${escapeHtml(pillar.name)} Catalog</span>
-          <span>→</span>
+          ${lucideIcon('arrow-right', { size: 15 })}
         </a>
       </div>
     `;
@@ -142,19 +145,33 @@ function renderBrandsRibbon() {
   const mount = document.getElementById('home-brands-mount');
   if (!mount) return;
 
-  mount.innerHTML = CONFIG.BRANDS.map(
-    (b) => `
-      <a
-        href="search.html?q=${encodeURIComponent(b.query)}&brand=${encodeURIComponent(b.name)}"
-        class="brand-tile"
-        title="Shop ${escapeHtml(b.name)} — ${escapeHtml(b.specialty)}"
-      >
-        <img src="${escapeHtml(b.logo)}" alt="${escapeHtml(b.name)}" loading="lazy" />
-        <span>${escapeHtml(b.name)}</span>
-        <small style="font-size:10px;color:var(--text-muted);text-align:center">${escapeHtml(b.specialty)}</small>
-      </a>
-    `
-  ).join('');
+  mount.innerHTML = CONFIG.BRANDS.filter((b) => b.featured)
+    .slice(0, 8)
+    .map((b) => {
+      const initials = b.name
+        .split(/[\s-]+/)
+        .map((w) => w.charAt(0))
+        .join('')
+        .slice(0, 3)
+        .toUpperCase();
+
+      const mediaHtml = b.logo
+        ? `<img src="${escapeHtml(b.logo)}" alt="${escapeHtml(b.name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'" /><span class="brand-monogram" style="display:none">${escapeHtml(initials)}</span>`
+        : `<span class="brand-monogram">${escapeHtml(initials)}</span>`;
+
+      return `
+        <a
+          href="search.html?q=${encodeURIComponent(b.query)}&brand=${encodeURIComponent(b.name)}"
+          class="brand-tile"
+          title="Shop ${escapeHtml(b.name)} — ${escapeHtml(b.specialty)}"
+        >
+          ${mediaHtml}
+          <span>${escapeHtml(b.name)}</span>
+          <small style="font-size:10px;color:var(--text-muted);text-align:center">${escapeHtml(b.specialty)}</small>
+        </a>
+      `;
+    })
+    .join('');
 }
 
 function renderReviewsAndFaq() {
@@ -165,13 +182,13 @@ function renderReviewsAndFaq() {
         <article class="review-card">
           <div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem">
-              <span class="review-stars">★★★★★</span>
+              ${lucideStars(r.rating || 5, { size: 14 })}
               <span class="badge badge-emerald">${escapeHtml(r.tag)}</span>
             </div>
-            <p style="font-size:14px;color:var(--color-navy-800);line-height:1.6">"${escapeHtml(r.quote)}"</p>
+            <p style="font-size:14px;color:var(--text-primary);line-height:1.6">"${escapeHtml(r.quote)}"</p>
           </div>
           <div style="padding-top:0.75rem;border-top:1px solid var(--color-slate-100);font-size:12px">
-            <strong style="color:var(--color-navy-900);display:block">${escapeHtml(r.author)}</strong>
+            <strong style="color:#5D1C25;display:block">${escapeHtml(r.author)}</strong>
             <span style="color:var(--text-muted)">${escapeHtml(r.date)}</span>
           </div>
         </article>
@@ -186,7 +203,7 @@ function renderReviewsAndFaq() {
         <div class="faq-item ${idx === 0 ? 'is-open' : ''}">
           <button type="button" class="faq-question" data-faq-toggle>
             <span>${escapeHtml(item.q)}</span>
-            <span class="mono" style="color:var(--color-amber-600)">+</span>
+            <span style="color:#EB1B24">${lucideIcon('chevron-down', { size: 16 })}</span>
           </button>
           <div class="faq-answer">${escapeHtml(item.a)}</div>
         </div>

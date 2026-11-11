@@ -58,7 +58,7 @@ export function getRetinaSrcset(rawUrl) {
 
 /**
  * Generates a clean SVG technical schematic placeholder with the brand name and SKU
- * rather than a broken image icon, per Section 5.2 of plan.md.
+ * using the #5D1C25 / #FFFFFF / #EB1B24 palette.
  */
 export function buildSchematicPlaceholder(sku = 'SCHNAP-SKU', brand = 'SCHNAP ELECTRIC') {
   const safeSku = String(sku || 'SCHNAP-PART').replace(/[<>&"']/g, '').slice(0, 24);
@@ -67,28 +67,28 @@ export function buildSchematicPlaceholder(sku = 'SCHNAP-SKU', brand = 'SCHNAP EL
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
     <defs>
       <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#E2E8F0" stroke-width="1"/>
+        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#F4EDEE" stroke-width="1"/>
       </pattern>
     </defs>
-    <rect width="300" height="300" fill="#F8FAFC"/>
+    <rect width="300" height="300" fill="#FAF7F8"/>
     <rect width="300" height="300" fill="url(#grid)"/>
-    <rect x="24" y="24" width="252" height="252" rx="10" fill="none" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="5 4"/>
-    <g transform="translate(150, 122)" stroke="#0F172A" stroke-width="2" fill="none">
-      <rect x="-42" y="-36" width="84" height="72" rx="6" fill="#FFFFFF" stroke="#0F172A" stroke-width="2"/>
-      <line x1="-22" y1="-52" x2="-22" y2="-36" stroke="#F97316" stroke-width="2.5"/>
-      <line x1="22" y1="-52" x2="22" y2="-36" stroke="#F97316" stroke-width="2.5"/>
-      <line x1="-22" y1="36" x2="-22" y2="52" stroke="#0F172A" stroke-width="2.5"/>
-      <line x1="22" y1="36" x2="22" y2="52" stroke="#0F172A" stroke-width="2.5"/>
-      <circle cx="-22" cy="-20" r="3.5" fill="#0F172A"/>
-      <circle cx="22" cy="-20" r="3.5" fill="#0F172A"/>
-      <circle cx="-22" cy="20" r="3.5" fill="#0F172A"/>
-      <circle cx="22" cy="20" r="3.5" fill="#0F172A"/>
-      <path d="M -22 16 L -8 -14" stroke="#F97316" stroke-width="2.2"/>
-      <path d="M 22 16 L 8 -14" stroke="#F97316" stroke-width="2.2"/>
+    <rect x="24" y="24" width="252" height="252" rx="10" fill="none" stroke="#D1BFC2" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <g transform="translate(150, 122)" stroke="#5D1C25" stroke-width="2" fill="none">
+      <rect x="-42" y="-36" width="84" height="72" rx="6" fill="#FFFFFF" stroke="#5D1C25" stroke-width="2"/>
+      <line x1="-22" y1="-52" x2="-22" y2="-36" stroke="#EB1B24" stroke-width="2.5"/>
+      <line x1="22" y1="-52" x2="22" y2="-36" stroke="#EB1B24" stroke-width="2.5"/>
+      <line x1="-22" y1="36" x2="-22" y2="52" stroke="#5D1C25" stroke-width="2.5"/>
+      <line x1="22" y1="36" x2="22" y2="52" stroke="#5D1C25" stroke-width="2.5"/>
+      <circle cx="-22" cy="-20" r="3.5" fill="#5D1C25"/>
+      <circle cx="22" cy="-20" r="3.5" fill="#5D1C25"/>
+      <circle cx="-22" cy="20" r="3.5" fill="#5D1C25"/>
+      <circle cx="22" cy="20" r="3.5" fill="#5D1C25"/>
+      <path d="M -22 16 L -8 -14" stroke="#EB1B24" stroke-width="2.2"/>
+      <path d="M 22 16 L 8 -14" stroke="#EB1B24" stroke-width="2.2"/>
     </g>
-    <text x="150" y="218" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#64748B" letter-spacing="1.2">${safeBrand}</text>
-    <rect x="65" y="230" width="170" height="26" rx="4" fill="#0F172A"/>
-    <text x="150" y="247" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#FB923C">${safeSku}</text>
+    <text x="150" y="218" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#5D1C25" letter-spacing="1.2">${safeBrand}</text>
+    <rect x="65" y="230" width="170" height="26" rx="4" fill="#5D1C25"/>
+    <text x="150" y="247" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#FFFFFF">${safeSku}</text>
   </svg>`;
 
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;

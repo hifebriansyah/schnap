@@ -1,12 +1,14 @@
 // ==========================================================================
 // SCHNAP Electric Products — Modal Quick-View Component (quickView.js)
 // Hydrated via dispatch=products.view / products.quick_view
+// All icons powered by Lucide (icons.js)
 // ==========================================================================
 
 import { fetchProductDetail, addToCart } from '../core/dispatch.js';
 import { normalizeImageUrl, buildSchematicPlaceholder } from '../core/media.js';
 import { formatAud, escapeHtml } from './productCard.js';
 import { showToast } from './notifications.js';
+import { lucideIcon } from './icons.js';
 import { CONFIG } from '../core/config.js';
 
 let modalBackdrop = null;
@@ -121,7 +123,9 @@ function renderQuickViewContent(container, product, { loadingSpecs = false } = {
         <span class="badge badge-amber">QUICK TECHNICAL VIEW</span>
         <span class="mono" style="font-size:13px">${sku}</span>
       </div>
-      <button type="button" class="drawer-close-btn" data-qv-close aria-label="Close Quick View">✕</button>
+      <button type="button" class="drawer-close-btn" data-qv-close aria-label="Close Quick View">
+        ${lucideIcon('x', { size: 18 })}
+      </button>
     </div>
 
     <div class="quickview-grid">
@@ -135,7 +139,10 @@ function renderQuickViewContent(container, product, { loadingSpecs = false } = {
           />
         </div>
         <div style="background:var(--color-slate-50);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:0.75rem 1rem;font-size:12px">
-          <strong style="color:var(--color-emerald-700)">✓ In Stock at Kingsgrove NSW Trade Counter</strong>
+          <strong style="color:var(--color-emerald-700);display:flex;align-items:center;gap:4px">
+            ${lucideIcon('check-circle-2', { size: 14 })}
+            <span>In Stock at Kingsgrove NSW Trade Counter</span>
+          </strong>
           <div style="color:var(--text-muted);margin-top:2px">${escapeHtml(CONFIG.STORE_FACTS.address)} • Open 7 Days</div>
         </div>
       </div>
@@ -148,10 +155,10 @@ function renderQuickViewContent(container, product, { loadingSpecs = false } = {
               ? `<span class="badge badge-discount">Trade Discount ${product.discountPct}%</span>`
               : ''
           }
-          <span class="badge badge-emerald">AS/NZS Compliant</span>
+          <span class="badge badge-emerald">${lucideIcon('shield-check', { size: 12 })}<span>AS/NZS Compliant</span></span>
         </div>
 
-        <h2 style="font-family:var(--font-display);font-size:1.35rem;font-weight:800;line-height:1.25">${title}</h2>
+        <h2 style="font-family:var(--font-display);font-size:1.35rem;font-weight:800;line-height:1.25;color:#5D1C25">${title}</h2>
 
         <div class="pdp-price-panel">
           <div>
@@ -166,7 +173,8 @@ function renderQuickViewContent(container, product, { loadingSpecs = false } = {
             </div>
           </div>
           <a href="product.html?id=${encodeURIComponent(product.id)}" class="btn btn-outline btn-sm">
-            Full Spec Sheet →
+            <span>Full Spec Sheet</span>
+            ${lucideIcon('arrow-right', { size: 14 })}
           </a>
         </div>
 
@@ -184,12 +192,17 @@ function renderQuickViewContent(container, product, { loadingSpecs = false } = {
 
         <div style="display:grid;grid-template-columns:auto 1fr;gap:0.75rem;align-items:center">
           <div class="qty-stepper" style="height:44px">
-            <button type="button" class="qty-stepper__btn" data-qv-step="-1" style="width:38px">&minus;</button>
+            <button type="button" class="qty-stepper__btn" data-qv-step="-1" style="width:38px">
+              ${lucideIcon('minus', { size: 14, strokeWidth: 2.5 })}
+            </button>
             <input type="text" id="qv-qty-input" class="qty-stepper__input" value="1" style="width:52px;font-size:14px" />
-            <button type="button" class="qty-stepper__btn" data-qv-step="1" style="width:38px">&#43;</button>
+            <button type="button" class="qty-stepper__btn" data-qv-step="1" style="width:38px">
+              ${lucideIcon('plus', { size: 14, strokeWidth: 2.5 })}
+            </button>
           </div>
           <button type="button" class="btn btn-primary btn-lg" data-qv-add>
-            Add to Trade Cart
+            ${lucideIcon('shopping-cart', { size: 17 })}
+            <span>Add to Trade Cart</span>
           </button>
         </div>
 
