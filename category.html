@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Trade Catalog &amp; Technical Specifications | SCHNAP Electric Products</title>
-  <meta name="description" content="Browse SCHNAP trade electrical categories, subcategories, technical facet filters, and BOM table view." />
+  <title>Trade Catalog | SCHNAP Electric Products</title>
+  <meta name="description" content="Browse SCHNAP electrical categories, subcategories, and technical filters." />
   <link rel="icon" href="https://d35gtgjy55l0bn.cloudfront.net/images/logos/169/schnap.png" />
   <link rel="stylesheet" href="assets/css/tokens.css" />
   <link rel="stylesheet" href="assets/css/base.css" />
@@ -12,48 +12,42 @@
   <link rel="stylesheet" href="assets/css/checkout.css" />
 </head>
 <body>
-  <!-- Global Sticky Header & 6-Pillar Mega-Menu -->
+  <!-- Global Sticky Header & 3-Level Mega-Menu -->
   <div id="site-shell-header"></div>
 
   <main>
-    <!-- Category Header & Subcategory Visual Pills -->
+    <!-- Category Header & Wrapped Subcategory Pills -->
     <section class="catalog-header-banner">
       <div class="container">
         <nav class="breadcrumb-nav" aria-label="Breadcrumb">
-          <a href="index.html">Trade Home</a>
+          <a href="index.html">Home</a>
           <span>/</span>
-          <span id="catalog-breadcrumb-current" style="color:#5D1C25;font-weight:700">Electrical Catalog</span>
+          <span id="catalog-breadcrumb-current" style="color:#5D1C25;font-weight:600">Electrical</span>
         </nav>
 
-        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;flex-wrap:wrap">
-          <div>
-            <h1 class="section-title" id="catalog-page-title">Electrical &amp; Circuit Protection</h1>
-            <p style="font-size:13px;color:var(--text-secondary);margin-top:4px" id="catalog-page-subtitle">
-              AS/NZS compliant switchgear, RCBOs, power cables, lighting, and industrial controls.
-            </p>
-          </div>
-          <span class="badge badge-slate mono" id="catalog-dispatch-chip">
-            dispatch=categories.view
-          </span>
+        <div>
+          <h1 class="section-title" id="catalog-page-title">Electrical &amp; Circuit Protection</h1>
+          <p style="font-size:13px;color:var(--text-secondary);margin-top:4px" id="catalog-page-subtitle">
+            Circuit protection, switches, power cables, lighting, and industrial controls.
+          </p>
         </div>
 
-        <!-- Scannable 1-Click Subcategory Visual Pills -->
+        <!-- Wrapped Subcategory Pills (No Horizontal Scroll) -->
         <div class="subcat-pills-bar" id="catalog-subcat-pills"></div>
       </div>
     </section>
 
-    <!-- Main Catalog Grid + Technical Facet Sidebar -->
+    <!-- Main Catalog Grid + Filter Sidebar -->
     <section class="container catalog-layout">
-      <!-- Left Technical Facet Filter Sidebar -->
-      <aside class="filter-sidebar" aria-label="Technical Filters">
+      <aside class="filter-sidebar" aria-label="Filters">
         <div class="filter-sidebar-header">
-          <strong style="font-size:13px;text-transform:uppercase;letter-spacing:0.04em;display:inline-flex;align-items:center;gap:6px;color:#5D1C25">
+          <strong style="font-size:12px;text-transform:uppercase;letter-spacing:0.05em;display:inline-flex;align-items:center;gap:6px;color:#5D1C25">
             <i data-lucide="filter" data-lucide-size="14"></i>
-            <span>Technical Filters</span>
+            <span>Filters</span>
           </strong>
-          <button type="button" class="btn btn-ghost btn-sm" id="clear-filters-btn" style="padding:2px 6px;color:#C4121A">
+          <button type="button" class="btn btn-ghost btn-sm" id="clear-filters-btn" style="padding:2px 6px;color:var(--color-gold-600)">
             <i data-lucide="rotate-ccw" data-lucide-size="12"></i>
-            <span>Reset All</span>
+            <span>Reset</span>
           </button>
         </div>
 
@@ -64,37 +58,35 @@
         </div>
       </aside>
 
-      <!-- Right Product Listing & Power-User BOM Toolbar -->
       <div>
         <div class="catalog-toolbar">
           <div style="font-size:13px;color:var(--text-secondary)" id="catalog-results-count">
-            Syncing CS-Cart catalog...
+            Loading products...
           </div>
 
           <div class="catalog-toolbar-right">
             <label for="catalog-sort-select" style="font-size:12px;font-weight:600;color:var(--text-muted)">Sort:</label>
             <select id="catalog-sort-select" class="sort-select">
-              <option value="position_asc">Trade Relevance / Position</option>
-              <option value="discount_desc">Highest Trade Discount %</option>
-              <option value="price_asc">Trade Price: Low to High</option>
-              <option value="price_desc">Trade Price: High to Low</option>
-              <option value="product_asc">Part Description: A to Z</option>
+              <option value="position_asc">Relevance</option>
+              <option value="discount_desc">Highest Savings</option>
+              <option value="price_asc">Price: Low to High</option>
+              <option value="price_desc">Price: High to Low</option>
+              <option value="product_asc">Name: A to Z</option>
             </select>
 
-            <div class="view-mode-toggle" role="group" aria-label="Switch Grid or BOM Table View">
+            <div class="view-mode-toggle" role="group" aria-label="View Mode">
               <button type="button" class="view-mode-btn is-active" data-view-mode="grid">
                 <i data-lucide="layout-grid" data-lucide-size="14"></i>
-                <span>Grid View</span>
+                <span>Grid</span>
               </button>
               <button type="button" class="view-mode-btn" data-view-mode="table">
                 <i data-lucide="table-2" data-lucide-size="14"></i>
-                <span>Trade Table (BOM)</span>
+                <span>Table</span>
               </button>
             </div>
           </div>
         </div>
 
-        <!-- Product Cards or BOM Table Mount -->
         <div class="product-grid" id="catalog-products-mount">
           <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line"></div></div>
           <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line"></div></div>
@@ -102,7 +94,6 @@
           <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line"></div></div>
         </div>
 
-        <!-- Pagination Bar -->
         <div class="pagination-bar" id="catalog-pagination-mount"></div>
       </div>
     </section>

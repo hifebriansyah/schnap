@@ -527,19 +527,27 @@ export const SEED_REVIEWS = [
 
 export const SEED_FAQS = [
   {
-    q: 'How does the $150 Australia-Wide Delivery & Free Kingsgrove Pickup policy work?',
-    a: 'All orders of $150 or more qualify for fast Australia-wide courier delivery (including Same-Day Sydney Metro dispatch on eligible weekday orders). Orders under $150 are available for Free Click & Collect 7 days a week from our Kingsgrove Trade Counter at Unit 3/192A Kingsgrove Rd, Kingsgrove NSW 2208.',
+    q: 'Do I need a trade account to buy from SCHNAP?',
+    a: 'No account is needed to order at standard trade pricing, which is shown on every product. Licensed electricians can register and log in for additional licensed pricing.',
   },
   {
-    q: 'What are the Kingsgrove Trade Counter opening hours?',
-    a: 'Unlike traditional electrical wholesalers that close early and stay shut all weekend, SCHNAP Kingsgrove is open 7 days a week: Monday to Friday 6:30am – 5:00pm, and Saturday & Sunday 8:00am – 2:00pm.',
+    q: 'How fast is delivery?',
+    a: 'Orders dispatch same-day from our Sydney warehouse. Same-day delivery is available across Sydney on eligible orders; everywhere else in Australia ships via courier.',
   },
   {
-    q: 'Do I need a credit account to access SCHNAP Trade Discounts?',
-    a: 'No lock-in credit application is required to see upfront trade discounts on our catalog. Working electricians and contractors can also request instant custom bulk quotes for large switchboard, cable drum, or commercial lighting schedules via our Bulk Quote Drawer or WhatsApp (02 9150 7744).',
+    q: 'Is there a minimum order?',
+    a: 'Orders over $150 can be delivered Australia-wide. Orders under $150 are collection-only — free from our Kingsgrove counter, open 7 days.',
   },
   {
-    q: 'Are all circuit protection, cables, and lighting products compliant with Australian Standards?',
-    a: 'Yes. Every RCBO, MCB, isolator, cable drum, and luminaire stocked by SCHNAP complies with relevant Australian/NZ standards including AS/NZS 3000 (Wiring Rules), AS/NZS 61009, AS/NZS 5000.1, and RCM regulatory approval.',
+    q: 'Where is SCHNAP located?',
+    a: 'Our trade counter is at Unit 3/192A Kingsgrove Rd, Kingsgrove NSW 2208, open seven days.',
+  },
+  {
+    q: 'What is your returns policy?',
+    a: "Returns are accepted within 100 days of purchase. Products come with the manufacturer's warranty.",
+  },
+  {
+    q: 'How do I get a bulk or project quote?',
+    a: 'Send your list via WhatsApp or the Request Bulk Quote form and our trade team replies with tailored pricing.',
   },
 ];

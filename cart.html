@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Trade Order Cart &amp; Quick BOM Entry | SCHNAP Electric Products</title>
-  <meta name="description" content="Review your SCHNAP trade cart, quick-add by SKU, track $150 Australia-wide delivery eligibility, or collect free from Kingsgrove NSW." />
+  <title>Your Order Cart | SCHNAP Electric Products</title>
+  <meta name="description" content="Review your SCHNAP trade cart, quick-add by part number, and check delivery eligibility." />
   <link rel="icon" href="https://d35gtgjy55l0bn.cloudfront.net/images/logos/169/schnap.png" />
   <link rel="stylesheet" href="assets/css/tokens.css" />
   <link rel="stylesheet" href="assets/css/base.css" />
@@ -12,68 +12,63 @@
   <link rel="stylesheet" href="assets/css/checkout.css" />
 </head>
 <body>
-  <!-- Global Sticky Header & 6-Pillar Mega-Menu -->
+  <!-- Global Sticky Header & 3-Level Mega-Menu -->
   <div id="site-shell-header"></div>
 
   <main>
     <section class="catalog-header-banner">
-      <div class="container" style="display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;flex-wrap:wrap">
-        <div>
-          <nav class="breadcrumb-nav" aria-label="Breadcrumb">
-            <a href="index.html">Trade Home</a>
-            <span>/</span>
-            <span style="color:#5D1C25;font-weight:700">Trade Cart &amp; BOM Builder</span>
-          </nav>
-          <h1 class="section-title">Trade Cart &amp; Project BOM Review</h1>
-        </div>
-        <span class="badge badge-slate mono">dispatch=checkout.cart • checkout.update</span>
+      <div class="container">
+        <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+          <a href="index.html">Home</a>
+          <span>/</span>
+          <span style="color:#5D1C25;font-weight:600">Cart</span>
+        </nav>
+        <h1 class="section-title">Order Cart</h1>
       </div>
     </section>
 
     <section class="container cart-page-layout">
-      <!-- Left Column: $150 Delivery Tracker + Quick-Add by SKU + Line Items Table -->
       <div>
-        <!-- Dynamic $150 Delivery vs. Kingsgrove Pickup Threshold Banner -->
+        <!-- Delivery vs. Pickup Progress Banner -->
         <div id="cart-fulfillment-tracker" class="fulfillment-tracker-card"></div>
 
         <!-- Cart Items Card -->
         <div class="cart-main-card">
           <div class="cart-card-header">
             <div style="display:flex;align-items:center;gap:0.65rem">
-              <strong style="font-size:15px">Configured Trade Line Items</strong>
-              <span class="badge badge-amber mono" id="cart-header-count">0 Units</span>
+              <strong style="font-size:15px">Order Items</strong>
+              <span class="badge badge-amber mono" id="cart-header-count">0</span>
             </div>
             <button type="button" class="btn btn-ghost btn-sm" id="cart-clear-all-btn" style="color:var(--text-on-dark-muted)">
               <i data-lucide="trash-2" data-lucide-size="13"></i>
-              <span>Clear BOM</span>
+              <span>Clear Cart</span>
             </button>
           </div>
 
-          <!-- Quick-Add by Known SKU / Part Number Bar -->
+          <!-- Quick-Add by SKU Bar -->
           <form class="quick-add-sku-bar" id="quick-add-sku-form">
-            <div style="font-size:12px;font-weight:800;text-transform:uppercase;color:#5D1C25;white-space:nowrap;display:inline-flex;align-items:center;gap:5px">
-              <i data-lucide="zap" data-lucide-size="14" style="color:#EB1B24"></i>
-              <span>Quick-Add by SKU:</span>
+            <div style="font-size:12px;font-weight:700;color:#5D1C25;white-space:nowrap;display:inline-flex;align-items:center;gap:5px">
+              <i data-lucide="plus" data-lucide-size="14" style="color:var(--color-gold-600)"></i>
+              <span>Quick-Add SKU:</span>
             </div>
             <input
               type="text"
               id="quick-sku-code"
               class="quick-add-sku-input"
-              placeholder="Enter SKU or keyword (e.g. LX620G2, LA210, F3015BLACK, 3800-CTV, AURORA220)..."
-              aria-label="Quick add SKU or part number"
+              placeholder="Enter part number (e.g. LX620G2, LA210, F3015BLACK)..."
+              aria-label="Quick add SKU"
             />
             <input
               type="number"
               id="quick-sku-qty"
               class="quick-add-sku-input"
-              style="flex:0 0 80px;min-width:80px;text-align:center"
+              style="flex:0 0 76px;min-width:76px;text-align:center"
               value="1"
               min="1"
               aria-label="Quantity"
             />
-            <button type="submit" class="btn btn-navy btn-sm" style="height:38px;padding-inline:1rem">
-              <i data-lucide="plus" data-lucide-size="14"></i>
-              <span>Append to Cart</span>
+            <button type="submit" class="btn btn-primary btn-sm" style="height:38px;padding-inline:1rem">
+              <span>Add Item</span>
             </button>
           </form>
 
@@ -82,11 +77,11 @@
             <table class="cart-table">
               <thead>
                 <tr>
-                  <th>Product &amp; Part Number</th>
-                  <th>Unit Trade Price</th>
+                  <th>Product</th>
+                  <th>Unit Price</th>
                   <th>Quantity</th>
-                  <th>Line Total</th>
-                  <th style="text-align:right">Action</th>
+                  <th>Total</th>
+                  <th style="text-align:right"></th>
                 </tr>
               </thead>
               <tbody id="cart-table-body">
@@ -101,70 +96,54 @@
         </div>
       </div>
 
-      <!-- Right Column: Trade Summary & Live CS-Cart Handoff -->
-      <aside class="summary-sidebar-card" aria-label="Trade Order Summary">
+      <!-- Right Column: Order Summary -->
+      <aside class="summary-sidebar-card" aria-label="Order Summary">
         <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:0.75rem;border-bottom:1px solid var(--border-subtle)">
-          <h3 style="font-family:var(--font-display);font-size:1.1rem;font-weight:800;color:#5D1C25">Trade Order Summary</h3>
-          <span class="badge badge-emerald">AUD Inc. GST</span>
+          <h3 style="font-family:var(--font-display);font-size:1.1rem;font-weight:800;color:#5D1C25">Order Summary</h3>
+          <span class="badge badge-slate">AUD Inc. GST</span>
         </div>
 
         <div class="summary-row">
-          <span>Trade List Savings</span>
-          <span class="mono" style="color:var(--color-emerald-600);font-weight:700" id="summary-savings">-$0.00</span>
+          <span>Trade Savings</span>
+          <span class="mono" style="color:var(--color-emerald-600);font-weight:600" id="summary-savings">-$0.00</span>
         </div>
         <div class="summary-row">
           <span>Included GST (10%)</span>
           <span class="mono" id="summary-gst">$0.00</span>
         </div>
         <div class="summary-row">
-          <span>Fulfillment Eligibility</span>
-          <span id="summary-delivery">Free Kingsgrove Pickup</span>
+          <span>Fulfillment</span>
+          <span id="summary-delivery">Kingsgrove Pickup</span>
         </div>
         <div class="summary-row">
-          <span>Trade Subtotal</span>
-          <span class="mono" style="font-weight:700" id="summary-subtotal">$0.00</span>
+          <span>Subtotal</span>
+          <span class="mono" style="font-weight:600" id="summary-subtotal">$0.00</span>
         </div>
 
         <div class="summary-row is-grand-total">
-          <span>Total (Inc. GST)</span>
+          <span>Total</span>
           <span class="mono" id="summary-total">$0.00</span>
         </div>
 
         <a href="checkout.html" class="btn btn-primary btn-lg" style="width:100%">
-          <span>Proceed to 3-Step Trade Checkout</span>
+          <span>Proceed to Checkout</span>
           <i data-lucide="arrow-right" data-lucide-size="16"></i>
         </a>
 
-        <!-- Approach B: Live Native HTML Form Handoff to www.schnap.com.au -->
-        <div class="live-handoff-box">
-          <h4>
-            <i data-lucide="zap" data-lucide-size="14"></i>
-            <span>Live CS-Cart Server Handoff</span>
-          </h4>
-          <p>
-            Want to complete checkout directly on <strong>www.schnap.com.au</strong>? Click below to submit a native CS-Cart <code class="mono">dispatch[checkout.add]</code> POST form and open your live cart in a new tab.
-          </p>
-          <button type="button" class="btn btn-primary btn-sm" id="cart-live-handoff-btn" style="width:100%">
-            <span>Transfer Cart to Live SCHNAP.com.au</span>
-            <i data-lucide="arrow-up-right" data-lucide-size="14"></i>
-          </button>
-        </div>
-
-        <div style="font-size:11px;color:var(--text-muted);line-height:1.5;display:flex;align-items:flex-start;gap:6px">
-          <i data-lucide="map-pin" data-lucide-size="14" style="color:#EB1B24;margin-top:2px"></i>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.5;display:flex;align-items:flex-start;gap:6px;padding-top:0.25rem">
+          <i data-lucide="map-pin" data-lucide-size="14" style="color:var(--color-gold-600);margin-top:2px"></i>
           <div>
-            <strong>Kingsgrove Trade Counter:</strong> Unit 3/192A Kingsgrove Rd, Kingsgrove NSW 2208 • Open 7 Days (Mon–Fri 6:30am–5pm, Sat–Sun 8am–2pm).
+            <strong>Kingsgrove Counter:</strong> 3/192A Kingsgrove Rd, NSW 2208 • Open 7 Days.
           </div>
         </div>
       </aside>
     </section>
 
-    <!-- Quick Top-Up Items to Reach $150 Delivery Threshold -->
     <section class="container section-block">
       <div class="section-header">
         <div>
-          <div class="section-eyebrow">Van Stock &amp; Board Essentials</div>
-          <h2 class="section-title">Top Up Your Order for $150+ Australia-Wide Delivery</h2>
+          <div class="section-eyebrow">Essentials</div>
+          <h2 class="section-title">Popular Additions</h2>
         </div>
       </div>
       <div class="product-grid" id="cart-cross-sell-mount"></div>

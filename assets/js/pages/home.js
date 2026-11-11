@@ -1,7 +1,6 @@
 // ==========================================================================
 // SCHNAP Electric Products — Home Page Controller (home.js)
-// Hydrates index.html via dispatch=index.index & dispatch=products.newest
-// All icons powered by Lucide (icons.js)
+// Clean, spacious layout without the "Browse by Electrical Trade Discipline" section
 // ==========================================================================
 
 import { CONFIG } from '../core/config.js';
@@ -19,19 +18,22 @@ import { SEED_PRODUCTS, SEED_REVIEWS, SEED_FAQS } from '../data/pitchSeeds.js';
 
 let currentProducts = [...SEED_PRODUCTS];
 let activePillarFilter = 'all';
-let activeViewMode = 'grid'; // 'grid' | 'table'
+let activeViewMode = 'grid';
 
 export async function initHomePage() {
   initGlobalShell({ activePillar: 'home' });
 
-  renderBentoCategories();
+  const heroImg = document.getElementById('home-hero-banner-img');
+  if (heroImg && CONFIG.STORE_FACTS.heroBannerUrl) {
+    heroImg.src = CONFIG.STORE_FACTS.heroBannerUrl;
+  }
+
   renderTradeHighlights();
   renderBrandsRibbon();
   renderReviewsAndFaq();
   bindHomeInteractions();
   hydrateLucideIcons(document);
 
-  // Hydrate with live CS-Cart products (dispatch=products.newest) while keeping featured homepage items
   try {
     const liveData = await fetchHomeCatalog({
       onRevalidate: (fresh) => {
@@ -42,14 +44,13 @@ export async function initHomePage() {
       mergeLiveProducts(liveData.products);
     }
   } catch {
-    // Seed catalog remains displayed seamlessly
+    // Seed catalog remains displayed
   }
 }
 
 function mergeLiveProducts(liveList = []) {
   if (!Array.isArray(liveList) || liveList.length === 0) return;
   const byId = new Map();
-  // Keep curated high-discount trade highlights first, then append live newest arrivals
   for (const p of SEED_PRODUCTS) byId.set(String(p.id), p);
   for (const p of liveList) {
     if (!byId.has(String(p.id))) {
@@ -60,66 +61,13 @@ function mergeLiveProducts(liveList = []) {
   renderTradeHighlights();
 }
 
-function renderBentoCategories() {
-  const mount = document.getElementById('home-bento-grid');
-  if (!mount) return;
-
-  const pillarIcons = {
-    '4255': 'cable',
-    '4257': 'zap',
-    '4258': 'lightbulb',
-    '4261': 'sun',
-    '4263': 'factory',
-    '4264': 'wrench',
-  };
-
-  mount.innerHTML = CONFIG.PILLARS.map((pillar) => {
-    const pillarUrl = `category.html?category_id=${encodeURIComponent(pillar.id)}&slug=${encodeURIComponent(pillar.slug)}`;
-    const subPills = pillar.subcategories
-      .slice(0, 5)
-      .map((sub) => {
-        const subUrl = sub.query
-          ? `search.html?q=${encodeURIComponent(sub.query)}&cat=${encodeURIComponent(pillar.id)}`
-          : `category.html?category_id=${encodeURIComponent(sub.id)}&slug=${encodeURIComponent(sub.slug)}&parent=${encodeURIComponent(pillar.id)}`;
-        return `<a href="${subUrl}" class="bento-subpill">${escapeHtml(sub.name)}</a>`;
-      })
-      .join('');
-
-    return `
-      <div class="bento-card" data-prefetch-key="catalog:cat_${pillar.id}">
-        <div>
-          <div class="bento-card-top">
-            <div>
-              <span class="badge badge-amber" style="margin-bottom:6px">${escapeHtml(pillar.badge)}</span>
-              <h3><a href="${pillarUrl}">${escapeHtml(pillar.name)}</a></h3>
-            </div>
-            <div class="bento-icon-box">
-              ${lucideIcon(pillarIcons[pillar.id] || 'zap', { size: 22, strokeWidth: 2.2 })}
-            </div>
-          </div>
-          <p style="margin-top:4px">${escapeHtml(pillar.tagline)}</p>
-        </div>
-
-        <div class="bento-subpills">
-          ${subPills}
-        </div>
-
-        <a href="${pillarUrl}" class="bento-card-footer">
-          <span>Open ${escapeHtml(pillar.name)} Catalog</span>
-          ${lucideIcon('arrow-right', { size: 15 })}
-        </a>
-      </div>
-    `;
-  }).join('');
-}
-
 function getFilteredHighlights() {
   if (activePillarFilter === 'all') {
-    return currentProducts.slice(0, 12);
+    return currentProducts.slice(0, 8);
   }
   return currentProducts
     .filter((p) => String(p.categoryId) === activePillarFilter || (activePillarFilter === '4264' && p.categoryId === '4472'))
-    .slice(0, 12);
+    .slice(0, 8);
 }
 
 function renderTradeHighlights() {
@@ -163,11 +111,10 @@ function renderBrandsRibbon() {
         <a
           href="search.html?q=${encodeURIComponent(b.query)}&brand=${encodeURIComponent(b.name)}"
           class="brand-tile"
-          title="Shop ${escapeHtml(b.name)} — ${escapeHtml(b.specialty)}"
+          title="${escapeHtml(b.name)}"
         >
           ${mediaHtml}
           <span>${escapeHtml(b.name)}</span>
-          <small style="font-size:10px;color:var(--text-muted);text-align:center">${escapeHtml(b.specialty)}</small>
         </a>
       `;
     })
@@ -183,7 +130,7 @@ function renderReviewsAndFaq() {
           <div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem">
               ${lucideStars(r.rating || 5, { size: 14 })}
-              <span class="badge badge-emerald">${escapeHtml(r.tag)}</span>
+              <span class="badge badge-amber">${escapeHtml(r.tag)}</span>
             </div>
             <p style="font-size:14px;color:var(--text-primary);line-height:1.6">"${escapeHtml(r.quote)}"</p>
           </div>
@@ -203,7 +150,7 @@ function renderReviewsAndFaq() {
         <div class="faq-item ${idx === 0 ? 'is-open' : ''}">
           <button type="button" class="faq-question" data-faq-toggle>
             <span>${escapeHtml(item.q)}</span>
-            <span style="color:#EB1B24">${lucideIcon('chevron-down', { size: 16 })}</span>
+            <span style="color:var(--color-gold-600)">${lucideIcon('chevron-down', { size: 16 })}</span>
           </button>
           <div class="faq-answer">${escapeHtml(item.a)}</div>
         </div>
@@ -213,7 +160,6 @@ function renderReviewsAndFaq() {
 }
 
 function bindHomeInteractions() {
-  // Pillar filter tabs on Trade Highlights
   document.querySelectorAll('[data-highlight-filter]').forEach((btn) => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('[data-highlight-filter]').forEach((b) => b.classList.remove('is-active'));
@@ -223,7 +169,6 @@ function bindHomeInteractions() {
     });
   });
 
-  // Grid vs. Compact Trade Table View Toggle
   document.querySelectorAll('[data-home-view]').forEach((btn) => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('[data-home-view]').forEach((b) => b.classList.remove('is-active'));
@@ -233,7 +178,6 @@ function bindHomeInteractions() {
     });
   });
 
-  // FAQ Accordion
   document.getElementById('home-faq-mount')?.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-faq-toggle]');
     if (!btn) return;

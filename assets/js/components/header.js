@@ -1,6 +1,6 @@
 // ==========================================================================
 // SCHNAP Electric Products — Global Shell: Utility Bar, Sticky Header,
-// 6-Pillar Mega-Menu, Live Search Dropdown, Mini-Cart & Quote Drawers
+// 3-Level Mega-Menu, Live Search Dropdown, Mini-Cart & Quote Drawers
 // All icons powered by Lucide (icons.js)
 // ==========================================================================
 
@@ -11,14 +11,273 @@ import {
   addToCart,
   updateCartQty,
   removeFromCart,
-  submitNativeCartHandoff,
-  subscribeTelemetry,
 } from '../core/dispatch.js';
 import { normalizeImageUrl, buildSchematicPlaceholder } from '../core/media.js';
 import { formatAud, escapeHtml } from './productCard.js';
 import { showToast } from './notifications.js';
 import { lucideIcon, lucideStars, hydrateLucideIcons } from './icons.js';
 import { SEED_PRODUCTS } from '../data/pitchSeeds.js';
+
+// 3-Level Menu Groups (Level 1 Pillar -> Level 2 Category Group -> Level 3 Links)
+const PILLAR_GROUPS_MAP = {
+  '4255': [
+    {
+      name: 'Power Cables',
+      slug: 'power-cables.html',
+      id: '4266',
+      items: [
+        { name: 'Building Wire', id: '4267', slug: 'building-wire.html' },
+        { name: 'Twin & Earth Cable', id: '4268', slug: 'twin-and-earth-cable.html' },
+        { name: 'Orange Circular Cable', id: '4269', slug: 'orange-circular-cable.html' },
+        { name: 'Flexible Cable', id: '4271', slug: 'flexible-cable.html' },
+      ],
+    },
+    {
+      name: 'Data & Comms',
+      slug: 'data-and-comms-cable.html',
+      id: '4270',
+      items: [
+        { name: 'Cat6 & Cat6A Cable', query: 'Cat6A' },
+        { name: 'Patch Leads & Panels', query: 'patch lead' },
+        { name: 'Fibre Optic Cabling', query: 'fibre' },
+        { name: 'Data Cabinets & Racks', query: 'cabinet' },
+      ],
+    },
+    {
+      name: 'Specialty & Solar',
+      slug: 'solar-cable.html',
+      id: '4272',
+      items: [
+        { name: 'Solar DC Cable', id: '4272', slug: 'solar-cable.html' },
+        { name: 'Control & Security Cable', query: 'security cable' },
+        { name: 'Low Voltage Garden Cable', query: 'garden cable' },
+      ],
+    },
+    {
+      name: 'Conduit & Terminations',
+      slug: 'conduit-and-ducts.html',
+      id: '4274',
+      items: [
+        { name: 'Rigid & Corrugated Conduit', id: '4274', slug: 'conduit-and-ducts.html' },
+        { name: 'Copper & Aluminium Lugs', id: '4273', slug: 'cable-accessories.html' },
+        { name: 'Cable Tray & Ties', query: 'cable tray' },
+      ],
+    },
+  ],
+  '4257': [
+    {
+      name: 'Circuit Protection',
+      slug: 'electrical.html',
+      id: '4277',
+      items: [
+        { name: '1P & 2P RCBOs (6kA)', query: 'rcbo' },
+        { name: 'Circuit Breakers (MCB)', query: 'breaker' },
+        { name: 'Main Switches & Isolators', query: 'main switch' },
+        { name: 'RCDs & Surge Protection', query: 'RCD' },
+      ],
+    },
+    {
+      name: 'Switches & Outlets',
+      slug: 'powerpoints.html',
+      id: '4275',
+      items: [
+        { name: 'Internal Powerpoints', id: '4275', slug: 'powerpoints.html' },
+        { name: 'Weatherproof Outlets', query: 'weatherproof' },
+        { name: 'Switches & Mechanisms', id: '4276', slug: 'switches-and-mechs.html' },
+        { name: 'Cover Plates & Grids', id: '4279', slug: 'cover-plates-and-grid-plates.html' },
+      ],
+    },
+    {
+      name: 'Switchboards & Metering',
+      slug: 'electrical.html',
+      id: '4282',
+      items: [
+        { name: 'Loadcentres & Enclosures', query: 'enclosure' },
+        { name: 'Busbars & Links', query: 'busbar' },
+        { name: 'Earthing Stakes & Clips', query: 'earth' },
+        { name: 'kWh Meters & Timers', query: 'timer' },
+      ],
+    },
+    {
+      name: 'Alarms & Accessories',
+      slug: 'mounting-accessories.html',
+      id: '4280',
+      items: [
+        { name: '230V Smoke & Heat Alarms', id: '4281', slug: 'sensors-bells-and-chimes.html', query: 'alarm' },
+        { name: 'Mounting Blocks & Wall Boxes', id: '4280', slug: 'mounting-accessories.html' },
+        { name: 'Plugs, Leads & Adaptors', id: '4278', slug: 'plugs-sockets-and-adaptors.html' },
+      ],
+    },
+  ],
+  '4258': [
+    {
+      name: 'Indoor Lighting',
+      slug: 'indoor-lighting.html',
+      id: '4284',
+      items: [
+        { name: 'IC-4 Tri-Colour Downlights', id: '4284', slug: 'indoor-lighting.html' },
+        { name: 'DALI-2 Commercial Downlights', query: 'DALI' },
+        { name: 'LED Panels & Troffers', query: 'panel' },
+        { name: 'LED Strip & Profiles', query: 'strip' },
+      ],
+    },
+    {
+      name: 'Commercial & Outdoor',
+      slug: 'commercial-and-industrial.html',
+      id: '4285',
+      items: [
+        { name: 'LED Battens', id: '4288', slug: 'commercial-and-industrial.html', query: 'batten' },
+        { name: 'Industrial Highbays', query: 'highbay' },
+        { name: 'Floodlights & Bunkers', id: '4286', slug: 'outdoor-and-landscape.html' },
+      ],
+    },
+    {
+      name: 'Emergency & Lamps',
+      slug: 'exit-and-emergency.html',
+      id: '4287',
+      items: [
+        { name: 'LED Exit Signs', id: '4287', slug: 'exit-and-emergency.html' },
+        { name: 'Emergency Spitfires', query: 'spitfire' },
+        { name: 'Lamps & Globes', id: '4289', slug: 'lamps-and-globes.html' },
+        { name: 'LED Drivers', id: '4291', slug: 'lighting-accessories.html' },
+      ],
+    },
+    {
+      name: 'Fans & Ventilation',
+      slug: 'ceiling-fan-lights-and-fittings.html',
+      id: '4290',
+      items: [
+        { name: 'Ceiling Sweep Fans', id: '4290', slug: 'ceiling-fan-lights-and-fittings.html' },
+        { name: 'Exhaust Fans & 3-in-1', query: 'exhaust' },
+        { name: 'Ducting & Fittings', query: 'duct' },
+      ],
+    },
+  ],
+  '4261': [
+    {
+      name: 'Solar & Battery',
+      slug: 'inverters.html',
+      id: '4293',
+      items: [
+        { name: 'Solar & Hybrid Inverters', id: '4293', slug: 'inverters.html' },
+        { name: 'Battery Storage (BESS)', id: '4294', slug: 'battery-storage.html' },
+        { name: 'Solar Panels', id: '4295', slug: 'solar-panels.html' },
+        { name: 'Solar Racking & BOS', id: '4296', slug: 'solar-racking.html' },
+      ],
+    },
+    {
+      name: 'EV & Power Protection',
+      slug: 'ev-chargers-and-accessories.html',
+      id: '4292',
+      items: [
+        { name: 'EV Chargers & Leads', id: '4292', slug: 'ev-chargers-and-accessories.html' },
+        { name: 'Network Protection Boards', id: '4299', slug: 'network-protection-boards.html' },
+        { name: 'MC4 & Isolators', id: '4297', slug: 'solar-bos-and-accessories.html' },
+      ],
+    },
+    {
+      name: 'Security & Surveillance',
+      slug: 'solar-panels.html',
+      id: '4298',
+      items: [
+        { name: 'AJAX 5MP PoE Cameras', query: 'ajax' },
+        { name: 'NVRs & Kits', query: 'NVR' },
+        { name: 'Intercoms & Access Control', query: 'intercom' },
+      ],
+    },
+    {
+      name: 'Smart Automation',
+      slug: 'solar-panels.html',
+      id: '4261',
+      items: [
+        { name: 'C-Bus Automation', query: 'C-Bus' },
+        { name: 'Smart Switches & Hubs', query: 'smart' },
+        { name: 'WiFi Access Points', query: 'WiFi' },
+      ],
+    },
+  ],
+  '4263': [
+    {
+      name: 'Plugs, Sockets & Isolators',
+      slug: 'industrial-plugs-and-sockets.html',
+      id: '4300',
+      items: [
+        { name: '3-Phase Plugs & Sockets', id: '4300', slug: 'industrial-plugs-and-sockets.html' },
+        { name: 'Industrial Switchgear', id: '4301', slug: 'industrial-switchgear.html' },
+        { name: 'Weatherproof Isolators', query: 'isolator' },
+      ],
+    },
+    {
+      name: 'Switching & Safety',
+      slug: 'switching-and-control.html',
+      id: '4303',
+      items: [
+        { name: 'Emergency Stop Buttons', id: '4304', slug: 'lights-bells-and-beacons.html', query: 'emergency stop' },
+        { name: 'Pushbuttons & Selectors', id: '4303', slug: 'switching-and-control.html' },
+        { name: 'Beacons & Pilot Lights', id: '4304', slug: 'lights-bells-and-beacons.html' },
+      ],
+    },
+    {
+      name: 'Motors & PLC Control',
+      slug: 'motors-and-motor-control.html',
+      id: '4302',
+      items: [
+        { name: 'Contactors & Starters', id: '4302', slug: 'motors-and-motor-control.html' },
+        { name: 'PLCs & Automation', id: '4305', slug: 'automation-and-control.html' },
+        { name: 'Industrial Power Supplies', query: 'power supply' },
+      ],
+    },
+    {
+      name: 'Enclosures & Climate',
+      slug: 'industrial-accessories.html',
+      id: '4306',
+      items: [
+        { name: 'IP66 Mounting Enclosures', id: '4306', slug: 'industrial-accessories.html' },
+        { name: 'Enclosure Climate Control', id: '4307', slug: 'climate-control.html' },
+      ],
+    },
+  ],
+  '4264': [
+    {
+      name: '1000V Hand Tools',
+      slug: 'tools-hand-tools.html',
+      id: '4472',
+      items: [
+        { name: 'Insulated Pliers & Cutters', id: '4473', slug: 'hand-tools-pliers.html' },
+        { name: '1000V VDE Screwdrivers', query: 'screwdriver' },
+        { name: 'Multigrips & Strippers', query: 'pliers' },
+      ],
+    },
+    {
+      name: 'Meters & Test Gear',
+      slug: 'meters-and-testers.html',
+      id: '4474',
+      items: [
+        { name: 'Multimeters & Clamp Meters', id: '4474', slug: 'meters-and-testers.html' },
+        { name: 'Insulation & RCD Testers', query: 'tester' },
+      ],
+    },
+    {
+      name: 'Drilling & Site Lighting',
+      slug: 'power-tool-accessories.html',
+      id: '4475',
+      items: [
+        { name: 'Drill Bits & Hole Saws', id: '4475', slug: 'power-tool-accessories.html' },
+        { name: 'Heat & Soldering', id: '4476', slug: 'heat-and-soldering.html' },
+        { name: 'Work Lights & Storage', id: '4477', slug: 'work-and-safety-lights.html' },
+      ],
+    },
+    {
+      name: 'Fixings & Consumables',
+      slug: 'fixings-and-hardware.html',
+      id: '4479',
+      items: [
+        { name: 'Silicone, Sealants & Adhesives', id: '4479', slug: 'fixings-and-hardware.html', query: 'silicone' },
+        { name: 'Electrical Tape & Fasteners', query: 'tape' },
+      ],
+    },
+  ],
+};
 
 export function initGlobalShell({ activePillar = '' } = {}) {
   const headerMount = document.getElementById('site-shell-header');
@@ -35,7 +294,13 @@ export function initGlobalShell({ activePillar = '' } = {}) {
   hydrateLucideIcons(document);
   bindHeaderEvents();
   bindCartDrawerEvents();
-  bindTelemetrySubscription();
+}
+
+function buildItemHref(item, pillarId) {
+  if (item.query) {
+    return `search.html?q=${encodeURIComponent(item.query)}&cat=${encodeURIComponent(pillarId)}`;
+  }
+  return `category.html?category_id=${encodeURIComponent(item.id || pillarId)}&slug=${encodeURIComponent(item.slug || '')}&parent=${encodeURIComponent(pillarId)}`;
 }
 
 function renderHeaderMarkup(activePillar) {
@@ -47,16 +312,33 @@ function renderHeaderMarkup(activePillar) {
       activePillar.toLowerCase() === pillar.name.toLowerCase() ||
       activePillar === pillar.slug;
 
-    const sublinksHtml = pillar.subcategories
-      .map((sub) => {
-        const url = sub.query
-          ? `search.html?q=${encodeURIComponent(sub.query)}&cat=${encodeURIComponent(pillar.id)}`
-          : `category.html?category_id=${encodeURIComponent(sub.id)}&slug=${encodeURIComponent(sub.slug)}&parent=${encodeURIComponent(pillar.id)}`;
+    const groups = pillar.groups || PILLAR_GROUPS_MAP[pillar.id] || [];
+
+    const treeHtml = groups
+      .map((group) => {
+        const groupUrl = buildItemHref(group, pillar.id);
+        const leavesHtml = (group.items || [])
+          .map(
+            (leaf) => `
+              <li>
+                <a href="${buildItemHref(leaf, pillar.id)}" class="mega-leaf-link">
+                  <span>${escapeHtml(leaf.name)}</span>
+                </a>
+              </li>
+            `
+          )
+          .join('');
+
         return `
-          <a href="${url}" class="mega-subcat-link">
-            <span>${escapeHtml(sub.name)}</span>
-            ${lucideIcon('arrow-right', { size: 13 })}
-          </a>
+          <div class="mega-group">
+            <a href="${groupUrl}" class="mega-group-title">
+              <span>${escapeHtml(group.name)}</span>
+              ${lucideIcon('chevron-right', { size: 13 })}
+            </a>
+            <ul class="mega-group-list">
+              ${leavesHtml}
+            </ul>
+          </div>
         `;
       })
       .join('');
@@ -69,37 +351,26 @@ function renderHeaderMarkup(activePillar) {
           data-prefetch-key="catalog:cat_${pillar.id}"
         >
           <span>${escapeHtml(pillar.name)}</span>
-          ${lucideIcon('chevron-down', { size: 14, strokeWidth: 2.2 })}
+          ${lucideIcon('chevron-down', { size: 13, strokeWidth: 2 })}
         </a>
-        <div class="mega-panel" role="region" aria-label="${escapeHtml(pillar.name)} subcategories">
+        <div class="mega-panel" role="region" aria-label="${escapeHtml(pillar.name)} menu">
           <div class="container mega-panel-inner">
             <div class="mega-panel-intro">
               <div>
                 <span class="badge badge-amber" style="margin-bottom:8px">${escapeHtml(pillar.badge)}</span>
-                <h3>${escapeHtml(pillar.name)} Range</h3>
+                <h3>${escapeHtml(pillar.name)}</h3>
                 <p>${escapeHtml(pillar.tagline)}</p>
               </div>
               <a
                 href="category.html?category_id=${encodeURIComponent(pillar.id)}&slug=${encodeURIComponent(pillar.slug)}"
-                class="btn btn-navy btn-sm"
+                class="btn btn-primary btn-sm"
               >
-                <span>Browse All ${escapeHtml(pillar.name)}</span>
+                <span>View All ${escapeHtml(pillar.name)}</span>
                 ${lucideIcon('arrow-right', { size: 14 })}
               </a>
             </div>
-            <div class="mega-subcat-grid">
-              ${sublinksHtml}
-            </div>
-            <div class="mega-panel-promo">
-              <div>
-                <span class="badge badge-discount">TRADE DIRECT</span>
-                <h4>Project &amp; Bulk Pricing</h4>
-                <p>Need full drum quantities, pre-wired distribution boards, or a commercial luminaire schedule?</p>
-              </div>
-              <button type="button" class="btn btn-primary btn-sm" data-open-drawer="quote">
-                ${lucideIcon('file-text', { size: 14 })}
-                <span>Request Bulk Trade Quote</span>
-              </button>
+            <div class="mega-tree-grid">
+              ${treeHtml}
             </div>
           </div>
         </div>
@@ -108,56 +379,41 @@ function renderHeaderMarkup(activePillar) {
   }).join('');
 
   return `
-    <!-- Top Trade Utility Bar -->
+    <!-- Top Utility Bar -->
     <div class="trade-utility-bar">
       <div class="container trade-utility-inner">
         <div class="trade-utility-facts">
-          <a href="${STORE_FACTS.phoneHref}" class="trade-fact" title="Call SCHNAP Trade Desk">
-            ${lucideIcon('phone', { size: 14, strokeWidth: 2.2 })}
+          <a href="${STORE_FACTS.phoneHref}" class="trade-fact">
+            ${lucideIcon('phone', { size: 13, strokeWidth: 2 })}
             <strong>${escapeHtml(STORE_FACTS.phone)}</strong>
           </a>
           <span class="trade-utility-divider"></span>
           <span class="trade-fact">
-            ${lucideIcon('clock', { size: 14, strokeWidth: 2.2 })}
-            <span>Kingsgrove Trade Counter: <strong>${escapeHtml(STORE_FACTS.hoursShort)}</strong></span>
-          </span>
-          <span class="trade-utility-divider"></span>
-          <span class="trade-fact trade-fact--emerald">
-            ${lucideIcon('truck', { size: 14, strokeWidth: 2.2 })}
-            <span><strong>Same-Day Sydney Dispatch</strong> &amp; $150+ Aus-Wide Delivery</span>
+            ${lucideIcon('map-pin', { size: 13, strokeWidth: 2 })}
+            <span>Kingsgrove NSW — <strong>Open 7 Days</strong></span>
           </span>
           <span class="trade-utility-divider"></span>
           <span class="trade-fact">
-            ${lucideStars(5, { size: 12 })}
-            <strong>${escapeHtml(STORE_FACTS.rating)}</strong>
-            <span>(${escapeHtml(STORE_FACTS.reviewCount)})</span>
+            ${lucideIcon('truck', { size: 13, strokeWidth: 2 })}
+            <span>Free Delivery on Orders <strong>$150+</strong></span>
           </span>
         </div>
 
         <div class="trade-utility-actions">
-          <span
-            id="edge-telemetry-indicator"
-            class="edge-telemetry-pill"
-            title="Live Cloudflare Worker Gateway connected to www.schnap.com.au CS-Cart"
-          >
-            <span class="edge-telemetry-dot"></span>
-            <span id="edge-telemetry-text">CS-CART EDGE: READY</span>
-          </span>
-
           <button type="button" class="utility-action-btn" data-open-drawer="photo">
-            ${lucideIcon('camera', { size: 13, strokeWidth: 2.2 })}
-            <span>Send Us a Photo</span>
+            ${lucideIcon('camera', { size: 13, strokeWidth: 2 })}
+            <span>Photo ID</span>
           </button>
 
           <button type="button" class="utility-action-btn" data-open-drawer="quote">
-            ${lucideIcon('file-text', { size: 13, strokeWidth: 2.2 })}
+            ${lucideIcon('file-text', { size: 13, strokeWidth: 2 })}
             <span>Bulk Quote</span>
           </button>
         </div>
       </div>
     </div>
 
-    <!-- Sticky Main Trade Header -->
+    <!-- Main Sticky Header -->
     <header class="site-header">
       <div class="container header-main">
         <a href="index.html" class="brand-logo-link" aria-label="SCHNAP Electric Products Home">
@@ -165,73 +421,55 @@ function renderHeaderMarkup(activePillar) {
             <img
               src="${escapeHtml(STORE_FACTS.logoUrl)}"
               alt="SCHNAP Electric Products"
-              width="136"
-              height="34"
+              width="132"
+              height="32"
             />
-          </div>
-          <div class="brand-tagline">
-            <span class="brand-tagline__title">Trade Direct Wholesale</span>
-            <span class="brand-tagline__sub">3/192A Kingsgrove Rd NSW</span>
           </div>
         </a>
 
-        <!-- Instant SKU & Catalog Search Bar -->
+        <!-- Search Bar -->
         <div class="header-search-wrap" id="header-search-container">
           <form class="header-search-form" action="search.html" method="GET" id="header-search-form">
             <span class="header-search-icon" aria-hidden="true">
-              ${lucideIcon('search', { size: 18, strokeWidth: 2.2 })}
+              ${lucideIcon('search', { size: 17, strokeWidth: 2 })}
             </span>
             <input
               type="search"
               name="q"
               id="header-search-input"
               class="header-search-input"
-              placeholder="Search 29,000+ SKUs, part numbers (e.g. LX620G2, LA210, 6mm earth, Clipsal)..."
+              placeholder="Search products, part numbers, or brands..."
               autocomplete="off"
-              aria-label="Search SKU or electrical product"
+              aria-label="Search products"
             />
-            <kbd class="header-search-kbd" title="Press / to search">/</kbd>
             <button type="submit" class="header-search-submit">Search</button>
           </form>
 
-          <!-- Instant Live Search Dropdown -->
-          <div class="search-dropdown" id="header-search-dropdown" role="listbox" aria-label="Instant SKU results"></div>
+          <div class="search-dropdown" id="header-search-dropdown" role="listbox" aria-label="Search suggestions"></div>
         </div>
 
-        <!-- Right Trade Actions & Mini-Cart Trigger -->
+        <!-- Right Header Actions -->
         <div class="header-actions">
-          <a href="cart.html" class="header-action-btn" title="Quick Order / BOM Cart">
-            ${lucideIcon('list', { size: 17, strokeWidth: 2 })}
-            <span>BOM Cart</span>
-          </a>
-
           <button
             type="button"
             class="header-action-btn header-cart-btn"
             data-open-drawer="cart"
-            aria-label="Open Trade Cart Drawer"
+            aria-label="Open Cart Drawer"
           >
-            ${lucideIcon('shopping-cart', { size: 18, strokeWidth: 2.2 })}
+            ${lucideIcon('shopping-cart', { size: 17, strokeWidth: 2 })}
             <span class="cart-badge-count" id="header-cart-count">0</span>
             <span class="cart-badge-subtotal" id="header-cart-subtotal">$0.00</span>
           </button>
         </div>
       </div>
 
-      <!-- 6-Pillar Mega-Menu Bar -->
-      <nav class="mega-nav-bar" aria-label="Primary Trade Categories">
+      <!-- 3-Level Mega-Menu Bar -->
+      <nav class="mega-nav-bar" aria-label="Primary Categories">
         <div class="container mega-nav-inner">
           <ul class="mega-nav-list">
-            <li>
-              <a href="index.html" class="mega-nav-link ${activePillar === 'home' ? 'is-active' : ''}">
-                ${lucideIcon('home', { size: 14, strokeWidth: 2.2 })}
-                <span>Trade Home</span>
-              </a>
-            </li>
             ${pillarsHtml}
             <li>
               <a href="brands.html" class="mega-nav-link ${activePillar === 'brands' ? 'is-active' : ''}">
-                ${lucideIcon('award', { size: 14, strokeWidth: 2.2 })}
                 <span>Brands</span>
               </a>
             </li>
@@ -239,8 +477,8 @@ function renderHeaderMarkup(activePillar) {
 
           <div class="mega-nav-right">
             <span class="delivery-rule-chip" id="nav-delivery-chip">
-              ${lucideIcon('shield-check', { size: 14 })}
-              <span>Free 7-Day Kingsgrove Pickup • $150+ Aus-Wide Delivery</span>
+              ${lucideIcon('check-circle-2', { size: 13 })}
+              <span>Free 7-Day Kingsgrove Pickup</span>
             </span>
           </div>
         </div>
@@ -256,68 +494,50 @@ function renderFooterMarkup() {
       <div class="container footer-top">
         <div class="footer-col">
           <div class="brand-logo-wrap" style="width:fit-content;margin-bottom:1rem">
-            <img src="${escapeHtml(STORE_FACTS.logoUrl)}" alt="SCHNAP Electric Products" width="136" height="34" />
+            <img src="${escapeHtml(STORE_FACTS.logoUrl)}" alt="SCHNAP Electric Products" width="132" height="32" />
           </div>
-          <p style="font-size:13px;line-height:1.6;color:var(--text-on-dark-muted)">
-            Australia’s fastest-growing trade electrical wholesaler. Supplying licensed electricians, solar installers, and industrial switchboard builders with upfront trade pricing 7 days a week.
+          <p style="font-size:13px;line-height:1.65;color:var(--text-on-dark-muted);max-width:36ch">
+            Sydney-based electrical wholesaler supplying licensed electricians, contractors, and commercial projects across Australia since 2008.
           </p>
-          <div class="footer-counter-card">
-            <strong>
-              ${lucideIcon('map-pin', { size: 14 })}
-              <span>Kingsgrove Trade Counter &amp; Warehouse</span>
-            </strong>
-            <div>${escapeHtml(STORE_FACTS.address)}</div>
-            <div style="color:#FF7A80;margin-top:4px;font-weight:600">${escapeHtml(STORE_FACTS.hoursShort)}</div>
-            <div style="margin-top:4px">Phone: <a href="${STORE_FACTS.phoneHref}" style="color:#fff;font-weight:700">${escapeHtml(STORE_FACTS.phone)}</a></div>
-          </div>
         </div>
 
         <div class="footer-col">
-          <h4>6-Pillar Trade Catalog</h4>
+          <h4>Departments</h4>
           <ul class="footer-links">
             ${PILLARS.map(
               (p) =>
-                `<li><a href="category.html?category_id=${encodeURIComponent(p.id)}&slug=${encodeURIComponent(p.slug)}">${lucideIcon('chevron-right', { size: 13 })}<span>${escapeHtml(p.name)} (${escapeHtml(p.badge)})</span></a></li>`
+                `<li><a href="category.html?category_id=${encodeURIComponent(p.id)}&slug=${encodeURIComponent(p.slug)}"><span>${escapeHtml(p.name)}</span></a></li>`
             ).join('')}
-            <li><a href="brands.html">${lucideIcon('award', { size: 13 })}<span>Authorized Brands Directory (200+)</span></a></li>
-            <li><a href="search.html?q=rcbo">${lucideIcon('zap', { size: 13 })}<span>6kA Type A RCBOs &amp; Protection</span></a></li>
+            <li><a href="brands.html"><span>All Brands (A–Z)</span></a></li>
           </ul>
         </div>
 
         <div class="footer-col">
-          <h4>Trade Services &amp; Fulfillment</h4>
+          <h4>Trade Services</h4>
           <ul class="footer-links">
-            <li><a href="cart.html">${lucideIcon('shopping-cart', { size: 13 })}<span>Trade Cart &amp; Quick SKU Entry</span></a></li>
-            <li><a href="checkout.html">${lucideIcon('check-circle-2', { size: 13 })}<span>Streamlined 3-Step Trade Checkout</span></a></li>
-            <li><a href="#quote" data-open-drawer="quote">${lucideIcon('file-text', { size: 13 })}<span>Request Bulk Project Quote</span></a></li>
-            <li><a href="#photo" data-open-drawer="photo">${lucideIcon('camera', { size: 13 })}<span>Send Us a Photo (Part ID Desk)</span></a></li>
-            <li><a href="https://www.schnap.com.au/payment-and-shipping/" target="_blank" rel="noopener">${lucideIcon('truck', { size: 13 })}<span>$150 Delivery &amp; Kingsgrove Pickup Policy</span>${lucideIcon('arrow-up-right', { size: 12 })}</a></li>
+            <li><a href="cart.html"><span>Order Cart &amp; Quick SKU Entry</span></a></li>
+            <li><a href="checkout.html"><span>Trade Checkout</span></a></li>
+            <li><a href="#quote" data-open-drawer="quote"><span>Request Bulk Quote</span></a></li>
+            <li><a href="#photo" data-open-drawer="photo"><span>Photo Part Identification</span></a></li>
           </ul>
         </div>
 
         <div class="footer-col">
-          <h4>Zero-Access Edge Architecture</h4>
-          <p style="font-size:12px;line-height:1.55;color:var(--text-on-dark-muted);margin-bottom:0.75rem">
-            Decoupled static B2B frontend powered by live CS-Cart controller dispatches (<code class="mono" style="color:#FF7A80">index.php?dispatch=...</code>) via Cloudflare Edge Gateway (<code class="mono">ap-southeast-2</code>) and CloudFront CDN media hotlinking.
-          </p>
-          <div style="display:flex;flex-direction:column;gap:0.5rem">
-            <span class="badge badge-emerald" style="width:fit-content">${lucideIcon('shield-check', { size: 12 })}<span>AS/NZS 3000 Compliant Range</span></span>
-            <span class="badge badge-amber" style="width:fit-content">${lucideIcon('check', { size: 12 })}<span>Zero Server Modification Required</span></span>
+          <h4>Kingsgrove Branch</h4>
+          <div style="font-size:13px;line-height:1.65;color:var(--text-on-dark-muted);display:flex;flex-direction:column;gap:0.4rem">
+            <div>3/192A Kingsgrove Rd, Kingsgrove NSW 2208</div>
+            <div>Mon–Fri 6:30am–5pm • Sat–Sun 8am–2pm</div>
+            <div><a href="${STORE_FACTS.phoneHref}" style="color:var(--color-gold-400);font-weight:600">${escapeHtml(STORE_FACTS.phone)}</a></div>
+            <div>${escapeHtml(STORE_FACTS.email)}</div>
           </div>
         </div>
       </div>
 
       <div class="container footer-bottom">
-        <div>© 2008 – ${new Date().getFullYear()} SCHNAP Electric Products Pty Ltd (ABN 80 099 079 848). All prices in AUD inc. GST.</div>
-        <div style="display:flex;gap:1.25rem;align-items:center">
-          <a href="https://www.schnap.com.au/brands" target="_blank" rel="noopener" style="color:#FF7A80;font-weight:600;display:inline-flex;align-items:center;gap:4px">
-            <span>Live SCHNAP Brands</span>
-            ${lucideIcon('arrow-up-right', { size: 13 })}
-          </a>
-          <a href="https://www.schnap.com.au/" target="_blank" rel="noopener" style="color:#FFFFFF;font-weight:600;display:inline-flex;align-items:center;gap:4px">
-            <span>Live Production Store (www.schnap.com.au)</span>
-            ${lucideIcon('arrow-up-right', { size: 13 })}
-          </a>
+        <div>© 2008 – ${new Date().getFullYear()} SCHNAP Electric Products Pty Ltd. All prices in AUD inc. GST.</div>
+        <div style="display:flex;align-items:center;gap:0.5rem">
+          ${lucideStars(5, { size: 12 })}
+          <span>4.8 Rating from 1,100+ Google Reviews</span>
         </div>
       </div>
     </footer>
@@ -326,25 +546,25 @@ function renderFooterMarkup() {
 
 function ensureDrawersMounted() {
   if (document.getElementById('global-drawers-root')) return;
+  const { STORE_FACTS } = CONFIG;
   const root = document.createElement('div');
   root.id = 'global-drawers-root';
   root.innerHTML = `
     <div class="drawer-backdrop" id="global-drawer-backdrop"></div>
 
     <!-- 1. Slide-Over Mini-Cart Drawer -->
-    <aside class="slide-drawer" id="drawer-cart" aria-label="Trade Mini-Cart">
+    <aside class="slide-drawer" id="drawer-cart" aria-label="Trade Cart">
       <div class="drawer-header">
         <div class="drawer-title">
-          ${lucideIcon('shopping-cart', { size: 20, strokeWidth: 2.2 })}
-          <span>Trade Order Cart</span>
-          <span class="badge badge-amber mono" id="drawer-cart-badge">0 items</span>
+          ${lucideIcon('shopping-cart', { size: 18, strokeWidth: 2 })}
+          <span>Your Cart</span>
+          <span class="badge badge-amber mono" id="drawer-cart-badge">0</span>
         </div>
-        <button type="button" class="drawer-close-btn" data-close-drawer aria-label="Close Cart Drawer">
-          ${lucideIcon('x', { size: 18 })}
+        <button type="button" class="drawer-close-btn" data-close-drawer aria-label="Close Cart">
+          ${lucideIcon('x', { size: 17 })}
         </button>
       </div>
 
-      <!-- Dynamic $150 Delivery Eligibility Progress Bar -->
       <div class="delivery-threshold-box" id="drawer-delivery-box">
         <div class="delivery-threshold-text" id="drawer-delivery-text"></div>
         <div class="delivery-progress-track">
@@ -356,129 +576,108 @@ function ensureDrawersMounted() {
 
       <div class="drawer-footer">
         <div class="mini-cart-summary-row">
-          <span style="color:var(--text-muted)">Trade Discount Savings</span>
-          <span class="mono" style="color:var(--color-emerald-600);font-weight:700" id="drawer-cart-savings">-$0.00</span>
-        </div>
-        <div class="mini-cart-summary-row">
-          <span style="color:var(--text-muted)">Fulfillment Status</span>
-          <span id="drawer-cart-fulfillment" style="font-weight:700;font-size:12px">Kingsgrove Pickup</span>
+          <span style="color:var(--text-muted)">Trade Savings</span>
+          <span class="mono" style="color:var(--color-emerald-600);font-weight:600" id="drawer-cart-savings">-$0.00</span>
         </div>
         <div class="mini-cart-summary-row is-total">
-          <span>Trade Subtotal (Inc. GST)</span>
+          <span>Subtotal (Inc. GST)</span>
           <span class="mono" id="drawer-cart-subtotal">$0.00</span>
         </div>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem">
-          <a href="cart.html" class="btn btn-outline">View Full Cart</a>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.65rem">
+          <a href="cart.html" class="btn btn-outline">View Cart</a>
           <a href="checkout.html" class="btn btn-primary">
-            <span>Trade Checkout</span>
+            <span>Checkout</span>
             ${lucideIcon('arrow-right', { size: 15 })}
           </a>
         </div>
-        <button
-          type="button"
-          class="btn btn-navy btn-sm"
-          id="drawer-live-handoff-btn"
-          title="Submits native HTML POST form to transfer items directly to www.schnap.com.au"
-        >
-          ${lucideIcon('zap', { size: 14 })}
-          <span>Push Cart to Live SCHNAP.com.au</span>
-        </button>
       </div>
     </aside>
 
     <!-- 2. Request Bulk Quote Drawer -->
-    <aside class="slide-drawer" id="drawer-quote" aria-label="Request Bulk Trade Quote">
+    <aside class="slide-drawer" id="drawer-quote" aria-label="Request Bulk Quote">
       <div class="drawer-header">
         <div class="drawer-title">
-          <span class="badge badge-amber">TRADE DESK</span>
-          <span>Request Bulk / Project Quote</span>
+          ${lucideIcon('file-text', { size: 18 })}
+          <span>Request Bulk Quote</span>
         </div>
         <button type="button" class="drawer-close-btn" data-close-drawer aria-label="Close Quote Drawer">
-          ${lucideIcon('x', { size: 18 })}
+          ${lucideIcon('x', { size: 17 })}
         </button>
       </div>
       <div class="drawer-body">
-        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:1rem">
-          Pricing a multi-dwelling project, commercial switchboard, or solar rollout? Submit your BOM or send directly to our Kingsgrove Trade Desk on WhatsApp for priority turnaround.
+        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:1.25rem">
+          Send your project list for quantity pricing. Our team will respond quickly via WhatsApp or phone.
         </p>
-        <form id="bulk-quote-form" style="display:flex;flex-direction:column;gap:0.85rem">
+        <form id="bulk-quote-form" style="display:flex;flex-direction:column;gap:0.9rem">
           <div class="form-field">
-            <label class="form-label">Your Name / Contracting Company *</label>
-            <input type="text" class="form-input" id="quote-name" placeholder="e.g. Apex Electrical Contracting" required />
+            <label class="form-label">Name or Company *</label>
+            <input type="text" class="form-input" id="quote-name" placeholder="Apex Electrical" required />
           </div>
           <div class="form-field">
-            <label class="form-label">ABN or Electrical Licence #</label>
-            <input type="text" class="form-input mono" id="quote-abn" placeholder="e.g. ABN 52 123 456 789 / Lic 294810C" />
-          </div>
-          <div class="form-field">
-            <label class="form-label">Mobile / Trade Contact *</label>
+            <label class="form-label">Mobile Number *</label>
             <input type="tel" class="form-input mono" id="quote-phone" placeholder="0400 000 000" required />
           </div>
           <div class="form-field">
-            <label class="form-label">SKUs, Quantities &amp; Project Notes *</label>
+            <label class="form-label">Part Numbers &amp; Quantities *</label>
             <textarea
               class="form-input mono"
               id="quote-items"
               rows="5"
-              placeholder="e.g. 50x LX620G2 (20A 6kA RCBO)&#10;10x F3015BLACK (100m 1.5mm 3C Flex)&#10;24x AURORA220-SQ-HDALI"
+              placeholder="50x LX620G2&#10;10x F3015BLACK"
               required
             ></textarea>
           </div>
           <button type="submit" class="btn btn-primary btn-lg">
-            <span>Send Quote Request via WhatsApp &amp; Trade Desk</span>
+            <span>Send Quote Request</span>
             ${lucideIcon('arrow-right', { size: 16 })}
           </button>
         </form>
       </div>
     </aside>
 
-    <!-- 3. Send Us a Photo (Part Identification) Drawer -->
-    <aside class="slide-drawer" id="drawer-photo" aria-label="Send Us a Photo Part Identification">
+    <!-- 3. Send Us a Photo Drawer -->
+    <aside class="slide-drawer" id="drawer-photo" aria-label="Photo Identification">
       <div class="drawer-header">
         <div class="drawer-title">
-          <span class="badge badge-emerald">PART ID DESK</span>
-          <span>Send Us a Photo</span>
+          ${lucideIcon('camera', { size: 18 })}
+          <span>Photo Part Identification</span>
         </div>
         <button type="button" class="drawer-close-btn" data-close-drawer aria-label="Close Photo Drawer">
-          ${lucideIcon('x', { size: 18 })}
+          ${lucideIcon('x', { size: 17 })}
         </button>
       </div>
-      <div class="drawer-body" style="display:flex;flex-direction:column;gap:1rem">
-        <div style="background:var(--color-red-50);border:1px solid var(--color-red-200);border-radius:var(--radius-lg);padding:1rem;font-size:13px">
-          <strong style="color:#5D1C25">On-site with an obsolete breaker, contactor, or fitting?</strong>
-          <p style="margin-top:4px;color:var(--text-secondary)">
-            Snap a photo of the nameplate or switchboard DIN rail. Our Kingsgrove trade counter engineers will identify the exact drop-in replacement within minutes.
-          </p>
-        </div>
+      <div class="drawer-body" style="display:flex;flex-direction:column;gap:1.1rem">
+        <p style="font-size:13px;color:var(--text-secondary)">
+          Not sure what a part is? Upload a clear photo of the product, label, or model number and our trade counter will identify it for you.
+        </p>
 
         <label
           for="photo-upload-input"
-          style="border:2px dashed var(--color-slate-300);border-radius:var(--radius-lg);padding:2rem 1rem;text-align:center;cursor:pointer;background:var(--color-slate-50)"
+          style="border:1.5px dashed var(--color-slate-300);border-radius:var(--radius-lg);padding:2rem 1rem;text-align:center;cursor:pointer;background:var(--color-slate-50)"
         >
-          <div style="font-weight:700;color:#5D1C25;margin-bottom:4px;display:flex;align-items:center;justify-content:center;gap:6px">
+          <div style="font-weight:600;color:#5D1C25;margin-bottom:4px;display:flex;align-items:center;justify-content:center;gap:6px">
             ${lucideIcon('camera', { size: 18 })}
-            <span>Drop Switchboard / Nameplate Photo Here</span>
+            <span>Select Product Photo</span>
           </div>
-          <div style="font-size:12px;color:var(--text-muted)" id="photo-file-label">Supports JPG, PNG, HEIC from phone camera</div>
+          <div style="font-size:12px;color:var(--text-muted)" id="photo-file-label">JPG, PNG or HEIC</div>
           <input type="file" id="photo-upload-input" accept="image/*" style="display:none" />
         </label>
 
         <div class="form-field">
-          <label class="form-label">Part Markings / Ratings Visible (Optional)</label>
-          <input type="text" class="form-input mono" id="photo-notes" placeholder="e.g. Old Federal 20A breaker or 3-phase contactor coil 240V" />
+          <label class="form-label">Notes (Optional)</label>
+          <input type="text" class="form-input" id="photo-notes" placeholder="Visible markings or ratings..." />
         </div>
 
         <a
-          href="https://wa.me/61291507744?text=Hi%20SCHNAP%20Trade%20Desk%2C%20I%20need%20help%20identifying%20an%20electrical%20part%20from%20site%3A"
+          href="${escapeHtml(STORE_FACTS.whatsappHref)}"
           target="_blank"
           rel="noopener"
-          class="btn btn-emerald btn-lg"
+          class="btn btn-primary btn-lg"
           id="photo-whatsapp-link"
         >
           ${lucideIcon('message-circle', { size: 17 })}
-          <span>Open WhatsApp Trade Identification Desk</span>
-          ${lucideIcon('arrow-up-right', { size: 15 })}
+          <span>Send Photo on WhatsApp</span>
         </a>
       </div>
     </aside>
@@ -506,7 +705,6 @@ export function closeAllDrawers() {
 }
 
 function bindHeaderEvents() {
-  // Open/Close Drawer triggers
   document.addEventListener('click', (e) => {
     const openBtn = e.target.closest('[data-open-drawer]');
     if (openBtn) {
@@ -522,7 +720,6 @@ function bindHeaderEvents() {
     }
   });
 
-  // Keyboard shortcut '/' to focus search input
   const searchInput = document.getElementById('header-search-input');
   const searchDropdown = document.getElementById('header-search-dropdown');
 
@@ -536,7 +733,6 @@ function bindHeaderEvents() {
     }
   });
 
-  // Debounced Instant Live Search Dropdown (dispatch=products.search)
   if (searchInput && searchDropdown) {
     let searchTimer = null;
 
@@ -557,29 +753,26 @@ function bindHeaderEvents() {
             p.brand.toLowerCase().includes(qLower)
         ).slice(0, 5);
 
-        renderSearchDropdown(searchDropdown, q, localHits, { isSyncing: true });
+        renderSearchDropdown(searchDropdown, q, localHits);
 
         try {
           const remote = await fetchSearchCatalog({ query: q, page: 1 });
           const combined = remote.products?.length ? remote.products.slice(0, 6) : localHits;
           renderSearchDropdown(searchDropdown, q, combined, {
-            isSyncing: false,
             totalCount: remote.totalCount || combined.length,
           });
         } catch {
-          renderSearchDropdown(searchDropdown, q, localHits, { isSyncing: false, totalCount: localHits.length });
+          renderSearchDropdown(searchDropdown, q, localHits, { totalCount: localHits.length });
         }
       }, 220);
     });
 
-    // Click outside closes search dropdown
     document.addEventListener('click', (e) => {
       if (!e.target.closest('#header-search-container')) {
         searchDropdown.classList.remove('is-open');
       }
     });
 
-    // Quick + Add inside search dropdown
     searchDropdown.addEventListener('click', (e) => {
       const addBtn = e.target.closest('[data-search-add]');
       if (addBtn) {
@@ -590,8 +783,8 @@ function bindHeaderEvents() {
             const prod = JSON.parse(rawJson);
             addToCart(prod, 1);
             showToast({
-              title: `Added 1× ${prod.sku}`,
-              message: `${prod.title} added to Trade Cart`,
+              title: `Added ${prod.sku}`,
+              message: prod.title,
               type: 'success',
             });
           } catch {
@@ -602,45 +795,34 @@ function bindHeaderEvents() {
     });
   }
 
-  // Bulk Quote Form submission
   const quoteForm = document.getElementById('bulk-quote-form');
   quoteForm?.addEventListener('submit', (e) => {
     e.preventDefault();
     const name = document.getElementById('quote-name')?.value || '';
-    const abn = document.getElementById('quote-abn')?.value || '';
     const phone = document.getElementById('quote-phone')?.value || '';
     const items = document.getElementById('quote-items')?.value || '';
-    const msg = `Hi SCHNAP Trade Desk, Bulk Quote Request from ${name} (${abn || phone}):\n${items}`;
-    window.open(`https://wa.me/61291507744?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
-    showToast({
-      title: 'Bulk Quote Logged',
-      message: 'Opening SCHNAP Kingsgrove Trade Desk on WhatsApp...',
-      type: 'success',
-    });
+    const msg = `Hi SCHNAP Trade Desk, Bulk Quote Request from ${name} (${phone}):\n${items}`;
+    window.open(`${CONFIG.STORE_FACTS.whatsappHref}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
     closeAllDrawers();
   });
 
-  // Photo Upload preview
   const photoInput = document.getElementById('photo-upload-input');
   photoInput?.addEventListener('change', () => {
     const file = photoInput.files?.[0];
     const label = document.getElementById('photo-file-label');
     if (file && label) {
-      label.textContent = `Selected: ${file.name} (${Math.round(file.size / 1024)} KB) — Ready to send`;
+      label.textContent = `${file.name} selected`;
       label.style.color = 'var(--color-emerald-600)';
-      label.style.fontWeight = '700';
+      label.style.fontWeight = '600';
     }
   });
 }
 
-function renderSearchDropdown(dropdownEl, query, products, { isSyncing = false, totalCount = 0 } = {}) {
+function renderSearchDropdown(dropdownEl, query, products, { totalCount = 0 } = {}) {
   if (!products || products.length === 0) {
     dropdownEl.innerHTML = `
-      <div class="search-dropdown-header">
-        <span>Searching CS-Cart for "${escapeHtml(query)}"...</span>
-      </div>
       <div style="padding:1.25rem;text-align:center;color:var(--text-muted);font-size:13px">
-        Press Enter to run full deep catalog search across 29,000+ SKUs.
+        Press Enter to search all products for "${escapeHtml(query)}".
       </div>
     `;
     dropdownEl.classList.add('is-open');
@@ -686,13 +868,13 @@ function renderSearchDropdown(dropdownEl, query, products, { isSyncing = false, 
 
   dropdownEl.innerHTML = `
     <div class="search-dropdown-header">
-      <span>Instant Trade Matches for "${escapeHtml(query)}"</span>
-      <span class="mono">${isSyncing ? 'Syncing live CS-Cart...' : `${totalCount || products.length} matches`}</span>
+      <span>Matches for "${escapeHtml(query)}"</span>
+      <span class="mono">${totalCount || products.length} results</span>
     </div>
     <div>${rows}</div>
     <div class="search-dropdown-footer">
-      <a href="search.html?q=${encodeURIComponent(query)}" class="btn btn-navy btn-sm" style="width:100%">
-        <span>View All ${totalCount || ''} Results for "${escapeHtml(query)}"</span>
+      <a href="search.html?q=${encodeURIComponent(query)}" class="btn btn-outline btn-sm" style="width:100%">
+        <span>View All Results</span>
         ${lucideIcon('arrow-right', { size: 14 })}
       </a>
     </div>
@@ -719,18 +901,6 @@ function bindCartDrawerEvents() {
     }
   });
 
-  const handoffBtn = document.getElementById('drawer-live-handoff-btn');
-  handoffBtn?.addEventListener('click', () => {
-    const ok = submitNativeCartHandoff('checkout.cart');
-    if (ok) {
-      showToast({
-        title: 'Live CS-Cart Handoff Triggered',
-        message: 'Posting cart items directly to www.schnap.com.au in a new tab...',
-        type: 'success',
-      });
-    }
-  });
-
   subscribeCart((state) => {
     const countEl = document.getElementById('header-cart-count');
     const subEl = document.getElementById('header-cart-subtotal');
@@ -739,15 +909,14 @@ function bindCartDrawerEvents() {
 
     if (countEl) countEl.textContent = String(state.itemCount);
     if (subEl) subEl.textContent = formatAud(state.subtotal);
-    if (drawerBadge) drawerBadge.textContent = `${state.itemCount} ${state.itemCount === 1 ? 'unit' : 'units'}`;
+    if (drawerBadge) drawerBadge.textContent = `${state.itemCount}`;
 
     if (navChip) {
       navChip.innerHTML = state.isDeliveryUnlocked
-        ? `${lucideIcon('check-circle-2', { size: 14 })}<span>$150+ Australia-Wide Delivery Unlocked (${formatAud(state.subtotal)})</span>`
-        : `${lucideIcon('truck', { size: 14 })}<span>Add ${formatAud(state.remainingForDelivery)} for Aus-Wide Delivery • Free Kingsgrove Pickup</span>`;
+        ? `${lucideIcon('check-circle-2', { size: 13 })}<span>Australia-Wide Delivery Unlocked</span>`
+        : `${lucideIcon('map-pin', { size: 13 })}<span>Free 7-Day Kingsgrove Pickup</span>`;
     }
 
-    // Update $150 Delivery Threshold Progress Bar in Drawer
     const delivBox = document.getElementById('drawer-delivery-box');
     const delivText = document.getElementById('drawer-delivery-text');
     const delivBar = document.getElementById('drawer-delivery-bar');
@@ -756,18 +925,17 @@ function bindCartDrawerEvents() {
       delivBox.classList.toggle('is-unlocked', state.isDeliveryUnlocked);
       delivBar.style.width = `${state.progressPct}%`;
       delivText.innerHTML = state.isDeliveryUnlocked
-        ? `<span style="display:inline-flex;align-items:center;gap:4px">${lucideIcon('check-circle-2', { size: 14 })}<strong>Australia-Wide Delivery &amp; Same-Day Sydney Dispatch Unlocked!</strong></span><span class="mono">${formatAud(state.subtotal)} / $150</span>`
-        : `<span>Add <strong>${formatAud(state.remainingForDelivery)}</strong> more for Australia-wide delivery, or collect <strong>FREE from Kingsgrove</strong></span><span class="mono">${state.progressPct}%</span>`;
+        ? `<span style="display:inline-flex;align-items:center;gap:4px">${lucideIcon('check-circle-2', { size: 14 })}<strong>Australia-Wide Delivery Unlocked</strong></span><span class="mono">${formatAud(state.subtotal)}</span>`
+        : `<span>Add <strong>${formatAud(state.remainingForDelivery)}</strong> for delivery, or collect free at Kingsgrove</span><span class="mono">${state.progressPct}%</span>`;
     }
 
-    // Update Drawer Line Items
     if (itemsContainer) {
       if (state.items.length === 0) {
         itemsContainer.innerHTML = `
           <div style="text-align:center;padding:3rem 1rem;color:var(--text-muted)">
-            <div style="font-size:15px;font-weight:700;color:#5D1C25;margin-bottom:6px">Your Trade Cart is Empty</div>
-            <p style="font-size:12px;margin-bottom:1.25rem">Browse our 6-pillar electrical catalog or search by SKU above.</p>
-            <a href="category.html?category_id=4257&slug=electrical.html" class="btn btn-primary btn-sm">Browse Trade Catalog</a>
+            <div style="font-size:15px;font-weight:700;color:#5D1C25;margin-bottom:6px">Your Cart is Empty</div>
+            <p style="font-size:12px;margin-bottom:1.25rem">Explore our electrical range or search by part number above.</p>
+            <a href="category.html?category_id=4257&slug=electrical.html" class="btn btn-primary btn-sm">Browse Catalog</a>
           </div>
         `;
       } else {
@@ -800,7 +968,6 @@ function bindCartDrawerEvents() {
                   <span class="mini-cart-line-total">${formatAud(item.price * item.qty)}</span>
                   <button type="button" class="mini-cart-remove" data-drawer-remove="${escapeHtml(item.id)}">
                     ${lucideIcon('trash-2', { size: 12 })}
-                    <span>Remove</span>
                   </button>
                 </div>
               </div>
@@ -810,33 +977,10 @@ function bindCartDrawerEvents() {
       }
     }
 
-    // Update Drawer Summary Totals
     const savEl = document.getElementById('drawer-cart-savings');
-    const fulEl = document.getElementById('drawer-cart-fulfillment');
     const totEl = document.getElementById('drawer-cart-subtotal');
 
     if (savEl) savEl.textContent = `-${formatAud(state.tradeSavings)}`;
-    if (fulEl) {
-      fulEl.innerHTML = state.isDeliveryUnlocked
-        ? `<span style="color:var(--color-emerald-600);display:inline-flex;align-items:center;gap:4px">${lucideIcon('check', { size: 13 })}<span>Aus-Wide Delivery / Kingsgrove Pickup</span></span>`
-        : `<span style="color:#5D1C25">Free Kingsgrove 7-Day Pickup</span>`;
-    }
     if (totEl) totEl.textContent = formatAud(state.subtotal);
-  });
-}
-
-function bindTelemetrySubscription() {
-  subscribeTelemetry((t) => {
-    const pill = document.getElementById('edge-telemetry-indicator');
-    const text = document.getElementById('edge-telemetry-text');
-    if (!pill || !text) return;
-
-    pill.classList.toggle('is-seed', t.mode !== 'live-edge');
-    if (t.mode === 'live-edge') {
-      const latencyStr = t.latencyMs > 0 ? ` • ${t.latencyMs}ms` : '';
-      text.textContent = `EDGE GATEWAY: ${t.cacheStatus}${latencyStr}`;
-    } else {
-      text.textContent = `HYBRID SEED CACHE: ACTIVE`;
-    }
   });
 }

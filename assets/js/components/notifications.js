@@ -1,6 +1,5 @@
 // ==========================================================================
 // SCHNAP Electric Products — Toast Notifications Component (notifications.js)
-// Maps CS-Cart's notifications envelope & optimistic trade actions into toasts.
 // All icons powered by Lucide (icons.js)
 // ==========================================================================
 
@@ -13,22 +12,22 @@ function ensureContainer() {
   containerEl = document.createElement('div');
   containerEl.className = 'toast-container';
   containerEl.setAttribute('role', 'region');
-  containerEl.setAttribute('aria-label', 'Trade notifications');
+  containerEl.setAttribute('aria-label', 'Notifications');
   document.body.appendChild(containerEl);
   return containerEl;
 }
 
-export function showToast({ title = 'SCHNAP Trade', message = '', type = 'info', duration = 3400 } = {}) {
+export function showToast({ title = 'SCHNAP', message = '', type = 'info', duration = 3000 } = {}) {
   const container = ensureContainer();
   const toast = document.createElement('div');
   toast.className = `toast toast--${type}`;
 
   const iconSvg =
     type === 'success'
-      ? `<span style="color:#10B981">${lucideIcon('check-circle-2', { size: 18, strokeWidth: 2.4 })}</span>`
+      ? `<span style="color:#10B981">${lucideIcon('check-circle-2', { size: 18, strokeWidth: 2.2 })}</span>`
       : type === 'error'
-        ? `<span style="color:#EB1B24">${lucideIcon('circle-alert', { size: 18, strokeWidth: 2.4 })}</span>`
-        : `<span style="color:#FF7A80">${lucideIcon('info', { size: 18, strokeWidth: 2.4 })}</span>`;
+        ? `<span style="color:#EBC06D">${lucideIcon('circle-alert', { size: 18, strokeWidth: 2.2 })}</span>`
+        : `<span style="color:#EBC06D">${lucideIcon('info', { size: 18, strokeWidth: 2.2 })}</span>`;
 
   toast.innerHTML = `
     <div style="margin-top:2px;flex-shrink:0">${iconSvg}</div>
@@ -53,7 +52,7 @@ export function renderCsCartNotifications(notifications = []) {
   for (const n of notifications) {
     if (String(n.message || '').includes('Possible CSRF attack')) continue;
     showToast({
-      title: n.title || 'CS-Cart Notice',
+      title: n.title || 'Notice',
       message: n.message || '',
       type: n.type || 'info',
     });

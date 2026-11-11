@@ -23,7 +23,7 @@ assert.ok(CONFIG.BRANDS.some((b) => b.name === 'Clipsal' && b.featured));
 assert.ok(CONFIG.BRANDS.some((b) => b.name === 'Hager' && b.featured));
 assert.ok(CONFIG.BRANDS.some((b) => b.name === 'Legrand' && b.featured));
 
-// 2. Media normalizer & SVG schematic fallback (#5D1C25 / #FFFFFF / #EB1B24 palette)
+// 2. Media normalizer & SVG schematic fallback (#5D1C25 / #FFFFFF / #C58B2A palette)
 const cfUrl =
   'https://d35gtgjy55l0bn.cloudfront.net/images/thumbnails/200/200/detailed/163/LA210.png?t=1770916996';
 assert.strictEqual(normalizeImageUrl(cfUrl), cfUrl);
@@ -37,7 +37,7 @@ assert.ok(placeholder.startsWith('data:image/svg+xml;utf8,'));
 const decodedSvg = decodeURIComponent(placeholder);
 assert.ok(decodedSvg.includes('LX620G2'));
 assert.ok(decodedSvg.includes('#5D1C25'));
-assert.ok(decodedSvg.includes('#EB1B24'));
+assert.ok(decodedSvg.includes('#C58B2A'));
 
 // 3. Lucide Icons Component
 const zapSvg = lucideIcon('zap', { size: 18 });
@@ -77,15 +77,25 @@ assert.strictEqual(env.notifications[0].type, 'success');
 
 assert.strictEqual(typeof parseBrandsResponse, 'function');
 
-// 5. Color Palette & Brands Page Verification
+// 5. Color Palette, 3-Level Menu & Clean UI Verification
 const tokensCss = fs.readFileSync(new URL('../assets/css/tokens.css', import.meta.url), 'utf8');
 assert.ok(tokensCss.includes('#5D1C25'));
 assert.ok(tokensCss.includes('#FFFFFF'));
-assert.ok(tokensCss.includes('#EB1B24'));
+assert.ok(tokensCss.includes('#C58B2A'));
+assert.ok(!tokensCss.includes('#EB1B24'));
 
 const brandsHtml = fs.readFileSync(new URL('../brands.html', import.meta.url), 'utf8');
 assert.ok(brandsHtml.includes('assets/js/pages/brands.js'));
 assert.ok(brandsHtml.includes('data-lucide='));
+assert.ok(!brandsHtml.includes('dispatch='));
+
+const indexHtml = fs.readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+assert.ok(!indexHtml.includes('Browse by Electrical Trade Discipline'));
+
+const headerJs = fs.readFileSync(new URL('../assets/js/components/header.js', import.meta.url), 'utf8');
+assert.ok(headerJs.includes('mega-tree-grid'));
+assert.ok(!headerJs.includes('EDGE GATEWAY'));
+assert.ok(!headerJs.includes('Zero-Access Edge Architecture'));
 
 // 6. Pitch seeds integrity
 assert.ok(SEED_PRODUCTS.length >= 14);

@@ -178,18 +178,6 @@ function renderQuickViewContent(container, product, { loadingSpecs = false } = {
           </a>
         </div>
 
-        <div>
-          <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px">
-            Quick Contractor Pack Increments
-          </div>
-          <div class="pdp-pack-pills">
-            <button type="button" class="pack-pill-btn is-active" data-qv-pack="1">1 Unit</button>
-            <button type="button" class="pack-pill-btn" data-qv-pack="5">5 Pack</button>
-            <button type="button" class="pack-pill-btn" data-qv-pack="10">10 Pack</button>
-            <button type="button" class="pack-pill-btn" data-qv-pack="${boxQty}">Box (${boxQty})</button>
-          </div>
-        </div>
-
         <div style="display:grid;grid-template-columns:auto 1fr;gap:0.75rem;align-items:center">
           <div class="qty-stepper" style="height:44px">
             <button type="button" class="qty-stepper__btn" data-qv-step="-1" style="width:38px">

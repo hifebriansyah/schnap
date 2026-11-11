@@ -1,8 +1,6 @@
 // ==========================================================================
 // SCHNAP Electric Products — Catalog & Search Page Controller (catalog.js)
-// Hydrates category.html (categories.view / categories.subcategories)
-// and search.html (products.search / tags.view)
-// All icons powered by Lucide (icons.js)
+// Clean, readable catalog & search experience
 // ==========================================================================
 
 import { CONFIG } from '../core/config.js';
@@ -29,7 +27,7 @@ const state = {
   tag: '',
   page: 1,
   sort: 'position_asc',
-  viewMode: 'grid', // 'grid' | 'table'
+  viewMode: 'grid',
   selectedBrands: new Set(),
   selectedSpecs: new Set(),
   selectedPrices: new Set(),
@@ -98,7 +96,6 @@ async function loadCatalogData() {
     productsMount.innerHTML = renderSkeletonGrid(8);
   }
 
-  // Resolve pillar metadata
   const pillar =
     CONFIG.PILLARS.find((p) => p.id === state.categoryId || p.slug === state.slug || p.id === state.parentId) ||
     CONFIG.PILLARS[1];
@@ -140,12 +137,11 @@ function applyCatalogResult(result, pillar) {
   state.title =
     result?.title ||
     (state.query
-      ? `Search Results for "${state.query}"`
+      ? `Results for "${state.query}"`
       : state.tag
-        ? `Tag: ${state.tag}`
-        : pillar?.name || 'Trade Catalog');
+        ? state.tag
+        : pillar?.name || 'Catalog');
 
-  // Subcategories: combine CS-Cart subcategories with Pillar config subcategories
   state.subcategories =
     result?.subcategories?.length > 0
       ? result.subcategories
@@ -169,26 +165,20 @@ function updateHeaderBanner(pillar) {
   const titleEl = document.getElementById('catalog-page-title');
   const subtitleEl = document.getElementById('catalog-page-subtitle');
   const breadcrumbEl = document.getElementById('catalog-breadcrumb-current');
-  const dispatchChipEl = document.getElementById('catalog-dispatch-chip');
 
   const resolvedTitle =
     state.query
       ? `Search: "${state.query}"`
       : state.tag
-        ? `Electrical Spec Tag: ${state.tag}`
-        : state.title || pillar?.name || 'Trade Catalog';
+        ? state.tag
+        : state.title || pillar?.name || 'Catalog';
 
   if (titleEl) titleEl.textContent = resolvedTitle;
   if (breadcrumbEl) breadcrumbEl.textContent = resolvedTitle;
   if (subtitleEl) {
     subtitleEl.textContent = state.query
-      ? `Live CS-Cart SKU & keyword results matched across SCHNAP's 29,000+ electrical trade catalog.`
-      : pillar?.tagline || 'Trade-certified electrical supplies with upfront contractor discounts.';
-  }
-  if (dispatchChipEl) {
-    dispatchChipEl.textContent = state.isSearchPage || state.query
-      ? `dispatch=products.search&q=${state.query || state.tag || 'rcbo'}`
-      : `dispatch=categories.view&category_id=${state.categoryId || '4257'}`;
+      ? `Showing matching products across our electrical range.`
+      : pillar?.tagline || 'Trade electrical supplies with upfront pricing.';
   }
 }
 
@@ -206,7 +196,7 @@ function renderSubcategoryPills(pillar) {
   const allActive = state.categoryId === pillar.id && !state.query;
 
   const pillsHtml = state.subcategories
-    .slice(0, 12)
+    .slice(0, 10)
     .map((sub) => {
       const isSubActive =
         (sub.id && sub.id === state.categoryId) ||
@@ -282,7 +272,6 @@ function renderFacetsSidebar() {
 function applyClientFiltersAndSort() {
   let list = [...state.allProducts];
 
-  // Brand filter
   if (state.selectedBrands.size > 0) {
     list = list.filter((p) =>
       [...state.selectedBrands].some(
@@ -294,7 +283,6 @@ function applyClientFiltersAndSort() {
     );
   }
 
-  // Spec filter
   if (state.selectedSpecs.size > 0) {
     list = list.filter((p) =>
       [...state.selectedSpecs].some((s) =>
@@ -304,7 +292,6 @@ function applyClientFiltersAndSort() {
     );
   }
 
-  // Price bracket filter
   if (state.selectedPrices.size > 0) {
     list = list.filter((p) => {
       return [...state.selectedPrices].some((range) => {
@@ -317,7 +304,6 @@ function applyClientFiltersAndSort() {
     });
   }
 
-  // Sorting
   if (state.sort === 'price_asc') {
     list.sort((a, b) => a.price - b.price);
   } else if (state.sort === 'price_desc') {
@@ -337,7 +323,6 @@ function renderProductsAndPagination() {
   const countEl = document.getElementById('catalog-results-count');
   const paginationMount = document.getElementById('catalog-pagination-mount');
 
-  // Update View Mode toggle buttons
   document.querySelectorAll('[data-view-mode]').forEach((btn) => {
     btn.classList.toggle('is-active', btn.getAttribute('data-view-mode') === state.viewMode);
   });
@@ -349,7 +334,7 @@ function renderProductsAndPagination() {
     : Math.max(state.totalCount, state.filteredProducts.length);
 
   if (countEl) {
-    countEl.innerHTML = `Showing <strong>${state.filteredProducts.length}</strong> of <strong class="mono">${displayedTotal.toLocaleString('en-AU')}</strong> trade products`;
+    countEl.innerHTML = `Showing <strong>${state.filteredProducts.length}</strong> of <strong class="mono">${displayedTotal.toLocaleString('en-AU')}</strong> products`;
   }
 
   if (!productsMount) return;
@@ -358,11 +343,11 @@ function renderProductsAndPagination() {
     productsMount.className = '';
     productsMount.innerHTML = `
       <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-xl);padding:3rem 1.5rem;text-align:center">
-        <h3 style="font-size:1.15rem;font-weight:800;color:#5D1C25;margin-bottom:0.5rem">No products match those exact filter criteria</h3>
-        <p style="color:var(--text-muted);font-size:13px;margin-bottom:1.25rem">Reset your active technical filters or search across all 29,000+ SCHNAP SKUs.</p>
+        <h3 style="font-size:1.1rem;font-weight:700;color:#5D1C25;margin-bottom:0.5rem">No products match your selected filters</h3>
+        <p style="color:var(--text-muted);font-size:13px;margin-bottom:1.25rem">Reset your filters to view all available items.</p>
         <button type="button" class="btn btn-primary btn-sm" id="empty-reset-filters-btn">
           ${lucideIcon('rotate-ccw', { size: 14 })}
-          <span>Clear Technical Filters</span>
+          <span>Clear Filters</span>
         </button>
       </div>
     `;
@@ -383,7 +368,6 @@ function renderProductsAndPagination() {
     onQuickView: (id, prod) => openQuickView(id, prod),
   });
 
-  // Pagination Bar
   if (paginationMount) {
     const totalPages = Math.min(8, Math.max(1, Math.ceil(displayedTotal / 35)));
     if (totalPages <= 1) {
@@ -400,7 +384,7 @@ function renderProductsAndPagination() {
 
     paginationMount.innerHTML = `
       <div style="font-size:12px;color:var(--text-muted)">
-        Page <strong class="mono">${state.page}</strong> of <strong class="mono">${totalPages}</strong> (CS-Cart Pagination Dispatch)
+        Page <strong class="mono">${state.page}</strong> of <strong class="mono">${totalPages}</strong>
       </div>
       <div class="pagination-pages">
         ${pagesHtml}
@@ -419,7 +403,6 @@ function clearAllFacets() {
 }
 
 function bindToolbarAndFilterEvents() {
-  // Facet Checkboxes
   document.getElementById('catalog-facets-mount')?.addEventListener('change', (e) => {
     const cb = e.target.closest('input[data-facet-group]');
     if (!cb) return;
@@ -439,10 +422,8 @@ function bindToolbarAndFilterEvents() {
     applyClientFiltersAndSort();
   });
 
-  // Clear all filters button
   document.getElementById('clear-filters-btn')?.addEventListener('click', clearAllFacets);
 
-  // Sort Select
   const sortSelect = document.getElementById('catalog-sort-select');
   if (sortSelect) {
     sortSelect.value = state.sort;
@@ -453,7 +434,6 @@ function bindToolbarAndFilterEvents() {
     });
   }
 
-  // Grid View vs. Trade Table View Toggle
   document.querySelectorAll('[data-view-mode]').forEach((btn) => {
     btn.addEventListener('click', () => {
       state.viewMode = btn.getAttribute('data-view-mode') || 'grid';
@@ -462,7 +442,6 @@ function bindToolbarAndFilterEvents() {
     });
   });
 
-  // Pagination Clicks
   document.getElementById('catalog-pagination-mount')?.addEventListener('click', (e) => {
     const pageBtn = e.target.closest('[data-page-num]');
     if (!pageBtn) return;
@@ -474,7 +453,6 @@ function bindToolbarAndFilterEvents() {
     loadCatalogData();
   });
 
-  // Quick Spec Tag Buttons on Search Page
   document.querySelectorAll('[data-spec-tag]').forEach((btn) => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
