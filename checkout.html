@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Streamlined 3-Step Trade Checkout | SCHNAP Electric Products</title>
+  <meta name="description" content="Complete your SCHNAP trade order with Australia-wide courier delivery ($150+ orders) or Free 7-Day Kingsgrove NSW counter pickup." />
+  <link rel="icon" href="https://d35gtgjy55l0bn.cloudfront.net/images/logos/169/schnap.png" />
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/catalog.css" />
+  <link rel="stylesheet" href="assets/css/checkout.css" />
+</head>
+<body>
+  <!-- Global Sticky Header & 6-Pillar Mega-Menu -->
+  <div id="site-shell-header"></div>
+
+  <main>
+    <section class="catalog-header-banner">
+      <div class="container" style="display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;flex-wrap:wrap">
+        <div>
+          <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+            <a href="index.html">Trade Home</a>
+            <span>/</span>
+            <a href="cart.html">Trade Cart</a>
+            <span>/</span>
+            <span style="color:var(--color-navy-900);font-weight:700">3-Step Trade Checkout</span>
+          </nav>
+          <h1 class="section-title">Streamlined 3-Step Trade Checkout</h1>
+        </div>
+        <span class="badge badge-slate mono">
+          dispatch=checkout.checkout • security_hash: <span id="checkout-security-hash-display">active</span>
+        </span>
+      </div>
+    </section>
+
+    <section class="container checkout-page-layout">
+      <!-- Left Column: 3-Step Trade Checkout Form -->
+      <form id="trade-checkout-form" class="checkout-steps-stack">
+        <!-- STEP 1: Customer & Trade Contact / ABN Details -->
+        <div class="checkout-step-card is-active">
+          <div class="checkout-step-header">
+            <div style="display:flex;align-items:center;gap:0.75rem">
+              <span class="step-num-badge">1</span>
+              <div>
+                <strong style="font-size:15px">Customer &amp; Trade Account Details</strong>
+                <div style="font-size:11px;opacity:0.8">Tax Invoice &amp; SMS Pickup / Courier Notifications</div>
+              </div>
+            </div>
+            <span class="badge badge-amber">Guest or Trade Account</span>
+          </div>
+
+          <div class="checkout-step-body">
+            <div class="form-grid-2">
+              <div class="form-field">
+                <label class="form-label" for="checkout-firstname">First Name *</label>
+                <input
+                  type="text"
+                  id="checkout-firstname"
+                  name="user_data[firstname]"
+                  class="form-input"
+                  placeholder="Damien"
+                  required
+                />
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="checkout-lastname">Last Name *</label>
+                <input
+                  type="text"
+                  id="checkout-lastname"
+                  name="user_data[lastname]"
+                  class="form-input"
+                  placeholder="Kowalski"
+                  required
+                />
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="checkout-email">Email for Tax Invoice *</label>
+                <input
+                  type="email"
+                  id="checkout-email"
+                  name="user_data[email]"
+                  class="form-input"
+                  placeholder="accounts@electricalcontracting.com.au"
+                  required
+                />
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="checkout-phone">Mobile Phone (SMS Dispatch Alert) *</label>
+                <input
+                  type="tel"
+                  id="checkout-phone"
+                  name="user_data[phone]"
+                  class="form-input mono"
+                  placeholder="0412 345 678"
+                  required
+                />
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="checkout-company">Company / Contracting Name (Optional)</label>
+                <input
+                  type="text"
+                  id="checkout-company"
+                  name="user_data[company]"
+                  class="form-input"
+                  placeholder="Sydney Metro Electrical Pty Ltd"
+                />
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="checkout-abn">ABN / PO Reference (Printed on Invoice)</label>
+                <input
+                  type="text"
+                  id="checkout-abn"
+                  name="customer_notes"
+                  class="form-input mono"
+                  placeholder="ABN 51 824 753 556 / PO-4092"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: Fulfillment & Shipping Method ($150 Delivery Rule Enforced) -->
+        <div class="checkout-step-card is-active">
+          <div class="checkout-step-header">
+            <div style="display:flex;align-items:center;gap:0.75rem">
+              <span class="step-num-badge">2</span>
+              <div>
+                <strong style="font-size:15px">Fulfillment: Kingsgrove 7-Day Pickup vs. Australia-Wide Delivery</strong>
+                <div style="font-size:11px;opacity:0.8">Enforces SCHNAP $150 delivery rule &amp; live CS-Cart rate steps</div>
+              </div>
+            </div>
+            <span class="badge badge-emerald mono">dispatch=checkout.update_steps</span>
+          </div>
+
+          <div class="checkout-step-body">
+            <!-- Dynamic $150 Rule Banner -->
+            <div id="checkout-150-rule-alert"></div>
+
+            <!-- Fulfillment Method Cards -->
+            <div class="method-cards-grid" id="checkout-fulfillment-methods"></div>
+
+            <!-- Delivery Address Inputs (Visible when $150+ Delivery is active) -->
+            <div id="checkout-delivery-address-block" style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border-subtle);display:none">
+              <h4 style="font-size:13px;font-weight:800;text-transform:uppercase;margin-bottom:0.85rem;color:var(--color-navy-900)">
+                Site / Workshop Delivery Address (Australia-Wide)
+              </h4>
+              <div class="form-grid-2">
+                <div class="form-field is-full">
+                  <label class="form-label" for="checkout-address">Street Address / Site Gate Instructions</label>
+                  <input
+                    type="text"
+                    id="checkout-address"
+                    name="user_data[s_address]"
+                    class="form-input"
+                    placeholder="Unit 4, 18 Industrial Ave"
+                  />
+                </div>
+                <div class="form-field">
+                  <label class="form-label" for="checkout-city">Suburb / City</label>
+                  <input
+                    type="text"
+                    id="checkout-city"
+                    name="user_data[s_city]"
+                    class="form-input"
+                    value="Kingsgrove"
+                  />
+                </div>
+                <div class="form-field">
+                  <label class="form-label" for="checkout-state">State / Territory</label>
+                  <select id="checkout-state" name="user_data[s_state]" class="form-select">
+                    <option value="NSW" selected>New South Wales (NSW)</option>
+                    <option value="VIC">Victoria (VIC)</option>
+                    <option value="QLD">Queensland (QLD)</option>
+                    <option value="WA">Western Australia (WA)</option>
+                    <option value="SA">South Australia (SA)</option>
+                    <option value="ACT">Australian Capital Territory (ACT)</option>
+                    <option value="TAS">Tasmania (TAS)</option>
+                    <option value="NT">Northern Territory (NT)</option>
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label class="form-label" for="checkout-zipcode">Postcode</label>
+                  <input
+                    type="text"
+                    id="checkout-zipcode"
+                    name="user_data[s_zipcode]"
+                    class="form-input mono"
+                    value="2208"
+                  />
+                </div>
+                <div class="form-field">
+                  <label class="form-label">Country</label>
+                  <input type="text" class="form-input" value="Australia (AU)" disabled />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3: Payment & Order Placement -->
+        <div class="checkout-step-card is-active">
+          <div class="checkout-step-header">
+            <div style="display:flex;align-items:center;gap:0.75rem">
+              <span class="step-num-badge">3</span>
+              <div>
+                <strong style="font-size:15px">Payment &amp; Order Placement</strong>
+                <div style="font-size:11px;opacity:0.8">Instant GST Tax Invoice Issued Upon Completion</div>
+              </div>
+            </div>
+            <span class="badge badge-amber mono">dispatch=checkout.place_order</span>
+          </div>
+
+          <div class="checkout-step-body">
+            <div class="method-cards-grid" id="checkout-payment-methods" style="margin-bottom:1.25rem">
+              <div class="method-radio-card is-selected" data-payment-option="card">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span class="badge badge-navy">INSTANT</span>
+                  <span class="mono" style="font-size:11px">Visa / MC / Amex</span>
+                </div>
+                <strong style="font-size:14px">Credit / Trade Debit Card</strong>
+                <p style="font-size:12px;color:var(--text-secondary)">Immediate payment processing with zero card surcharge on trade debit.</p>
+              </div>
+
+              <div class="method-radio-card" data-payment-option="live_handoff">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span class="badge badge-amber">NATIVE CS-CART</span>
+                  <span class="mono" style="font-size:11px">www.schnap.com.au</span>
+                </div>
+                <strong style="font-size:14px">Complete on Live SCHNAP Gateway ↗</strong>
+                <p style="font-size:12px;color:var(--text-secondary)">Transfers cart via native HTML POST directly to SCHNAP's live checkout.</p>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg" id="place-order-submit-btn" style="width:100%">
+              Complete Trade Order (dispatch=checkout.place_order) →
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <!-- Right Column: Sticky Order Summary & Live CS-Cart Handoff -->
+      <aside class="summary-sidebar-card" aria-label="Checkout Order Summary">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:0.75rem;border-bottom:1px solid var(--border-subtle)">
+          <h3 style="font-family:var(--font-display);font-size:1.1rem;font-weight:800">BOM Summary</h3>
+          <a href="cart.html" style="font-size:12px;font-weight:700;color:var(--color-amber-600)">Edit Cart</a>
+        </div>
+
+        <div id="checkout-summary-items" style="max-height:280px;overflow-y:auto"></div>
+
+        <div class="summary-row">
+          <span>Items Subtotal</span>
+          <span class="mono" style="font-weight:700" id="checkout-summary-subtotal">$0.00</span>
+        </div>
+        <div class="summary-row">
+          <span>Fulfillment / Shipping</span>
+          <span class="mono" style="font-weight:700;color:var(--color-emerald-600)" id="checkout-summary-shipping">FREE</span>
+        </div>
+        <div class="summary-row">
+          <span>Included GST (10%)</span>
+          <span class="mono" id="checkout-summary-gst">$0.00</span>
+        </div>
+
+        <div class="summary-row is-grand-total">
+          <span>Grand Total (AUD)</span>
+          <span class="mono" id="checkout-summary-total">$0.00</span>
+        </div>
+
+        <div class="live-handoff-box">
+          <h4>⚡ Magic Pitch Moment: Live Handoff</h4>
+          <p>
+            Click below to transfer these exact SKUs and quantities directly into a live checkout session on <strong>www.schnap.com.au</strong>.
+          </p>
+          <button type="button" class="btn btn-primary btn-sm" id="checkout-live-handoff-btn" style="width:100%">
+            Proceed to Live SCHNAP.com.au Checkout ↗
+          </button>
+        </div>
+      </aside>
+    </section>
+
+    <!-- Order Confirmation Modal -->
+    <div class="modal-backdrop" id="order-confirmation-modal" role="dialog" aria-modal="true" aria-label="Order Confirmation">
+      <div class="quickview-dialog" style="max-width:560px;padding:1.75rem" id="order-confirmation-body"></div>
+    </div>
+  </main>
+
+  <!-- Global Footer -->
+  <div id="site-shell-footer"></div>
+
+  <script type="module" src="assets/js/pages/checkout.js"></script>
+</body>
+</html>

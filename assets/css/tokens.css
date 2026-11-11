@@ -1,0 +1,132 @@
+/* ==========================================================================
+   SCHNAP Electric Products — B2B Trade Storefront Design Tokens
+   Industrial Navy (#0F172A), Electric Trade Amber (#F97316), Compliance Emerald (#10B981)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
+
+:root {
+  /* Core Brand & Industrial Surfaces */
+  --color-navy-950: #090D16;
+  --color-navy-900: #0F172A;
+  --color-navy-800: #1E293B;
+  --color-navy-700: #334155;
+  --color-navy-600: #475569;
+
+  /* Neutral Slate Surfaces & Hairlines */
+  --color-slate-50: #F8FAFC;
+  --color-slate-100: #F1F5F9;
+  --color-slate-200: #E2E8F0;
+  --color-slate-300: #CBD5E1;
+  --color-slate-400: #94A3B8;
+  --color-slate-500: #64748B;
+  --color-white: #FFFFFF;
+
+  /* Primary Trade Accent — Electric Amber / Orange */
+  --color-amber-50: #FFF7ED;
+  --color-amber-100: #FFEDD5;
+  --color-amber-200: #FED7AA;
+  --color-amber-400: #FB923C;
+  --color-amber-500: #F97316;
+  --color-amber-600: #EA580C;
+  --color-amber-700: #C2410C;
+
+  /* Compliance, Stock & $150 Delivery Threshold Emerald */
+  --color-emerald-50: #ECFDF5;
+  --color-emerald-100: #D1FAE5;
+  --color-emerald-500: #10B981;
+  --color-emerald-600: #059669;
+  --color-emerald-700: #047857;
+
+  /* SCHNAP Heritage Crimson (for discount badges / alerts) */
+  --color-crimson-50: #FEF2F2;
+  --color-crimson-100: #FEE2E2;
+  --color-crimson-600: #DC2626;
+  --color-crimson-700: #B91C1C;
+
+  /* Technical Info Blue */
+  --color-blue-50: #EFF6FF;
+  --color-blue-100: #DBEAFE;
+  --color-blue-600: #2563EB;
+  --color-blue-700: #1D4ED8;
+
+  /* Semantic Tokens */
+  --bg-canvas: var(--color-slate-50);
+  --bg-surface: var(--color-white);
+  --bg-subtle: var(--color-slate-100);
+  --bg-header: var(--color-navy-900);
+  --bg-utility: var(--color-navy-950);
+
+  --text-primary: var(--color-navy-900);
+  --text-secondary: var(--color-navy-700);
+  --text-muted: var(--color-slate-500);
+  --text-on-dark: var(--color-white);
+  --text-on-dark-muted: var(--color-slate-300);
+
+  --border-subtle: var(--color-slate-200);
+  --border-strong: var(--color-slate-300);
+  --border-focus: var(--color-amber-500);
+
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Type Scale */
+  --text-2xs: 0.6875rem;   /* 11px */
+  --text-xs: 0.75rem;      /* 12px */
+  --text-sm: 0.8125rem;    /* 13px */
+  --text-base: 0.875rem;   /* 14px */
+  --text-md: 0.9375rem;    /* 15px */
+  --text-lg: 1.0625rem;    /* 17px */
+  --text-xl: 1.25rem;      /* 20px */
+  --text-2xl: 1.5rem;      /* 24px */
+  --text-3xl: 1.875rem;    /* 30px */
+  --text-4xl: 2.375rem;    /* 38px */
+
+  /* Spacing Scale */
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+
+  /* Layout & Grid */
+  --container-max: 1440px;
+  --container-pad: clamp(1rem, 2.5vw, 2.25rem);
+  --header-height: 72px;
+  --nav-height: 46px;
+
+  /* Radii */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* Elevation & Shadows */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.07), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 28px -4px rgba(15, 23, 42, 0.14), 0 4px 10px -2px rgba(15, 23, 42, 0.06);
+  --shadow-xl: 0 20px 44px -8px rgba(15, 23, 42, 0.22), 0 8px 16px -4px rgba(15, 23, 42, 0.08);
+  --shadow-amber: 0 4px 14px rgba(249, 115, 22, 0.28);
+
+  /* Transitions */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: 140ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-base: 220ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Z-index layers */
+  --z-sticky: 100;
+  --z-dropdown: 200;
+  --z-drawer: 400;
+  --z-modal: 500;
+  --z-toast: 600;
+}

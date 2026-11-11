@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trade Catalog &amp; Technical Specifications | SCHNAP Electric Products</title>
+  <meta name="description" content="Browse SCHNAP trade electrical categories, subcategories, technical facet filters, and BOM table view." />
+  <link rel="icon" href="https://d35gtgjy55l0bn.cloudfront.net/images/logos/169/schnap.png" />
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/catalog.css" />
+  <link rel="stylesheet" href="assets/css/checkout.css" />
+</head>
+<body>
+  <!-- Global Sticky Header & 6-Pillar Mega-Menu -->
+  <div id="site-shell-header"></div>
+
+  <main>
+    <!-- Category Header & Subcategory Visual Pills -->
+    <section class="catalog-header-banner">
+      <div class="container">
+        <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+          <a href="index.html">Trade Home</a>
+          <span>/</span>
+          <span id="catalog-breadcrumb-current" style="color:var(--color-navy-900);font-weight:700">Electrical Catalog</span>
+        </nav>
+
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;flex-wrap:wrap">
+          <div>
+            <h1 class="section-title" id="catalog-page-title">Electrical &amp; Circuit Protection</h1>
+            <p style="font-size:13px;color:var(--text-secondary);margin-top:4px" id="catalog-page-subtitle">
+              AS/NZS compliant switchgear, RCBOs, power cables, lighting, and industrial controls.
+            </p>
+          </div>
+          <span class="badge badge-slate mono" id="catalog-dispatch-chip">
+            dispatch=categories.view
+          </span>
+        </div>
+
+        <!-- Scannable 1-Click Subcategory Visual Pills -->
+        <div class="subcat-pills-bar" id="catalog-subcat-pills"></div>
+      </div>
+    </section>
+
+    <!-- Main Catalog Grid + Technical Facet Sidebar -->
+    <section class="container catalog-layout">
+      <!-- Left Technical Facet Filter Sidebar -->
+      <aside class="filter-sidebar" aria-label="Technical Filters">
+        <div class="filter-sidebar-header">
+          <strong style="font-size:13px;text-transform:uppercase;letter-spacing:0.04em">Technical Filters</strong>
+          <button type="button" class="btn btn-ghost btn-sm" id="clear-filters-btn" style="padding:2px 6px;color:var(--color-amber-600)">
+            Reset All
+          </button>
+        </div>
+
+        <div id="catalog-facets-mount">
+          <div class="skeleton skeleton-line" style="margin-bottom:8px"></div>
+          <div class="skeleton skeleton-line skeleton-line--med" style="margin-bottom:8px"></div>
+          <div class="skeleton skeleton-line skeleton-line--short"></div>
+        </div>
+      </aside>
+
+      <!-- Right Product Listing & Power-User BOM Toolbar -->
+      <div>
+        <div class="catalog-toolbar">
+          <div style="font-size:13px;color:var(--text-secondary)" id="catalog-results-count">
+            Syncing CS-Cart catalog...
+          </div>
+
+          <div class="catalog-toolbar-right">
+            <label for="catalog-sort-select" style="font-size:12px;font-weight:600;color:var(--text-muted)">Sort:</label>
+            <select id="catalog-sort-select" class="sort-select">
+              <option value="position_asc">Trade Relevance / Position</option>
+              <option value="discount_desc">Highest Trade Discount %</option>
+              <option value="price_asc">Trade Price: Low to High</option>
+              <option value="price_desc">Trade Price: High to Low</option>
+              <option value="product_asc">Part Description: A to Z</option>
+            </select>
+
+            <div class="view-mode-toggle" role="group" aria-label="Switch Grid or BOM Table View">
+              <button type="button" class="view-mode-btn is-active" data-view-mode="grid">
+                <span>⊞ Grid View</span>
+              </button>
+              <button type="button" class="view-mode-btn" data-view-mode="table">
+                <span>☰ Trade Table (BOM)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Cards or BOM Table Mount -->
+        <div class="product-grid" id="catalog-products-mount">
+          <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line"></div></div>
+          <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line"></div></div>
+          <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line"></div></div>
+          <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line"></div></div>
+        </div>
+
+        <!-- Pagination Bar -->
+        <div class="pagination-bar" id="catalog-pagination-mount"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Global Footer -->
+  <div id="site-shell-footer"></div>
+
+  <script type="module" src="assets/js/pages/catalog.js"></script>
+</body>
+</html>

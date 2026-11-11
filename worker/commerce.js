@@ -8,8 +8,9 @@
 // (sid_customer_...) is set for www.schnap.com.au only. This Worker adds CORS for the allowed pages and keeps the CS-Cart session:
 //   - every cookie SCHNAP sets comes back renamed "cs_<name>", host-only on this Worker, SameSite=None; Secure; Partitioned,
 //     and only cs_ cookies are sent on to SCHNAP (so no other cookie of this domain ever leaves for SCHNAP);
-//   - for pages where third-party cookies are blocked, the same session travels in the X-Session header:
+//   - for pages where third-party cookies are blocked, the same session travels in the X-Session header (or _x_session form field):
 //     each answer carries the current session ("name=value; name=value"); send it back as X-Session on the next request.
+//   - if a POST arrives without a valid CS-Cart security_hash for the active session, the Worker fetches a fresh token and retries once.
 // Redirects are not followed here: a Location on SCHNAP is rewritten to this Worker, so the session cookies of every hop are kept.
 // Anonymous catalog GETs (no session) are cached for CACHE_SECONDS, which spares the slow backend (plan.md section 7).
 // Settings (worker/commerce.jsonc): UPSTREAM, ALLOWED_ORIGINS, CACHE_SECONDS, and the rate limits LIMITER (each IP) and LIMITER_ALL.
@@ -63,12 +64,40 @@ export function rewriteSetCookie(line) {
   return { name, value, deleted, header: [`${COOKIE_PREFIX}${name}=${value}`, ...kept, "Path=/", "Secure", "SameSite=None", "Partitioned"].join("; ") };
 }
 
+function collectSetCookies(res, session, cookieJar) {
+  let changed = false;
+  for (const line of res.headers.getSetCookie ? res.headers.getSetCookie() : []) {
+    const c = rewriteSetCookie(line);
+    if (!c) continue;
+    cookieJar.push(c.header);
+    if (c.deleted) session.delete(c.name); else session.set(c.name, c.value);
+    changed = true;
+  }
+  return changed;
+}
+
+async function fetchFreshSecurityHash(upstream, session, cookieJar) {
+  const hdrs = new Headers({ "X-Requested-With": "XMLHttpRequest", Referer: `${upstream}/` });
+  if (session.size) hdrs.set("Cookie", serialize(session));
+  const r = await fetch(`${upstream}/index.php?dispatch=auth.login_form&is_ajax=1`, {
+    method: "GET",
+    headers: hdrs,
+    redirect: "manual",
+    signal: AbortSignal.timeout(TIMEOUT_MS),
+  });
+  collectSetCookies(r, session, cookieJar);
+  const txt = await r.text();
+  const m = txt.match(/name=\\?["']security_hash\\?["'][^>]*value=\\?["']([a-f0-9]{16,64})\\?["']/i) ||
+            txt.match(/security_hash\s*[:=]\s*\\?["']([a-f0-9]{16,64})\\?["']/i);
+  return m ? m[1] : "";
+}
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const origin = request.headers.get("Origin") || "";
     const allowed = (env.ALLOWED_ORIGINS || "").split(",").map((s) => s.trim()).filter(Boolean);
-    const originOk = allowed.some((a) => origin === a || origin.startsWith(`${a}:`));   // http://localhost also allows its ports
+    const originOk = origin === url.origin || allowed.some((a) => origin === a || origin.startsWith(`${a}:`));   // http://localhost also allows its ports
     const cors = {
       "Access-Control-Allow-Origin": originOk ? origin : "null",
       "Access-Control-Allow-Credentials": "true",
@@ -102,13 +131,27 @@ export default {
     const headers = new Headers();
     for (const h of FORWARD_HEADERS) if (request.headers.get(h)) headers.set(h, request.headers.get(h));
     headers.set("Referer", `${upstream}/`);
-    if (session.size) headers.set("Cookie", serialize(session));
 
+    const cookieJar = [];
     let body;
+    const isFormPost = request.method === "POST" && (headers.get("content-type") || "").includes("application/x-www-form-urlencoded");
     if (request.method === "POST") {
       body = await request.arrayBuffer();
       if (body.byteLength > MAX_BODY) return reply({ error: "too large" }, 413);
+      if (isFormPost) {
+        const text = new TextDecoder().decode(body);
+        if (text.includes("_x_session=")) {
+          const params = new URLSearchParams(text);
+          for (const [k, v] of parseCookies(params.get("_x_session"))) {
+            session.set(k, v);
+            cookieJar.push(`${COOKIE_PREFIX}${k}=${v}; Path=/; Secure; SameSite=None; Partitioned`);
+          }
+          params.delete("_x_session");
+          body = new TextEncoder().encode(params.toString()).buffer;
+        }
+      }
     }
+    if (session.size) headers.set("Cookie", serialize(session));
 
     const dispatch = target.searchParams.get("dispatch") || "";
     const ttl = Number(env.CACHE_SECONDS || 0);
@@ -132,17 +175,42 @@ export default {
       return reply({ error: `upstream: ${String(e?.message || e).slice(0, 200)}` }, 502);
     }
 
+    let changed = collectSetCookies(res, session, cookieJar);
+    let bufferedText = null;
+
+    // Self-heal CS-Cart CSRF rejection ("Access denied: Possible CSRF attack") on form POSTs:
+    // - Non-AJAX form POST rejected for CSRF redirects (302) back to the storefront root `${upstream}/`
+    // - AJAX form POST rejected for CSRF returns 200 JSON containing "Possible CSRF attack"
+    if (isFormPost) {
+      const locHeader = res.headers.get("Location") || "";
+      const isCsrfRedirect = (res.status === 302 || res.status === 301) && (locHeader === `${upstream}/` || locHeader === "/");
+      let isCsrfJson = false;
+      if (!isCsrfRedirect && res.status === 200 && (res.headers.get("content-type") || "").includes("application/json")) {
+        bufferedText = await res.text();
+        isCsrfJson = bufferedText.includes("Possible CSRF attack");
+      }
+      if (isCsrfRedirect || isCsrfJson) {
+        try {
+          const freshHash = await fetchFreshSecurityHash(upstream, session, cookieJar);
+          if (freshHash) {
+            const params = new URLSearchParams(new TextDecoder().decode(body));
+            params.set("security_hash", freshHash);
+            body = new TextEncoder().encode(params.toString()).buffer;
+            if (session.size) headers.set("Cookie", serialize(session));
+            res = await fetch(target, { method: "POST", headers, body, redirect: "manual", signal: AbortSignal.timeout(TIMEOUT_MS) });
+            if (collectSetCookies(res, session, cookieJar)) changed = true;
+            bufferedText = null;
+          }
+        } catch {
+          // keep original response if token fetch fails
+        }
+      }
+    }
+
     const out = new Headers();
     for (const h of ["content-type", "content-language", "last-modified", "etag"]) if (res.headers.get(h)) out.set(h, res.headers.get(h));
     for (const [k, v] of Object.entries(cors)) out.set(k, v);
-    let changed = false;
-    for (const line of res.headers.getSetCookie ? res.headers.getSetCookie() : []) {
-      const c = rewriteSetCookie(line);
-      if (!c) continue;
-      out.append("Set-Cookie", c.header);
-      if (c.deleted) session.delete(c.name); else session.set(c.name, c.value);
-      changed = true;
-    }
+    for (const cHeader of cookieJar) out.append("Set-Cookie", cHeader);
     if (session.size) out.set("X-Session", serialize(session));
     const location = res.headers.get("Location");
     if (location) {
@@ -150,6 +218,21 @@ export default {
       out.set("Location", loc.origin === new URL(upstream).origin ? `${url.origin}/cscart${loc.pathname}${loc.search}${loc.hash}` : loc.toString());
     }
     out.set("Cache-Control", "no-store");
+
+    // Rewrite form actions and cart/checkout links inside full HTML navigation pages so actions stay on /cscart/
+    const isHtmlNav = request.method === "GET" && !headers.get("x-requested-with") && res.status === 200 && (res.headers.get("content-type") || "").includes("text/html");
+    if (isHtmlNav) {
+      const html = (bufferedText !== null ? bufferedText : await res.text())
+        .replaceAll(`action="${upstream}/"`, `action="${url.origin}/cscart/index.php"`)
+        .replaceAll(`action="${upstream}/index.php"`, `action="${url.origin}/cscart/index.php"`)
+        .replaceAll(`href="${upstream}/checkout/"`, `href="${url.origin}/cscart/checkout/"`)
+        .replaceAll(`href="${upstream}/cart/"`, `href="${url.origin}/cscart/cart/"`);
+      return new Response(html, { status: res.status, statusText: res.statusText, headers: out });
+    }
+
+    if (bufferedText !== null) {
+      return new Response(bufferedText, { status: res.status, statusText: res.statusText, headers: out });
+    }
 
     if (cacheable && cache && res.status === 200 && !changed) {
       const [a, b] = res.body ? res.body.tee() : [null, null];

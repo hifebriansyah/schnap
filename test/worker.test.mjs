@@ -96,6 +96,28 @@ assert.strictEqual((await call("/api/index.php", { method: "POST", body: "x".rep
 assert.deepStrictEqual(await (await call("/health")).json(), { ok: true });
 const limited = await worker.fetch(new Request("https://w/api/index.php", { headers: { Origin: ORIGIN } }), { ...env, LIMITER: { limit: async () => ({ success: false }) } }, ctx);
 assert.strictEqual(limited.status, 429);
+// CSRF self-healing on POST: if CS-Cart redirects to root (302 -> https://www.schnap.com.au/), Worker fetches fresh security_hash and retries
+let postAttempts = 0;
+next = (url, init) => {
+  if (init.method === "POST") {
+    postAttempts++;
+    const bodyText = new TextDecoder().decode(init.body);
+    if (!bodyText.includes("security_hash=0123456789abcdef0123456789abcdef")) {
+      return new Response(null, { status: 302, headers: [["Location", "https://www.schnap.com.au/"], ["Set-Cookie", "sid_customer_abc=s1; path=/"]] });
+    }
+    return new Response(null, { status: 302, headers: [["Location", "https://www.schnap.com.au/cart/"]] });
+  }
+  return Response.json({ text: '<input type="hidden" name="security_hash" value="0123456789abcdef0123456789abcdef" />' });
+};
+r = await call("/cscart/index.php", {
+  method: "POST",
+  headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  body: "_x_session=sid_customer_abc%3Ds1&dispatch%5Bcheckout.add%5D=Add+to+cart&product_data%5B1%5D%5Bamount%5D=1&redirect_url=index.php%3Fdispatch%3Dcheckout.cart",
+});
+assert.strictEqual(postAttempts, 2);
+assert.strictEqual(r.status, 302);
+assert.strictEqual(r.headers.get("Location"), "https://commerce-worker.situs.id/cscart/cart/");
+
 next = () => { throw new Error("connect timeout"); };
 r = await call("/api/index.php?dispatch=checkout.cart");
 assert.strictEqual(r.status, 502);
